@@ -1,4 +1,4 @@
-FROM python:3.11-slim@sha256:da047cb8f9d1d98e5c070f5300ba9f7274e33b8fc0e5be5ed88740aed1b95ba9
+FROM python:3.14-slim@sha256:a2b82f3c48559aa0a8446d9af49826b6e2b2016f4cd2afabfe6013ec53729170
 RUN useradd --create-home --uid 1000 user
 WORKDIR /app
 COPY inference/requirements.txt /app/requirements.txt
