@@ -1,0 +1,18 @@
+rules:
+  - id: no-raw-react-html
+    languages: [typescript, javascript]
+    severity: ERROR
+    message: Do not render unsanitized HTML in this application.
+    pattern: <$TAG dangerouslySetInnerHTML={$VALUE} ... />
+  - id: no-python-eval
+    languages: [python]
+    severity: ERROR
+    message: Dynamic code evaluation is not permitted for retrieved or uploaded content.
+    pattern-either:
+      - pattern: eval(...)
+      - pattern: exec(...)
+  - id: no-shell-subprocess
+    languages: [python]
+    severity: ERROR
+    message: Use argument arrays and shell=False for subprocesses.
+    pattern: subprocess.$FUNC(..., shell=True, ...)

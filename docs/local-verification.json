@@ -1,0 +1,439 @@
+{
+  "database": "native PostgreSQL + pgvector",
+  "documents": 8,
+  "sql_permissions": "verified",
+  "llm_model": "Qwen2.5-1.5B-Instruct Q4_K_M",
+  "answer": "Full-time SaiTech employees receive 24 paid annual leave days per calendar year. [Source 1]",
+  "grounding": "SUPPORTED",
+  "citation_count": 1,
+  "evaluation": {
+    "configuration": {
+      "generation_mode": "llm",
+      "embedding_model": "BAAI/bge-small-en-v1.5",
+      "reranker_model": "Xenova/ms-marco-MiniLM-L-6-v2",
+      "llm_model": "sai-local",
+      "grounding_action": "refuse"
+    },
+    "cases": [
+      {
+        "question": "How many paid annual leave days do full-time SaiTech employees receive?",
+        "expected_answer": "Full-time SaiTech employees receive 24 working days of paid annual leave per calendar year, accruing at two days per completed month.",
+        "answer": "Full-time SaiTech employees receive 24 paid annual leave days per calendar year. [Source 1]",
+        "citations": [
+          {
+            "chunk_id": "dd8ca9bd-9834-4626-8608-cca10e6b742c",
+            "document_id": "d8c7c229-8b9b-43ad-bbe5-b096ef7c9f4e",
+            "document": "Leave-Policy.md",
+            "text": "Full-time SaiTech employees receive 24 working days of paid annual leave per calendar year. Leave accrues at two days per completed month of service. Part-time employees receive a prorated allowance. Contractors follow their individual agreements and do not receive this employee allowance.",
+            "page": null,
+            "section": "Annual leave",
+            "version": 1,
+            "dense_score": 0.9538817433189324,
+            "lexical_score": 1.8000000715255737,
+            "rrf_score": 0.03278688524590164,
+            "reranker_score": 10.448183059692383,
+            "label": "Source 1"
+          }
+        ],
+        "metrics": {
+          "recall_at_k": 1.0,
+          "precision_at_k": 0.16666666666666666,
+          "mrr": 1.0,
+          "ndcg": 1.0,
+          "faithfulness": 1.0,
+          "answer_relevance": 0.7428571428571429,
+          "context_relevance": 0.6666666666666666,
+          "citation_correctness": 1.0,
+          "latency_ms": 21725.662600000076
+        },
+        "token_usage": null,
+        "estimated_cost": null,
+        "trace": [
+          {
+            "node": "query_classifier",
+            "status": "completed",
+            "output": "DOCUMENT"
+          },
+          {
+            "node": "query_rewriter",
+            "status": "completed",
+            "output": "How many paid annual leave days do full-time SaiTech employees receive?"
+          },
+          {
+            "node": "router",
+            "status": "completed",
+            "output": "DOCUMENT"
+          },
+          {
+            "node": "dense_retriever",
+            "status": "completed",
+            "attempts": 1,
+            "latency_ms": 300.85
+          },
+          {
+            "node": "lexical_retriever",
+            "status": "completed",
+            "attempts": 1,
+            "latency_ms": 9.35
+          },
+          {
+            "node": "rrf_fusion",
+            "status": "completed",
+            "output": {
+              "count": 27,
+              "constant": 60,
+              "latency_ms": 0.1095999998597108
+            }
+          },
+          {
+            "node": "reranker",
+            "status": "completed",
+            "attempts": 1,
+            "latency_ms": 606.36
+          },
+          {
+            "node": "context_builder",
+            "status": "completed",
+            "output": {
+              "chunk_ids": [
+                "dd8ca9bd-9834-4626-8608-cca10e6b742c",
+                "7c36fdeb-a38a-4eaa-88ff-bf4edb0ecb69",
+                "9e42ca47-cd49-43ea-9a33-5c37518b1683",
+                "b7b3cc9c-dc2a-40b9-b893-d860f0be4b5c",
+                "73052fd1-0018-4e9f-bb6b-1bcb1f3849ad",
+                "8a1d8ba1-7995-47fa-a072-5ecf41341fae"
+              ],
+              "byte_budget": 10000
+            }
+          },
+          {
+            "node": "answer_generator",
+            "status": "completed",
+            "attempts": 1,
+            "latency_ms": 7828.78
+          },
+          {
+            "node": "grounding_checker",
+            "status": "completed",
+            "attempts": 1,
+            "latency_ms": 12979.73
+          },
+          {
+            "node": "grounding_verdict",
+            "status": "completed",
+            "output": {
+              "status": "SUPPORTED",
+              "reason": "The answer directly states that full-time SaiTech employees receive 24 paid annual leave days per calendar year, which is supported by the evidence provided."
+            }
+          },
+          {
+            "node": "citation_generator",
+            "status": "completed",
+            "output": {
+              "labels": [
+                "Source 1"
+              ]
+            }
+          },
+          {
+            "node": "final_answer",
+            "status": "completed",
+            "output": {
+              "grounding": "SUPPORTED"
+            }
+          }
+        ]
+      },
+      {
+        "question": "What is the deadline for submitting an expense claim?",
+        "expected_answer": "Submit expense claims through the Finance Portal within 30 calendar days of purchase with an itemized receipt, business purpose, and cost center.",
+        "answer": "The deadline for submitting an expense claim is within 30 calendar days of the purchase. [Source 1]",
+        "citations": [
+          {
+            "chunk_id": "6b76decb-f4ef-450b-97e0-d737c5b1f0a0",
+            "document_id": "53b33976-0be7-4520-be41-9005a8c3e0e2",
+            "document": "Expense-Policy.md",
+            "text": "Submit expense claims through the Finance Portal within 30 calendar days of the purchase. Attach an itemized receipt, a business purpose, and the relevant cost center. Your manager approves the claim before Finance reviews it. Approved claims are reimbursed in the next monthly payroll cycle.",
+            "page": null,
+            "section": "Submitting claims",
+            "version": 1,
+            "dense_score": 0.8417066335678101,
+            "lexical_score": 0.699999988079071,
+            "rrf_score": 0.03278688524590164,
+            "reranker_score": 6.930003643035889,
+            "label": "Source 1"
+          }
+        ],
+        "metrics": {
+          "recall_at_k": 1.0,
+          "precision_at_k": 0.16666666666666666,
+          "mrr": 1.0,
+          "ndcg": 1.0,
+          "faithfulness": 1.0,
+          "answer_relevance": 0.47368421052631576,
+          "context_relevance": 0.5,
+          "citation_correctness": 1.0,
+          "latency_ms": 21703.59910000002
+        },
+        "token_usage": null,
+        "estimated_cost": null,
+        "trace": [
+          {
+            "node": "query_classifier",
+            "status": "completed",
+            "output": "DOCUMENT"
+          },
+          {
+            "node": "query_rewriter",
+            "status": "completed",
+            "output": "What is the deadline for submitting an expense claim?"
+          },
+          {
+            "node": "router",
+            "status": "completed",
+            "output": "DOCUMENT"
+          },
+          {
+            "node": "dense_retriever",
+            "status": "completed",
+            "attempts": 1,
+            "latency_ms": 369.4
+          },
+          {
+            "node": "lexical_retriever",
+            "status": "completed",
+            "attempts": 1,
+            "latency_ms": 3.41
+          },
+          {
+            "node": "rrf_fusion",
+            "status": "completed",
+            "output": {
+              "count": 21,
+              "constant": 60,
+              "latency_ms": 0.12220000007800991
+            }
+          },
+          {
+            "node": "reranker",
+            "status": "completed",
+            "attempts": 1,
+            "latency_ms": 587.46
+          },
+          {
+            "node": "context_builder",
+            "status": "completed",
+            "output": {
+              "chunk_ids": [
+                "6b76decb-f4ef-450b-97e0-d737c5b1f0a0",
+                "e916ac77-b76a-4044-9e10-b701ae7b4524",
+                "8a1d8ba1-7995-47fa-a072-5ecf41341fae",
+                "53e97acf-30aa-4aac-8175-efa025f3e8a1",
+                "9e42ca47-cd49-43ea-9a33-5c37518b1683",
+                "c6002b13-1d48-4507-816c-bd23bbd183c8"
+              ],
+              "byte_budget": 10000
+            }
+          },
+          {
+            "node": "answer_generator",
+            "status": "completed",
+            "attempts": 1,
+            "latency_ms": 7758.48
+          },
+          {
+            "node": "grounding_checker",
+            "status": "completed",
+            "attempts": 1,
+            "latency_ms": 12984.3
+          },
+          {
+            "node": "grounding_verdict",
+            "status": "completed",
+            "output": {
+              "status": "SUPPORTED",
+              "reason": "The answer directly states the deadline for submitting an expense claim, which is within 30 calendar days of the purchase. This information matches exactly with the evidence provided."
+            }
+          },
+          {
+            "node": "citation_generator",
+            "status": "completed",
+            "output": {
+              "labels": [
+                "Source 1"
+              ]
+            }
+          },
+          {
+            "node": "final_answer",
+            "status": "completed",
+            "output": {
+              "grounding": "SUPPORTED"
+            }
+          }
+        ]
+      },
+      {
+        "question": "How quickly must a SEV1 incident be acknowledged?",
+        "expected_answer": "The on-call engineer acknowledges SEV1 incidents within 15 minutes. The incident commander sends stakeholder updates every 30 minutes until mitigation.",
+        "answer": "According to the Incident-Response-Policy.md, a SEV1 incident must be acknowledged within 15 minutes. [Source 1]",
+        "citations": [
+          {
+            "chunk_id": "90382963-47c7-4b07-97d2-38edf5ecce40",
+            "document_id": "75b5e586-8a8e-4e5e-a6eb-f0a22fd16f23",
+            "document": "Incident-Response-Policy.md",
+            "text": "The on-call engineer acknowledges SEV1 incidents within 15 minutes and SEV2 incidents within 30 minutes. The incident commander sends SEV1 stakeholder updates every 30 minutes until mitigation. These are response targets, not guarantees of resolution time.",
+            "page": null,
+            "section": "Response targets",
+            "version": 1,
+            "dense_score": 0.844312122125156,
+            "lexical_score": 0.6000000238418579,
+            "rrf_score": 0.03278688524590164,
+            "reranker_score": 8.568767547607422,
+            "label": "Source 1"
+          }
+        ],
+        "metrics": {
+          "recall_at_k": 1.0,
+          "precision_at_k": 0.16666666666666666,
+          "mrr": 1.0,
+          "ndcg": 1.0,
+          "faithfulness": 1.0,
+          "answer_relevance": 0.3333333333333333,
+          "context_relevance": 0.5,
+          "citation_correctness": 1.0,
+          "latency_ms": 22698.791100000108
+        },
+        "token_usage": null,
+        "estimated_cost": null,
+        "trace": [
+          {
+            "node": "query_classifier",
+            "status": "completed",
+            "output": "DOCUMENT"
+          },
+          {
+            "node": "query_rewriter",
+            "status": "completed",
+            "output": "How quickly must a SEV1 incident be acknowledged?"
+          },
+          {
+            "node": "router",
+            "status": "completed",
+            "output": "DOCUMENT"
+          },
+          {
+            "node": "dense_retriever",
+            "status": "completed",
+            "attempts": 1,
+            "latency_ms": 449.88
+          },
+          {
+            "node": "lexical_retriever",
+            "status": "completed",
+            "attempts": 1,
+            "latency_ms": 7.77
+          },
+          {
+            "node": "rrf_fusion",
+            "status": "completed",
+            "output": {
+              "count": 26,
+              "constant": 60,
+              "latency_ms": 0.20949999998265412
+            }
+          },
+          {
+            "node": "reranker",
+            "status": "completed",
+            "attempts": 1,
+            "latency_ms": 769.26
+          },
+          {
+            "node": "context_builder",
+            "status": "completed",
+            "output": {
+              "chunk_ids": [
+                "90382963-47c7-4b07-97d2-38edf5ecce40",
+                "56cbcb1b-eb0b-4255-8952-72948e354362",
+                "76ab6a20-1bf7-43fe-9870-8b2d7f362267",
+                "b620386d-68a8-4a30-810a-e5bed8b3777f",
+                "f18371ee-cf4e-43ff-b1c9-e0dc6f3ea8b9",
+                "b7b3cc9c-dc2a-40b9-b893-d860f0be4b5c"
+              ],
+              "byte_budget": 10000
+            }
+          },
+          {
+            "node": "answer_generator",
+            "status": "completed",
+            "attempts": 1,
+            "latency_ms": 10734.4
+          },
+          {
+            "node": "grounding_checker",
+            "status": "completed",
+            "attempts": 1,
+            "latency_ms": 10736.8
+          },
+          {
+            "node": "grounding_verdict",
+            "status": "completed",
+            "output": {
+              "status": "SUPPORTED",
+              "reason": "The evidence directly supports the claim made in the answer by stating that a SEV1 incident must be acknowledged within 15 minutes."
+            }
+          },
+          {
+            "node": "citation_generator",
+            "status": "completed",
+            "output": {
+              "labels": [
+                "Source 1"
+              ]
+            }
+          },
+          {
+            "node": "final_answer",
+            "status": "completed",
+            "output": {
+              "grounding": "SUPPORTED"
+            }
+          }
+        ]
+      }
+    ],
+    "aggregate": {
+      "recall_at_k": 1.0,
+      "precision_at_k": 0.16666666666666666,
+      "mrr": 1.0,
+      "ndcg": 1.0,
+      "faithfulness": 1.0,
+      "answer_relevance": 0.516624895572264,
+      "context_relevance": 0.5555555555555555,
+      "citation_correctness": 1.0,
+      "latency_ms": 22042.684266666736
+    },
+    "error": null,
+    "k": 6,
+    "baseline_id": "30c4f17b-bf12-45de-b179-e0dbe8cd7ff5",
+    "delta": {
+      "recall_at_k": 0.0,
+      "precision_at_k": 0.0,
+      "mrr": 0.0,
+      "ndcg": 0.0,
+      "faithfulness": 0.6666666666666667,
+      "answer_relevance": 0.22658160552897394,
+      "context_relevance": 0.0,
+      "citation_correctness": 0.6666666666666667,
+      "latency_ms": -1287.7512999999271
+    },
+    "methodology": {
+      "retrieval": "Unique documents; Precision@6 divides by 6 even with fewer results.",
+      "faithfulness": "Binary grounding-check pass rate; LLM judged, or verbatim in extractive mode. Not a calibrated semantic score.",
+      "answer_relevance": "Token-set F1 against reference answer (lexical proxy).",
+      "context_relevance": "Fraction of retrieved chunks from expected documents (label-based proxy).",
+      "citation_correctness": "Exact expected document and section match fraction."
+    }
+  }
+}

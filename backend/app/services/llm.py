@@ -1,0 +1,89 @@
+import json
+from abc import ABC, abstractmethod
+from collections.abc import AsyncIterator
+
+import httpx
+
+from app.core.config import get_settings
+
+
+class LLMProvider(ABC):
+    @abstractmethod
+    def stream(self, messages: list[dict], *, json_mode: bool = False) -> AsyncIterator[dict]: ...
+
+    async def complete(self, messages: list[dict], *, json_mode: bool = False):
+        parts, usage = [], None
+        async for event in self.stream(messages, json_mode=json_mode):
+            if event.get("text"):
+                parts.append(event["text"])
+            if event.get("usage"):
+                usage = event["usage"]
+        return "".join(parts), usage
+
+
+class TrackedLLM(LLMProvider):
+    """Record one usage report per call, including missing reports."""
+
+    def __init__(self, provider):
+        self.provider = provider
+        self.usages = []
+
+    async def stream(self, messages, *, json_mode=False):
+        usage = None
+        completed = False
+        try:
+            async for event in self.provider.stream(messages, json_mode=json_mode):
+                if event.get("usage"):
+                    usage = event["usage"]
+                yield event
+            completed = True
+        finally:
+            self.usages.append(usage if completed else None)
+
+
+class OpenCompatibleLLM(LLMProvider):
+    """Works with Ollama's local OpenAI-compatible endpoint; paid keys are optional."""
+
+    async def stream(self, messages, *, json_mode=False):
+        cfg = get_settings()
+        headers = {"Authorization": f"Bearer {cfg.llm_api_key}"} if cfg.llm_api_key else {}
+        payload = {
+            "model": cfg.llm_model,
+            "messages": messages,
+            "stream": True,
+            "temperature": 0,
+            "max_tokens": 1000,
+            "stream_options": {"include_usage": True},
+        }
+        if json_mode:
+            payload["response_format"] = {"type": "json_object"}
+        completed = False
+        async with httpx.AsyncClient(timeout=httpx.Timeout(60, connect=10)) as client:
+            async with client.stream(
+                "POST", cfg.llm_url.rstrip("/") + "/chat/completions", json=payload, headers=headers
+            ) as response:
+                response.raise_for_status()
+                async for line in response.aiter_lines():
+                    if not line.startswith("data:"):
+                        continue
+                    raw = line[5:].strip()
+                    if raw == "[DONE]":
+                        completed = True
+                        break
+                    try:
+                        event = json.loads(raw)
+                        if "error" in event:
+                            raise ValueError("Provider returned a stream error.")
+                        choices = event.get("choices", [])
+                        if choices and choices[0].get("finish_reason") not in (None, "stop"):
+                            raise ValueError("LLM generation ended without a complete answer.")
+                        delta = choices[0].get("delta", {}) if choices else {}
+                        yield {"text": delta.get("content") or "", "usage": event.get("usage")}
+                    except (json.JSONDecodeError, TypeError, KeyError) as exc:
+                        raise ValueError("Malformed LLM stream.") from exc
+        if not completed:
+            raise ValueError("LLM stream ended before completion.")
+
+
+def llm() -> LLMProvider:
+    return OpenCompatibleLLM()

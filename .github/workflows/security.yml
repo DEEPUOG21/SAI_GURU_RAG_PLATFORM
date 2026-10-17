@@ -1,0 +1,43 @@
+name: Security checks
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_call:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: '3.11'
+      - run: pip install bandit==1.9.4 pip-audit==2.10.1
+      - name: Report medium findings; block high-severity findings
+        run: |
+          bandit -r backend/app inference -f json -o bandit.json --exit-zero
+          bandit -r backend/app inference -lll
+      - run: pip-audit -r backend/requirements.lock
+      - run: npm audit --prefix frontend --audit-level=high
+      - name: Semgrep reviewed local rules
+        run: docker run --rm -v "$PWD:/src" semgrep/semgrep:1.177.0 semgrep scan --config /src/.semgrep.yml --error /src/backend/app /src/frontend/src /src/inference
+      - name: Scan Git history for secrets
+        run: docker run --rm -v "$PWD:/repo" zricethezav/gitleaks:v8.30.1 git /repo --config /repo/.gitleaks.toml --redact
+      - name: Scan filesystem and Docker configuration
+        run: docker run --rm -v "$PWD:/repo" aquasec/trivy:0.74.0 fs --scanners vuln,misconfig --severity HIGH,CRITICAL --exit-code 1 /repo
+  images:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - run: docker build -f backend/Dockerfile -t sai-guru-api .
+      - run: docker build -f frontend/Dockerfile -t sai-guru-web .
+      - name: Scan application images
+        run: |
+          for image in sai-guru-api sai-guru-web; do
+            docker run --rm -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy:0.74.0 image --severity HIGH,CRITICAL --exit-code 1 "$image"
+          done

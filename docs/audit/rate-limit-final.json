@@ -1,0 +1,27 @@
+{
+  "status": "PASS",
+  "codes": [
+    401,
+    401,
+    401,
+    401,
+    401,
+    401,
+    401,
+    401,
+    401,
+    401,
+    429,
+    429,
+    429,
+    429,
+    429,
+    429,
+    429,
+    429,
+    429,
+    429,
+    429
+  ],
+  "note": "21 attempts cover a fixed-window boundary; no production account targeted."
+}

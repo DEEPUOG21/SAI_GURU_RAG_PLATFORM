@@ -1,0 +1,6 @@
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Generated dependencies, model weights and local database binaries; not application source"
+paths = ['''(^|[/\\])(\.venv|node_modules|\.model-cache|\.local-postgres|\.audit-tools|__pycache__)([/\\]|$)''']

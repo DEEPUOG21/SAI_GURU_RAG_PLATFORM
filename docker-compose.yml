@@ -1,0 +1,59 @@
+services:
+  db:
+    image: pgvector/pgvector:pg16@sha256:ccc6e83d6e35e931dc7c5def2022729d5a6c370318d099181995567ff1fb4d6b
+    environment:
+      POSTGRES_USER: sai
+      POSTGRES_DB: sai_guru
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Generate .env with scripts/configure_local.py}
+    ports: ["127.0.0.1:5432:5432"]
+    volumes: ["postgres_data:/var/lib/postgresql/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sai -d sai_guru"]
+      interval: 5s
+      timeout: 5s
+      retries: 15
+  migrate:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql+asyncpg://sai:${POSTGRES_PASSWORD}@db:5432/sai_guru
+    command: ["sh", "-c", "alembic -c backend/alembic.ini upgrade head && python -m app.database.setup_sql && python -m app.database.setup_runtime && python -m app.database.seed"]
+    depends_on:
+      db: {condition: service_healthy}
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql+asyncpg://sai_runtime:${RUNTIME_DATABASE_PASSWORD:?Set a random runtime password}@db:5432/sai_guru
+      SQL_DATABASE_URL: postgresql+asyncpg://sai_reader:${SQL_READER_PASSWORD}@db:5432/sai_guru
+      LLM_URL: http://host.docker.internal:11434/v1
+      PORT: 8000
+    ports: ["127.0.0.1:8000:8000"]
+    extra_hosts: ["host.docker.internal:host-gateway"]
+    depends_on:
+      migrate: {condition: service_completed_successfully}
+  worker:
+    profiles: [worker]
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql+asyncpg://sai_runtime:${RUNTIME_DATABASE_PASSWORD:?Set a random runtime password}@db:5432/sai_guru
+    command: ["python", "-m", "app.ingestion.worker"]
+    depends_on:
+      migrate: {condition: service_completed_successfully}
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+      args:
+        VITE_API_URL: ${VITE_API_URL:-http://localhost:8000}
+    ports: ["127.0.0.1:5173:8080"]
+    depends_on: [backend]
+volumes:
+  postgres_data:

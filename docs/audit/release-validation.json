@@ -1,0 +1,20 @@
+{
+  "date": "2026-10-17",
+  "backend": {
+    "passed": 124,
+    "skipped": 3,
+    "note": "Database integration scenarios intentionally excluded; no production database tests performed during packaging."
+  },
+  "frontend": {
+    "unit_tests_passed": 7,
+    "lint": "PASS",
+    "typecheck": "PASS",
+    "production_build": "PASS",
+    "source_matches_release": true
+  },
+  "gitleaks": "PASS: no leaks",
+  "exact_private_value_scan": "PASS",
+  "excluded": "Private configuration, account-specific deployment evidence, local database, model weights, dependencies and build artifacts",
+  "container_builds": "NOT VERIFIED",
+  "hosted_deployment": "NOT VERIFIED"
+}
