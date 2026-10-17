@@ -1,10 +1,12 @@
 # Free deployment: GitHub, Supabase, Render and Vercel
 
+> Demo fixtures have been removed. Seeding now creates only the admin account. Upload your own documents and configure a private dataset as described in [data configuration](../../data/README.md). References to synthetic fixtures below describe the original validation setup.
+
 This guide deploys a **personal portfolio demo** with no mandatory paid service. It uses Vercel Hobby for React, Render Free for FastAPI, Supabase Free for PostgreSQL/pgvector, and an optional free Hugging Face CPU Space for inference. The extra model host is necessary for a realistic free CPU design: do not expect a 512 MB API container to run embeddings, a reranker and a generative model together.
 
 The instructions match this repository. Cloud deployment has not been performed on your accounts. Interface labels, available plans and limits can change; check the linked official pages before selecting resources. Account approval, regional availability and free quotas are controlled by the providers.
 
-See [current hardening results and release blockers](HARDENING-RESULTS.md) before release. Use your existing dedicated projects; creating replacements is unnecessary.
+See [current hardening results and release blockers](../security/HARDENING-RESULTS.md) before release. Use your existing dedicated projects; creating replacements is unnecessary.
 
 ## 1. Understand the cost boundaries
 
@@ -40,7 +42,7 @@ git status --short
 git diff --cached --stat
 ```
 
-6. Review the staged file list. `.env.example` is expected; `.env`, `.local-inference-key`, `.local-postgres`, `.venv` and `.model-cache` must not be present. `docs/local-verification.json` contains synthetic measured results, not live customer data.
+6. Review the staged file list. `.env.example` is expected; `.env`, `.local-inference-key`, `.local-postgres`, `.venv` and `.model-cache` must not be present. `docs/audit/local-verification.json` contains synthetic measured results, not live customer data.
 7. Commit and push, replacing the remote with your repository:
 
 ```sh

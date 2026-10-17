@@ -1,4 +1,5 @@
 import asyncio
+import hashlib
 import json
 from pathlib import Path
 
@@ -13,9 +14,37 @@ from app.models.entities import Evaluation
 DATASET = Path(__file__).resolve().parents[3] / "data" / "evaluation.json"
 
 
-async def run_evaluation(scope):
+def load_dataset():
+    if not DATASET.is_file():
+        raise ValueError("No evaluation dataset configured. Ask your administrator to add a labeled dataset.")
+    cases = json.loads(DATASET.read_text(encoding="utf-8"))
+    if not isinstance(cases, list) or not cases:
+        raise ValueError("The evaluation dataset must contain at least one labeled question.")
+    required = {"question", "expected_answer", "expected_documents", "expected_citations"}
+    if any(not isinstance(case, dict) or not required.issubset(case) for case in cases):
+        raise ValueError("The evaluation dataset is missing required labels.")
+    for case in cases:
+        if not all(
+            isinstance(case[key], str) and case[key].strip() for key in ("question", "expected_answer")
+        ):
+            raise ValueError("Evaluation questions and answers must be nonempty strings.")
+        if not isinstance(case["expected_documents"], list) or not all(
+            isinstance(name, str) for name in case["expected_documents"]
+        ):
+            raise ValueError("Expected documents must be a list of filenames.")
+        if not isinstance(case["expected_citations"], list) or not all(
+            isinstance(citation, dict)
+            and all(isinstance(citation.get(key), str) for key in ("document", "section"))
+            for citation in case["expected_citations"]
+        ):
+            raise ValueError("Expected citations must contain document and section labels.")
+    return cases
+
+
+async def run_evaluation(scope, cases):
+    version = hashlib.sha256(json.dumps(cases, sort_keys=True).encode()).hexdigest()[:16]
     async with Session(scope=scope) as db:
-        evaluation = Evaluation(tenant_id=scope.tenant_id, user_id=scope.user_id)
+        evaluation = Evaluation(tenant_id=scope.tenant_id, user_id=scope.user_id, dataset_version=version)
         db.add(evaluation)
         await db.commit()
         id = evaluation.id
@@ -26,7 +55,7 @@ async def run_evaluation(scope):
 
     try:
         async with asyncio.timeout(600):
-            for case in json.loads(DATASET.read_text(encoding="utf-8")):
+            for case in cases:
                 async with Session(scope=scope) as db:
                     result = await execute(db, scope, case["question"], [], discard)
                 citations = result["citations"]
@@ -75,7 +104,7 @@ async def run_evaluation(scope):
                 Evaluation.user_id == scope.user_id,
                 Evaluation.id != id,
                 Evaluation.status == "COMPLETED",
-                Evaluation.dataset_version == "saitech-v1",
+                Evaluation.dataset_version == version,
             )
             .order_by(Evaluation.created_at.desc())
             .limit(1)

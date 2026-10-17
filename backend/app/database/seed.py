@@ -1,13 +1,10 @@
 import asyncio
-from datetime import datetime, timezone
-from pathlib import Path
 
-from sqlalchemy import func, select
+from sqlalchemy import select
 
 from app.core.config import get_settings
 from app.database.session import Session, engine
-from app.ingestion.service import upload
-from app.models.entities import Document, Employee, Tenant, User
+from app.models.entities import Tenant, User
 from app.security.auth import passwords
 
 
@@ -34,40 +31,8 @@ async def main():
                 )
             )
             await db.commit()
-        for path in sorted((Path(__file__).resolve().parents[3] / "data" / "demo").glob("*.md")):
-            existing = await db.scalar(
-                select(Document).where(Document.tenant_id == tenant.id, Document.name == path.name)
-            )
-            if existing and existing.status not in {"COMPLETED", "FAILED"}:
-                continue
-            await upload(db, tenant.id, path.name, path.read_bytes())
-        count = await db.scalar(
-            select(func.count()).select_from(Employee).where(Employee.tenant_id == tenant.id)
-        )
-        if not count:
-            # Fixed, explicitly synthetic records. Results change with calendar-based queries, not invented metrics.
-            for department, month in [
-                ("Engineering", 1),
-                ("Engineering", 2),
-                ("Product", 3),
-                ("People", 4),
-                ("Engineering", 6),
-                ("Support", 8),
-                ("Security", 8),
-                ("Engineering", 9),
-            ]:
-                db.add(
-                    Employee(
-                        tenant_id=tenant.id,
-                        department=department,
-                        joined_at=datetime(2026, month, 5, tzinfo=timezone.utc),
-                    )
-                )
-            await db.commit()
     await engine.dispose()
-    print(
-        "SaiTech synthetic documents queued; admin account exists. Start the worker or select Process in the UI."
-    )
+    print("Admin account exists. Upload your knowledge documents through the UI.")
 
 
 if __name__ == "__main__":

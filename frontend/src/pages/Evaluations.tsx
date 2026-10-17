@@ -56,7 +56,7 @@ export function Evaluations() {
       <PageHeading
         eyebrow="QUALITY & EVALUATION"
         title="Measure. Learn. Improve."
-        description="Run the SaiTech regression dataset against your actual knowledge pipeline."
+        description="Run your configured evaluation dataset against your knowledge pipeline."
         action={
           <Button disabled={busy} onClick={() => void run()}>
             <Play size={15} />
@@ -70,12 +70,12 @@ export function Evaluations() {
         <div>
           <strong>Small dataset. Transparent measurements.</strong>
           <p>
-            Seed and index the synthetic SaiTech documents first. Retrieval
+            Upload and index the documents covered by your evaluation dataset first. Retrieval
             scores use labeled documents. Generation metrics include clearly
             identified proxies — see the methodology below.
           </p>
         </div>
-        <Badge>saitech-v1</Badge>
+        <Badge>Configured dataset</Badge>
       </div>
       {busy && (
         <div className="loading">

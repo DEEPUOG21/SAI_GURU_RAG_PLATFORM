@@ -1,5 +1,7 @@
 # Setup
 
+> Demo fixtures have been removed. Seeding now creates only the admin account. Upload your own documents and configure a private dataset as described in [data configuration](../../data/README.md). References to synthetic fixtures below describe the original validation setup.
+
 Sai Guru has three required application components: a browser frontend, a Python API, and PostgreSQL with pgvector. Models can run locally or in the included private inference service. Redis is unnecessary.
 
 ## Prerequisites

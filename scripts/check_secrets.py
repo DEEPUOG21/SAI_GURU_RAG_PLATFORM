@@ -9,7 +9,7 @@ values = [value for name, value in dotenv_values(".env").items() if name in secr
 local_key = Path(".local-inference-key")
 if local_key.exists():
     values.append(local_key.read_text().strip())
-ignored = {".git", ".venv", "node_modules", ".model-cache", ".local-postgres", "dist", "test-results", "__pycache__", ".pytest_cache", ".ruff_cache", "sai_guru.egg-info"}
+ignored = {".local", ".audit-tools", ".git", ".venv", "node_modules", ".model-cache", ".local-postgres", "dist", "test-results", "__pycache__", ".pytest_cache", ".ruff_cache", "sai_guru.egg-info"}
 failures = []
 checked = 0
 for root, directories, files in os.walk("."):

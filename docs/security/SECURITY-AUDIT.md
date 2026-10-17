@@ -8,7 +8,7 @@ Audit performed September 17–20, 2026 against this local Windows workspace. **
 
 Targeted fixes preserve the existing architecture. Final backend suite: **115 passed, 0 skipped; 79.7121% statement coverage**. Frontend: **7 unit tests passed**, lint/typecheck/production build passed. **Two mocked browser tests and one separate live browser test passed.** Real-model audit: **33 functional probes passed; 10 of 12 RAG scenario predicates passed, one failed and one requires manual testing**. A stronger supplemental injection probe **failed answer utility through refusal**, without observed canary disclosure. These narrow predicates are not a general answer-quality or injection-resistance guarantee.
 
-Evidence: [baseline](audit/live-baseline.json), [real-model retest](audit/live-results.json), [backend JUnit](audit/backend-tests.xml), [coverage](audit/coverage.json), [scanner findings](audit/scanner-summary.json), [npm audit](audit/npm-audit.json). [Reproduction commands and deployment checklist](AUDIT-REPRODUCTION.md) accompany this report. No Git repository/history, Docker engine, deployed cloud environment or remote Actions run was available for verification.
+Evidence: [baseline](../audit/live-baseline.json), [real-model retest](../audit/live-results.json), [backend JUnit](../audit/backend-tests.xml), [coverage](../audit/coverage.json), [scanner findings](../audit/scanner-summary.json), [npm audit](../audit/npm-audit.json). [Reproduction commands and deployment checklist](AUDIT-REPRODUCTION.md) accompany this report. No Git repository/history, Docker engine, deployed cloud environment or remote Actions run was available for verification.
 
 ## Architecture Reviewed
 
@@ -22,7 +22,7 @@ Metrics and traces are stored in PostgreSQL. Three synthetic evaluation cases ex
 
 ### Files and scope
 
-Reviewed application entry points, every API router, auth/scope/body middleware, models/session/migrations/SQL-role setup, ingestion parser/service/worker, routing/workflow/SQL agent, provider/retrieval/reranking/context/grounding/conversation/access services, evaluation/metrics/tracing, React API/auth/Markdown/source rendering and workspace pages, test suites, environment examples, deployment manifests, Dockerfiles, ignore rules and Actions. [Source inventory](audit/source-inventory.json) records 101 source/test/configuration files at its capture point; later supplemental scripts and this report are additional files. Inventory inclusion indicates audit scope, not a claim of exhaustive line-by-line formal verification. Generated dependencies/model binaries were excluded from source review and handled by dependency analysis where supported. All functional fixtures are synthetic.
+Reviewed application entry points, every API router, auth/scope/body middleware, models/session/migrations/SQL-role setup, ingestion parser/service/worker, routing/workflow/SQL agent, provider/retrieval/reranking/context/grounding/conversation/access services, evaluation/metrics/tracing, React API/auth/Markdown/source rendering and workspace pages, test suites, environment examples, deployment manifests, Dockerfiles, ignore rules and Actions. [Source inventory](../audit/source-inventory.json) records 101 source/test/configuration files at its capture point; later supplemental scripts and this report are additional files. Inventory inclusion indicates audit scope, not a claim of exhaustive line-by-line formal verification. Generated dependencies/model binaries were excluded from source review and handled by dependency analysis where supported. All functional fixtures are synthetic.
 
 ## Authentication
 
@@ -59,7 +59,7 @@ All paths below are under `/api/v1`. A=ADMIN, M=MANAGER, E=EMPLOYEE. Ownership i
 | GET /health | Public | Liveness only |
 | GET /ready | Public | Database/migration readiness; no model guarantee |
 
-`/docs`, `/redoc` and `/openapi.json` are public framework documentation. No additional unprotected data administration endpoint was found. [OpenAPI snapshot](audit/openapi.json) describes request schemas and bearer dependencies. Response models and error responses are incomplete; `/chat` is not fully documented as an SSE event contract. Readiness discloses pgvector version/mode (low-risk fingerprinting); restrict docs/readiness at the edge if required.
+`/docs`, `/redoc` and `/openapi.json` are public framework documentation. No additional unprotected data administration endpoint was found. [OpenAPI snapshot](../audit/openapi.json) describes request schemas and bearer dependencies. Response models and error responses are incomplete; `/chat` is not fully documented as an SSE event contract. Readiness discloses pgvector version/mode (low-risk fingerprinting); restrict docs/readiness at the edge if required.
 
 ## Tenant Isolation
 
@@ -75,7 +75,7 @@ Git history scan: **NOT VERIFIED — this directory has no Git repository**. Ign
 
 ## Dependencies
 
-`npm audit` reports zero known vulnerabilities for the current lockfile. pip-audit baseline had **12 unique advisory IDs across pip, setuptools, pytest and diskcache** (the feed duplicated entries). Upgraded only affected tooling/build dependencies: pip 24.0→26.2.1, setuptools 65.5.0→83.0.0, pytest 8.4.2→9.1.1 with pytest-asyncio 1.4.0 compatibility. Full tests and `pip check` passed after upgrades. Exact advisory IDs, affected/fixed versions are in [scanner summary](audit/scanner-summary.json).
+`npm audit` reports zero known vulnerabilities for the current lockfile. pip-audit baseline had **12 unique advisory IDs across pip, setuptools, pytest and diskcache** (the feed duplicated entries). Upgraded only affected tooling/build dependencies: pip 24.0→26.2.1, setuptools 65.5.0→83.0.0, pytest 8.4.2→9.1.1 with pytest-asyncio 1.4.0 compatibility. Full tests and `pip check` passed after upgrades. Exact advisory IDs, affected/fixed versions are in [scanner summary](../audit/scanner-summary.json).
 
 Remaining: diskcache 5.6.3, **CVE-2025-69872 / PYSEC-2026-2447 / GHSA-w8v5-vhqr-4h9v**, no fixed version reported. Pickle deserialization can execute code when an attacker can modify its cache. It is an inherited llama-cpp-python dependency; this service now explicitly sets `cache=False`. No application route enables the disk-cache path. That reduces reachability but **does not remove the vulnerable package** or justify a clean dependency status.
 
@@ -99,7 +99,7 @@ PDF max 500 pages, extracted text max 2 million characters and max 5,000 chunks 
 
 Four deterministic analytics templates, SQL AST allowlist, bind parameters, LIMIT 100, three-second statement timeout, transaction read-only and a separate `sai_reader` role protect the SQL route. INSERT/UPDATE/DELETE/DROP/ALTER/TRUNCATE/CREATE/GRANT/REVOKE and injection-shaped queries are rejected by tests. Live tenant A/B analytics returned their distinct expected counts; employee SQL access was denied. The model cannot submit arbitrary SQL. `employee_analytics` uses a security-barrier view and caller-set tenant GUC, with base-table grants removed.
 
-This scoped reader is separate from the overprivileged main API account. The GUC is application controlled: anyone holding reader credentials can choose a tenant, so this is **not credential-level tenant isolation**. Supplemental database probes confirmed private-table SELECT and a harmless `DELETE ... WHERE false` were denied; results are in [supplemental evidence](audit/supplement.json). All 15 protected method/path combinations returned 401 without authentication; liveness and readiness returned 200.
+This scoped reader is separate from the overprivileged main API account. The GUC is application controlled: anyone holding reader credentials can choose a tenant, so this is **not credential-level tenant isolation**. Supplemental database probes confirmed private-table SELECT and a harmless `DELETE ... WHERE false` were denied; results are in [supplemental evidence](../audit/supplement.json). All 15 protected method/path combinations returned 401 without authentication; liveness and readiness returned 200.
 
 ## RAG Security
 
@@ -128,7 +128,7 @@ Every entry in `live-results.json.rag` stores actual candidate chunks/scores, co
 
 ## Prompt Injection
 
-Instructions distinguish documents/history from trusted directives; routing, SQL templates and access filters remain server controlled. Initial malicious document contained “Ignore previous instructions”, prompt/credential disclosure and permission-bypass instructions. Inspection showed the malicious paragraph was **not retrieved**, so its answer cannot establish resistance. `audit_injection.py` forces instructions into the same retrieved paragraph; [its actual result](audit/injection.json) is **FAIL for useful answering**: instructions reached context, the final answer abstained despite the office location being present, and no attack canary was disclosed. This is not evidence of successful credential exfiltration. Broader adaptive attacks, multilingual/encoded instructions, combined documents and tool-output attacks **REQUIRE MANUAL TESTING**. The ambiguous-case hallucination demonstrates the grounding judge's limits.
+Instructions distinguish documents/history from trusted directives; routing, SQL templates and access filters remain server controlled. Initial malicious document contained “Ignore previous instructions”, prompt/credential disclosure and permission-bypass instructions. Inspection showed the malicious paragraph was **not retrieved**, so its answer cannot establish resistance. `audit_injection.py` forces instructions into the same retrieved paragraph; [its actual result](../audit/injection.json) is **FAIL for useful answering**: instructions reached context, the final answer abstained despite the office location being present, and no attack canary was disclosed. This is not evidence of successful credential exfiltration. Broader adaptive attacks, multilingual/encoded instructions, combined documents and tool-output attacks **REQUIRE MANUAL TESTING**. The ambiguous-case hallucination demonstrates the grounding judge's limits.
 
 ## LLM Security
 

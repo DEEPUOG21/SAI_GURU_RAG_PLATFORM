@@ -1,8 +1,8 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import select
 
 from app.database.session import get_db
-from app.evaluation.service import run_evaluation
+from app.evaluation.service import load_dataset, run_evaluation
 from app.models.entities import Evaluation
 from app.schemas.responses import EvaluationResponse
 from app.security.auth import current_scope, rate_limit, require_role
@@ -14,8 +14,12 @@ router = APIRouter(prefix="/api/v1/evaluation", tags=["Evaluation"])
 @router.post("/run")
 async def run(scope=Depends(current_scope), db=Depends(get_db)):
     require_role(scope, 1)
+    try:
+        cases = load_dataset()
+    except (ValueError, OSError) as exc:
+        raise HTTPException(status_code=409, detail=str(exc)) from exc
     await rate_limit(db, "evaluation:" + scope.user_id, 1)
-    return await run_evaluation(scope)
+    return await run_evaluation(scope, cases)
 
 
 @router.get("/results", response_model=list[EvaluationResponse])

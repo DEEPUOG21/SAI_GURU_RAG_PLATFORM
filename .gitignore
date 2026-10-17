@@ -35,3 +35,11 @@ test-results/
 release/
 .local-*
 .tmp-*
+
+# Private workspace archives and account-specific evidence
+.local/
+docs/audit/supabase-*.json
+
+# User-supplied evaluation content
+data/evaluation.json
+.claude/

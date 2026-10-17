@@ -26,3 +26,5 @@
 release
 .tmp-*
 docs/audit
+
+.local

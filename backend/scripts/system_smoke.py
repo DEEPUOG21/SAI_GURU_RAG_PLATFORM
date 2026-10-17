@@ -112,7 +112,7 @@ async def main():
         evaluation = result.json()
         assert evaluation["status"] == "COMPLETED", evaluation
         print({"evaluation": evaluation["status"], "metrics": evaluation["results"]["aggregate"]}, flush=True)
-        Path("docs/local-verification.json").write_text(
+        Path("docs/audit/local-verification.json").write_text(
             json.dumps(
                 {
                     "database": "native PostgreSQL + pgvector",

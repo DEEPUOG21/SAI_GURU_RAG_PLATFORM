@@ -4,7 +4,7 @@
 
 React, TypeScript, Vite, Tailwind and Radix UI power the workspace. FastAPI coordinates document ingestion, PostgreSQL/pgvector hybrid retrieval, local ONNX embeddings, cross-encoder reranking, streamed LLM generation and grounding verification. There are no fabricated dashboard metrics or canned AI answers.
 
-> Release status: the application has local verification and security hardening, but container-image advisories and hosted end-to-end verification remain open. See [release readiness](docs/RELEASE-READINESS.md).
+> Release status: the application has local verification and security hardening, but container-image advisories and hosted end-to-end verification remain open. See [release readiness](docs/operations/RELEASE-READINESS.md).
 
 ## Start locally
 
@@ -15,7 +15,7 @@ python scripts/configure_local.py
 docker compose up --build
 ```
 
-The setup script creates an ignored `.env` with unique credentials. Compose starts PostgreSQL, applies migrations, creates restricted runtime and read-only SQL accounts, seeds eight synthetic documents and an admin, and serves the application. Process uploads from the UI, or enable the optional `worker` profile with `WORKER_TENANT_ID` set to the tenant UUID.
+The setup script creates an ignored `.env` with unique credentials. Compose starts PostgreSQL, applies migrations, creates restricted runtime and read-only SQL accounts, creates the initial admin account, and serves the application. Process uploads from the UI, or enable the optional `worker` profile with `WORKER_TENANT_ID` set to the tenant UUID.
 
 - Frontend: http://localhost:5173
 - API and OpenAPI: http://localhost:8000/docs
@@ -23,15 +23,15 @@ The setup script creates an ignored `.env` with unique credentials. Compose star
 - Database readiness: http://localhost:8000/api/v1/ready
 - Login email: `SEED_ADMIN_EMAIL` in `.env`; password: `SEED_ADMIN_PASSWORD` in `.env`.
 
-For real local AI generation, install Ollama and run `ollama pull qwen2.5:3b` on the host. Ensure Ollama accepts connections from Docker (see [local development](docs/LOCAL-DEVELOPMENT.md)). Alternatively, use the included CPU inference service. If you do not have an LLM, set `GENERATION_MODE=extractive` in `.env` and recreate the backend. This returns **actual quoted excerpts**, clearly labeled as extractive search, and does not pretend to generate AI answers.
+For real local AI generation, install Ollama and run `ollama pull qwen2.5:3b` on the host. Ensure Ollama accepts connections from Docker (see [local development](docs/guides/LOCAL-DEVELOPMENT.md)). Alternatively, use the included CPU inference service. If you do not have an LLM, set `GENERATION_MODE=extractive` in `.env` and recreate the backend. This returns **actual quoted excerpts**, clearly labeled as extractive search, and does not pretend to generate AI answers.
 
 ## Explore the product
 
-1. Open **Knowledge Library**. Wait for the seeded documents to finish, or upload your own supported files. Managers/admins can upload, process, retry and delete.
+1. Open **Knowledge Library**. Upload your own supported files. Managers/admins can upload, process, retry and delete.
 2. Ask **“What is our annual leave policy?”** in Knowledge Assistant. Watch the provisional draft stream; the final answer replaces it after verification.
 3. Open a source card to inspect the exact document text, section, available page number and chunk ID.
 4. Select **Inspect retrieval** to see routing, timings, retrieval scores, RRF, reranking, context and grounding.
-5. Run **Evaluations** to establish a measured baseline against three synthetic cases. Methodology is visible because some generation metrics are explicitly labeled proxies.
+5. Run **Evaluations** to establish a measured baseline against your configured labeled dataset. Methodology is visible because some generation metrics are explicitly labeled proxies.
 6. Return to **Overview** to see actual indexed-document and query activity.
 
 ## Repository
@@ -54,7 +54,7 @@ backend/app/
   services/               Generation, grounding, context, streaming and access
 backend/migrations/       Frozen Alembic migrations
 backend/tests/            Unit, API, security, integration and regression tests
-data/                     Eight synthetic policies and evaluation labels
+data/                     Dataset configuration guide; private datasets are ignored
 inference/                Optional authenticated CPU model service
 docs/                     Setup, design, deployment and verification records
 .github/workflows/        CI checks and opt-in deployment trigger
@@ -62,14 +62,16 @@ docs/                     Setup, design, deployment and verification records
 
 ## Documentation
 
-- [Current hardening results and release blockers](docs/HARDENING-RESULTS.md)
-- [Setup](docs/SETUP.md) — prerequisites and environment variables
-- [Local development](docs/LOCAL-DEVELOPMENT.md) — separate processes, migrations, seeds and tests
-- [Free deployment](docs/DEPLOYMENT.md) — GitHub → Supabase → model host → Render → Vercel
-- [Architecture](docs/ARCHITECTURE.md) and [RAG pipeline](docs/RAG-PIPELINE.md)
-- [Evaluation methodology](docs/EVALUATION.md)
-- [Troubleshooting](docs/TROUBLESHOOTING.md)
-- [Verification and limitations](docs/PROGRESS.md)
+Start with the [documentation index](docs/README.md). This repository root is the single project folder; local archives and raw reports are grouped under ignored `.local/`.
+
+- [Current hardening results and release blockers](docs/security/HARDENING-RESULTS.md)
+- [Setup](docs/guides/SETUP.md) — prerequisites and environment variables
+- [Local development](docs/guides/LOCAL-DEVELOPMENT.md) — separate processes, migrations, seeds and tests
+- [Free deployment](docs/guides/DEPLOYMENT.md) — GitHub → Supabase → model host → Render → Vercel
+- [Architecture](docs/architecture/ARCHITECTURE.md) and [RAG pipeline](docs/architecture/RAG-PIPELINE.md)
+- [Evaluation methodology](docs/architecture/EVALUATION.md)
+- [Troubleshooting](docs/guides/TROUBLESHOOTING.md)
+- [Verification and limitations](docs/operations/PROGRESS.md)
 
 ## Honest boundaries
 

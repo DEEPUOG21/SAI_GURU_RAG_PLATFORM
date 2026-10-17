@@ -35,5 +35,5 @@
     "Optional inference diskcache advisory remains; caching disabled",
     "Hosting project identifiers and authenticated access unavailable"
   ],
-  "details": "../HARDENING-RESULTS.md"
+  "details": "../security/HARDENING-RESULTS.md"
 }

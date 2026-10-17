@@ -1,5 +1,0 @@
-[
-  {"question":"How many paid annual leave days do full-time SaiTech employees receive?","expected_answer":"Full-time SaiTech employees receive 24 working days of paid annual leave per calendar year, accruing at two days per completed month.","expected_documents":["Leave-Policy.md"],"expected_citations":[{"document":"Leave-Policy.md","section":"Annual leave"}]},
-  {"question":"What is the deadline for submitting an expense claim?","expected_answer":"Submit expense claims through the Finance Portal within 30 calendar days of purchase with an itemized receipt, business purpose, and cost center.","expected_documents":["Expense-Policy.md"],"expected_citations":[{"document":"Expense-Policy.md","section":"Submitting claims"}]},
-  {"question":"How quickly must a SEV1 incident be acknowledged?","expected_answer":"The on-call engineer acknowledges SEV1 incidents within 15 minutes. The incident commander sends stakeholder updates every 30 minutes until mitigation.","expected_documents":["Incident-Response-Policy.md"],"expected_citations":[{"document":"Incident-Response-Policy.md","section":"Response targets"}]}
-]

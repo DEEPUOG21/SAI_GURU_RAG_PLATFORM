@@ -7,7 +7,7 @@ This repository contains the application source, migrations, tests, pinned depen
 - `backend/`: FastAPI application, database migrations, backend tests and operational scripts.
 - `frontend/`: React application, unit/browser tests and Vercel/Nginx configuration.
 - `inference/`: Optional authenticated CPU embedding, reranking and LLM service.
-- `data/`: Synthetic demonstration documents and evaluation dataset.
+- `data/`: Dataset configuration instructions.
 - `scripts/`: Local configuration and launch helpers.
 - `docs/`: Architecture, operating guides and historical audit evidence.
 - `.github/`: Validation, security workflows and dependency updates.
@@ -28,4 +28,4 @@ Run `python backend/scripts/provision_supabase.py` from the repository root. It 
 
 For deployed connections, use `ssl=verify-full` and provide the CA through `PGSSLROOTCERT` at a path available on the host. The local helper uses a local certificate path; deploy that certificate separately with your hosting configuration. Do not deploy the owner password to the API.
 
-Historical local validation is described in `HARDENING-RESULTS.md`. Run CI on the uploaded revision for current results.
+Historical local validation is described in [hardening results](../security/HARDENING-RESULTS.md). Run CI on the uploaded revision for current results.

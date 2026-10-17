@@ -1,5 +1,7 @@
 # Local development
 
+> Demo fixtures have been removed. Seeding now creates only the admin account. Upload your own documents and configure a private dataset as described in [data configuration](../../data/README.md). References to synthetic fixtures below describe the original validation setup.
+
 Run commands from the repository root unless a step explicitly says otherwise. Do not use a production database for tests.
 
 ## Compose
@@ -118,6 +120,6 @@ python backend/scripts/local_test_database.py
 
 Keep that terminal running; from another root terminal run `python backend/scripts/prepare_test_database.py`. Read the ignored `.local-test-url` into `DATABASE_URL`, migrate it, and run the integration test. This is native PostgreSQL bundled for testing, not a deployment dependency. Its local trust-auth configuration must never be exposed beyond loopback.
 
-After preparing that test database and starting the included inference service, `python backend/scripts/system_smoke.py` exercises actual HTTP model inference, SQL privilege denials, seeded ingestion, LLM streaming and the evaluation endpoint. It writes measured synthetic results to `docs/local-verification.json`. That command does not publish or send real company data.
+After preparing that test database and starting the included inference service, `python backend/scripts/system_smoke.py` exercises actual HTTP model inference, SQL privilege denials, seeded ingestion, LLM streaming and the evaluation endpoint. It writes measured synthetic results to `docs/audit/local-verification.json`. That command does not publish or send real company data.
 
 With the local preview API running, `python backend/scripts/conversation_smoke.py` checks real multi-turn general questions, pronoun resolution, cited policy follow-ups, a topic switch, labeled missing-evidence guidance, and reloaded message labels. It uses credentials from the ignored `.env` without printing them.
