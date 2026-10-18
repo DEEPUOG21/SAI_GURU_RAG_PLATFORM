@@ -1,4 +1,5 @@
 import json
+import math
 from abc import ABC, abstractmethod
 from collections.abc import AsyncIterator
 
@@ -99,7 +100,18 @@ class OpenCompatibleLLM(LLMProvider):
                         if choices and choices[0].get("finish_reason") not in (None, "stop"):
                             raise ValueError("LLM generation ended without a complete answer.")
                         delta = choices[0].get("delta", {}) if choices else {}
-                        yield {"text": delta.get("content") or "", "usage": event.get("usage")}
+                        content = delta.get("content")
+                        if content is None:
+                            content = ""
+                        # Workers AI may encode numeric token fragments as JSON numbers,
+                        # including zero. Preserve them rather than dropping falsey values.
+                        if cfg.llm_provider == "cloudflare" and type(content) in (int, float):
+                            if not math.isfinite(content):
+                                raise ValueError("Invalid numeric LLM fragment.")
+                            content = str(content)
+                        if not isinstance(content, str):
+                            raise ValueError("Malformed LLM content fragment.")
+                        yield {"text": content, "usage": event.get("usage")}
                     except (json.JSONDecodeError, TypeError, KeyError) as exc:
                         raise ValueError("Malformed LLM stream.") from exc
         if not completed:

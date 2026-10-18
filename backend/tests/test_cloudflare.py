@@ -141,3 +141,25 @@ async def test_cloudflare_rejects_invalid_or_truncated_json(monkeypatch, cloudfl
     }))
     with pytest.raises(ValueError):
         await OpenCompatibleLLM().complete([], json_mode={"type": "object"})
+
+
+async def test_cloudflare_numeric_stream_fragments_preserve_zero(monkeypatch, cloudflare):
+    from app.services.llm import OpenCompatibleLLM
+
+    monkeypatch.setattr(cloudflare, "llm_provider", "cloudflare")
+    frames = ["Code ", 7, 0, 1, " [Source ", 1, "]"]
+    body = "".join('data: ' + json.dumps({"choices": [{"delta": {"content": value}}]}) + '\n\n'
+                   for value in frames) + 'data: [DONE]\n\n'
+    mock_api(monkeypatch, lambda request: httpx.Response(200, text=body))
+    assert (await OpenCompatibleLLM().complete([]))[0] == "Code 701 [Source 1]"
+
+
+@pytest.mark.parametrize("fragment", [True, {}, []])
+async def test_structured_stream_content_is_not_answer_text(monkeypatch, cloudflare, fragment):
+    from app.services.llm import OpenCompatibleLLM
+
+    monkeypatch.setattr(cloudflare, "llm_provider", "cloudflare")
+    body = 'data: ' + json.dumps({"choices": [{"delta": {"content": fragment}}]}) + '\n\ndata: [DONE]\n\n'
+    mock_api(monkeypatch, lambda request: httpx.Response(200, text=body))
+    with pytest.raises(ValueError):
+        await OpenCompatibleLLM().complete([])

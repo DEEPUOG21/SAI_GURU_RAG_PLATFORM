@@ -1,4 +1,4 @@
-# Free hosted inference with Cloudflare Workers AI
+﻿# Free hosted inference with Cloudflare Workers AI
 
 This configuration uses one Cloudflare account for chat, embeddings and reranking. It needs no inference container or additional Python dependencies. Keep the account on **Workers Free**. Cloudflare documents 10,000 Neurons per day; requests fail when the free quota is exhausted. Paid accounts can incur overage charges, so verify the plan before configuring production. Availability and quotas can change.
 
@@ -25,7 +25,7 @@ RERANKER_MODEL=@cf/baai/bge-reranker-base
 INFERENCE_API_KEY=YOUR_PRIVATE_WORKERS_AI_TOKEN
 LLM_URL=https://api.cloudflare.com/client/v4/accounts/ACCOUNT_ID/ai/v1
 LLM_PROVIDER=cloudflare
-LLM_MODEL=@cf/meta/llama-3.1-8b-instruct-fp8-fast
+LLM_MODEL=@cf/meta/llama-3.3-70b-instruct-fp8-fast
 LLM_API_KEY=YOUR_PRIVATE_WORKERS_AI_TOKEN
 GENERATION_MODE=llm
 GENERAL_FALLBACK_ENABLED=true
@@ -47,3 +47,4 @@ Deploy the backend version containing `RERANKER_PROVIDER=cloudflare` support bef
 Reindex documents when changing embedding providers, even when their model names and dimensions match: preprocessing may differ. The currently deployed database had zero indexed documents during the last verification. Do not automatically delete or reindex unrelated user data.
 
 The app can make multiple model requests per chat for rewriting, answering and grounding; the daily quota is shared across those calls and ingestion. This is a limited free deployment, not unlimited production capacity. Provider failures remain explicit; the application must not claim successful answers when quota is exhausted.
+
