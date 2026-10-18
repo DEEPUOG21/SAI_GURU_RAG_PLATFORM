@@ -9,9 +9,9 @@ from app.core.config import get_settings
 
 class LLMProvider(ABC):
     @abstractmethod
-    def stream(self, messages: list[dict], *, json_mode: bool = False) -> AsyncIterator[dict]: ...
+    def stream(self, messages: list[dict], *, json_mode: bool | dict = False) -> AsyncIterator[dict]: ...
 
-    async def complete(self, messages: list[dict], *, json_mode: bool = False):
+    async def complete(self, messages: list[dict], *, json_mode: bool | dict = False):
         parts, usage = [], None
         async for event in self.stream(messages, json_mode=json_mode):
             if event.get("text"):
@@ -57,6 +57,27 @@ class OpenCompatibleLLM(LLMProvider):
         }
         if json_mode:
             payload["response_format"] = {"type": "json_object"}
+        if json_mode and cfg.llm_provider == "cloudflare":
+            # Workers AI requires an explicit schema and non-streaming JSON mode.
+            if not isinstance(json_mode, dict):
+                raise ValueError("Cloudflare JSON mode requires a schema.")
+            payload["stream"] = False
+            payload.pop("stream_options")
+            payload["response_format"] = {"type": "json_schema", "json_schema": json_mode}
+            async with httpx.AsyncClient(timeout=httpx.Timeout(60, connect=10)) as client:
+                response = await client.post(
+                    cfg.llm_url.rstrip("/") + "/chat/completions", json=payload, headers=headers
+                )
+                response.raise_for_status()
+            event = response.json()
+            choice = event["choices"][0]
+            if choice.get("finish_reason") != "stop":
+                raise ValueError("LLM generation ended without a complete answer.")
+            content = choice["message"]["content"]
+            if not isinstance(content, str) or not isinstance(json.loads(content), dict):
+                raise ValueError("Malformed LLM JSON response.")
+            yield {"text": content, "usage": event.get("usage")}
+            return
         completed = False
         async with httpx.AsyncClient(timeout=httpx.Timeout(60, connect=10)) as client:
             async with client.stream(

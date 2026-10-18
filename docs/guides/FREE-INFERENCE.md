@@ -24,6 +24,7 @@ RERANKER_URL=https://api.cloudflare.com/client/v4/accounts/ACCOUNT_ID/ai/run/@cf
 RERANKER_MODEL=@cf/baai/bge-reranker-base
 INFERENCE_API_KEY=YOUR_PRIVATE_WORKERS_AI_TOKEN
 LLM_URL=https://api.cloudflare.com/client/v4/accounts/ACCOUNT_ID/ai/v1
+LLM_PROVIDER=cloudflare
 LLM_MODEL=@cf/meta/llama-3.1-8b-instruct-fp8-fast
 LLM_API_KEY=YOUR_PRIVATE_WORKERS_AI_TOKEN
 GENERATION_MODE=llm

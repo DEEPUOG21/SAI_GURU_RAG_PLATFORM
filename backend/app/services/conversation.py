@@ -79,7 +79,12 @@ async def resolve_question(provider, question: str, history: list[dict]):
                 + question,
             },
         ],
-        json_mode=True,
+        json_mode={
+            "type": "object",
+            "properties": {"question": {"type": "string"}},
+            "required": ["question"],
+            "additionalProperties": False,
+        },
     )
     parsed = json.loads(response)
     standalone = parsed.get("question")

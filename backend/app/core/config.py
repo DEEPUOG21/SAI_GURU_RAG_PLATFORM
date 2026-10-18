@@ -21,6 +21,7 @@ class Settings(BaseSettings):
     reranker_url: str = ""
     reranker_model: str = "Xenova/ms-marco-MiniLM-L-6-v2"
     llm_url: str = "http://localhost:11434/v1"
+    llm_provider: Literal["openai", "cloudflare"] = "openai"
     llm_model: str = "qwen2.5:3b"
     llm_api_key: str = ""
     llm_input_cost_per_million: float = 0

@@ -107,3 +107,37 @@ def test_cloudflare_requires_key(cloudflare, monkeypatch):
     monkeypatch.setattr(cloudflare, "inference_api_key", "")
     with pytest.raises(ValueError):
         reranker()
+
+
+async def test_cloudflare_json_uses_schema_without_stream_options(monkeypatch, cloudflare):
+    from app.services.llm import OpenCompatibleLLM
+
+    monkeypatch.setattr(cloudflare, "llm_provider", "cloudflare")
+    schema = {"type": "object", "properties": {"ok": {"type": "boolean"}}, "required": ["ok"]}
+
+    def handler(request):
+        payload = json.loads(request.content)
+        assert payload["stream"] is False
+        assert "stream_options" not in payload
+        assert payload["response_format"] == {"type": "json_schema", "json_schema": schema}
+        return httpx.Response(200, json={
+            "choices": [{"message": {"content": '{"ok":true}'}, "finish_reason": "stop"}],
+            "usage": {"total_tokens": 10},
+        })
+
+    mock_api(monkeypatch, handler)
+    answer, usage = await OpenCompatibleLLM().complete([], json_mode=schema)
+    assert json.loads(answer) == {"ok": True}
+    assert usage == {"total_tokens": 10}
+
+
+@pytest.mark.parametrize("content,finish", [('{"ok":', 'stop'), ('[]', 'stop'), ('{}', 'length')])
+async def test_cloudflare_rejects_invalid_or_truncated_json(monkeypatch, cloudflare, content, finish):
+    from app.services.llm import OpenCompatibleLLM
+
+    monkeypatch.setattr(cloudflare, "llm_provider", "cloudflare")
+    mock_api(monkeypatch, lambda request: httpx.Response(200, json={
+        "choices": [{"message": {"content": content}, "finish_reason": finish}]
+    }))
+    with pytest.raises(ValueError):
+        await OpenCompatibleLLM().complete([], json_mode={"type": "object"})

@@ -77,7 +77,12 @@ async def check_grounding(provider, question, answer, context):
                 "content": json.dumps({"answer": answer, "evidence": evidence_text(cited)}),
             },
         ],
-        json_mode=True,
+        json_mode={
+            "type": "object",
+            "properties": {"supported": {"type": "boolean"}, "reason": {"type": "string"}},
+            "required": ["supported", "reason"],
+            "additionalProperties": False,
+        },
     )
     try:
         verdict = json.loads(response)
