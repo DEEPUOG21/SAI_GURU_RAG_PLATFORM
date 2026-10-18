@@ -1,5 +1,7 @@
 # Free deployment: GitHub, Supabase, Render and Vercel
 
+> Hosting update (2026-10-18): for the current free hosted inference path, use [Cloudflare Workers AI](FREE-INFERENCE.md). The Hugging Face Docker Space instructions below describe an alternative that now requires an eligible paid account plan to create, even though CPU Basic hardware has no hourly charge. Do not assume the older zero-cost Space instructions apply to a new free account. See [current Spaces requirements](https://huggingface.co/docs/hub/spaces-overview).
+
 > Demo fixtures have been removed. Seeding now creates only the admin account. Upload your own documents and configure a private dataset as described in [data configuration](../../data/README.md). References to synthetic fixtures below describe the original validation setup.
 
 This guide deploys a **personal portfolio demo** with no mandatory paid service. It uses Vercel Hobby for React, Render Free for FastAPI, Supabase Free for PostgreSQL/pgvector, and an optional free Hugging Face CPU Space for inference. The extra model host is necessary for a realistic free CPU design: do not expect a 512 MB API container to run embeddings, a reranker and a generative model together.

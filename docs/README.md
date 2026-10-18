@@ -1,5 +1,7 @@
 # Documentation
 
+For the current free hosted model setup, see [Cloudflare inference configuration](guides/FREE-INFERENCE.md).
+
 | Folder | Contents |
 | --- | --- |
 | [guides](guides/SETUP.md) | Setup, local development, deployment and troubleshooting |

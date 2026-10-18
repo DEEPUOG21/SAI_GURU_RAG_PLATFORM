@@ -17,7 +17,7 @@ class Settings(BaseSettings):
     embedding_url: str = ""
     embedding_model: str = "BAAI/bge-small-en-v1.5"
     embedding_dimensions: int = 384
-    reranker_provider: Literal["local", "http"] = "local"
+    reranker_provider: Literal["local", "http", "cloudflare"] = "local"
     reranker_url: str = ""
     reranker_model: str = "Xenova/ms-marco-MiniLM-L-6-v2"
     llm_url: str = "http://localhost:11434/v1"
