@@ -24,8 +24,6 @@ test-results/
 *.tsbuildinfo
 *.pem
 *.key
-.tokensave/
-.claude/*.local.json
 .audit-tools/
 .audit-*.json
 .bandit-*.json
@@ -42,4 +40,8 @@ docs/audit/supabase-*.json
 
 # User-supplied evaluation content
 data/evaluation.json
+# Explicitly unwanted assistant integrations, at any directory depth.
 .claude/
+.tokensave/
+tokensave-docs/
+CLAUDE.md

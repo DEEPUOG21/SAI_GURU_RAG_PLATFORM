@@ -58,15 +58,15 @@ Default browser tests mock API data and skip the live test; the explicit second 
 
 ## Security checks
 
-Gitleaks 8.30.1 and Trivy 0.74.0 Windows binaries were downloaded from their official GitHub releases and checked against release SHA-256 files, into ignored `.audit-tools`. Python tooling: pip-audit 2.10.1, Bandit 1.9.4, pytest-cov 7.1.0.
+Gitleaks 8.30.1 and Trivy 0.74.0 Windows binaries were downloaded from their official GitHub releases and checked against release SHA-256 files, into ignored `.local/tools/security`. Python tooling: pip-audit 2.10.1, Bandit 1.9.4, pytest-cov 7.1.0.
 
 ```powershell
-.audit-tools/gitleaks.exe dir . --config .gitleaks.toml --redact --report-format json --report-path .audit-gitleaks-final.json
+.local/tools/security/gitleaks.exe dir . --config .gitleaks.toml --redact --report-format json --report-path .audit-gitleaks-final.json
 .venv/Scripts/pip-audit.exe --format json --output .pip-audit-final.json
 .venv/Scripts/bandit.exe -r backend/app inference -f json -o .bandit-final.json
 .venv/Scripts/pip.exe check
 npm audit --prefix frontend --json
-.audit-tools/trivy.exe fs --cache-dir .audit-tools/trivy-cache --scanners vuln,misconfig --skip-dirs .venv --skip-dirs .model-cache --skip-dirs .local-postgres --skip-dirs .audit-tools --skip-dirs frontend/node_modules --format json --output .audit-trivy-final.json .
+.local/tools/security/trivy.exe fs --cache-dir .local/tools/security/trivy-cache --scanners vuln,misconfig --skip-dirs .venv --skip-dirs .model-cache --skip-dirs .local-postgres --skip-dirs .local --skip-dirs frontend/node_modules --format json --output .audit-trivy-final.json .
 ```
 
 Expected nonzero results must be reviewed: Gitleaks sees three ignored local `.env` credentials; pip-audit sees diskcache; Bandit reports container bindings and a token-type false positive. Do not blanket-ignore new results. Once this directory is a Git repository, also run `gitleaks git . --redact` to scan history. Never publish unredacted reports or `.env`. Rotate any credential discovered in published history, then coordinate history cleanup; deletion alone is insufficient.

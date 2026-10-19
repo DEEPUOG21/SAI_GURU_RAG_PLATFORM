@@ -64,6 +64,8 @@ docs/                     Setup, design, deployment and verification records
 
 Start with the [documentation index](docs/README.md). This repository root is the single project folder; local archives and raw reports are grouped under ignored `.local/`.
 
+Workspace rules live in [AGENTS.md](AGENTS.md). Editor configuration disables unwanted assistant integrations, and `python scripts/check_repository.py` checks repository hygiene locally and in CI. Downloaded audit tools belong under `.local/tools/`; generated caches and build output are not source files.
+
 - [Current hardening results and release blockers](docs/security/HARDENING-RESULTS.md)
 - [Setup](docs/guides/SETUP.md) — prerequisites and environment variables
 - [Local development](docs/guides/LOCAL-DEVELOPMENT.md) — separate processes, migrations, seeds and tests

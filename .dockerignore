@@ -7,6 +7,12 @@
 **/*.key
 .tokensave
 .claude
+**/.claude
+**/.tokensave
+**/tokensave-docs
+**/CLAUDE.md
+.vscode
+AGENTS.md
 .audit-tools
 .audit-*.json
 .bandit-*.json

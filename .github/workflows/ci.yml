@@ -55,6 +55,7 @@ jobs:
           cache: pip
           cache-dependency-path: backend/requirements.lock
       - run: pip install -r backend/requirements.lock && pip install -e './backend[dev,local]'
+      - run: python scripts/check_repository.py
       - run: ruff check backend
       - run: alembic -c backend/alembic.ini upgrade head
       - run: python -m app.database.setup_runtime
