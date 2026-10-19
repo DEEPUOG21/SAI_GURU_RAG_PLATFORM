@@ -28,12 +28,14 @@ def classify(query: str) -> str:
             r"\b(saitech|our|we|company|organization|workplace|internal|uploaded|knowledge base|"
             r"employees?|contractors?|annual leave|sick leave|paid leave|vacation|pto|"
             r"expenses?|reimbursement|remote work|work from home|sev[1-4]|incident response|"
-            r"onboarding|offboarding|payroll|salary|salaries|benefits)\b",
+            r"onboarding|offboarding|payroll|salary|salaries|benefits|"
+            r"reviewers?|approvals?|pull requests?|code review|"
+            r"workspace|data exports?|download links?|retention)\b",
             text,
         )
     )
-    # General questions are open-ended, not a fixed list of example prompts.
-    # A failed document search must never silently fall back to ungrounded generation.
+    # Operational questions may omit "our" or "policy". Search evidence before
+    # answering them; an unsuccessful search uses the explicitly labeled fallback.
     return "DOCUMENT" if documents or company_context else "DIRECT"
 
 

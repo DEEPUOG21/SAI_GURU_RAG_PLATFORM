@@ -31,6 +31,11 @@ from app.services.grounding import check_grounding, citations_valid
         ("Summarize the uploaded file", "DOCUMENT"),
         ("How do I claim expenses?", "DOCUMENT"),
         ("What is the SEV1 acknowledgement target?", "DOCUMENT"),
+        ("Which reviewer is required for changes to authentication code?", "DOCUMENT"),
+        ("How long do Atlas data export download links remain valid?", "DOCUMENT"),
+        ("Who approves a production pull request?", "DOCUMENT"),
+        ("Can a workspace viewer change tasks?", "DOCUMENT"),
+        ("What is authentication?", "DIRECT"),
     ],
 )
 def test_routes(query, route):

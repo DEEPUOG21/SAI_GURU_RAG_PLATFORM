@@ -85,10 +85,12 @@ async def run_sql(question, scope):
             if not {"department", "joined_at"} <= set(columns):
                 raise ValueError("Read-only analytics view is missing. Run SQL role setup.")
             sql = validate_sql(generate_sql(question))
-            rows = (await connection.execute(text(sql))).mappings().fetchmany(100)
+            result = await connection.execute(text(sql))
+            result_columns = list(result.keys())
+            rows = result.mappings().fetchmany(100)
             return {
                 "sql": sql,
-                "columns": list(columns),
+                "columns": result_columns,
                 "rows": [
                     {
                         key: value.isoformat() if hasattr(value, "isoformat") else value
