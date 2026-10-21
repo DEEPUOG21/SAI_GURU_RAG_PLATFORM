@@ -12,6 +12,8 @@ from app.evaluation.metrics import citation_correctness, retrieval_metrics, toke
 from app.models.entities import Evaluation
 
 DATASET = Path(__file__).resolve().parents[3] / "data" / "evaluation.json"
+if not DATASET.is_file():
+    DATASET = DATASET.parent / "demo" / "evaluation.json"
 
 
 def load_dataset():

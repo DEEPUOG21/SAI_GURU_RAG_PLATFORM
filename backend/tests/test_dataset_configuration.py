@@ -41,3 +41,20 @@ def test_custom_dataset_loads(tmp_path, monkeypatch):
     path.write_text(json.dumps(cases))
     monkeypatch.setattr(service, "DATASET", path)
     assert service.load_dataset() == cases
+
+def test_bundled_demo_labels_match_source_sections(monkeypatch):
+    from pathlib import Path
+
+    from app.evaluation import service
+
+    demo = Path(__file__).resolve().parents[2] / "data" / "demo"
+    monkeypatch.setattr(service, "DATASET", demo / "evaluation.json")
+    cases = service.load_dataset()
+    assert len(cases) == 8
+    assert {name for case in cases for name in case["expected_documents"]} == {
+        path.name for path in demo.glob("*.md")
+    }
+    for case in cases:
+        for citation in case["expected_citations"]:
+            content = (demo / citation["document"]).read_text(encoding="utf-8")
+            assert "## " + citation["section"] in content.splitlines()
