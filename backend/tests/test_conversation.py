@@ -70,6 +70,7 @@ async def test_resolver_cannot_downgrade_explicit_company_request():
     "question,rewritten,expected",
     [
         ("Who leads it?", "Who leads Project Atlas?", "DOCUMENT"),
+        ("What must the author describe?", "What must the code change author describe?", "DOCUMENT"),
         ("What is Python?", "What is Python?", "DIRECT"),
     ],
 )

@@ -42,7 +42,7 @@ def classify(query: str) -> str:
 def is_followup(query: str) -> bool:
     text = query.lower().strip()
     return bool(
-        re.search(r"\b(it|that|this policy|they|those|he|she|his|her)\b", text)
+        re.search(r"\b(it|that|this policy|they|those|he|she|his|her|the author|the reviewer)\b", text)
         or re.match(r"(?:what about|how about|and\b|also\b)", text)
         or re.fullmatch(
             r"(?:tell me more|explain (?:more|further)|go on|continue|why|give (?:me )?an example|make (?:it )?(?:shorter|simpler))[.!?]*",

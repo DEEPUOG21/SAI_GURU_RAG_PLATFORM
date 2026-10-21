@@ -47,6 +47,10 @@ def test_rewrite_followup():
 
 
 def test_followup_routes_with_previous_topic():
+    assert classify(rewrite(
+        "What must the author describe?",
+        [{"role": "user", "content": "Which reviewer is required for changes to authentication code?"}],
+    )) == "DOCUMENT"
     assert (
         classify(rewrite("Tell me more", [{"role": "user", "content": "Explain our leave policy"}]))
         == "DOCUMENT"
