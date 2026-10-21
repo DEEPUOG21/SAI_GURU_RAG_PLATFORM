@@ -1,6 +1,7 @@
 import asyncio
 import hashlib
 import json
+import os
 from pathlib import Path
 
 from sqlalchemy import select
@@ -11,7 +12,7 @@ from app.database.session import Session
 from app.evaluation.metrics import citation_correctness, retrieval_metrics, token_f1
 from app.models.entities import Evaluation
 
-DATASET = Path(__file__).resolve().parents[3] / "data" / "evaluation.json"
+DATASET = Path(os.environ.get("SAI_DATA_DIR", Path(__file__).resolve().parents[3] / "data")) / "evaluation.json"
 if not DATASET.is_file():
     DATASET = DATASET.parent / "demo" / "evaluation.json"
 

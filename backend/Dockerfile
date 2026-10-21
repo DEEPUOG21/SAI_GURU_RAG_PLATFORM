@@ -1,6 +1,7 @@
 FROM python:3.11-slim@sha256:da047cb8f9d1d98e5c070f5300ba9f7274e33b8fc0e5be5ed88740aed1b95ba9
 ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 FASTEMBED_CACHE_PATH=/tmp/fastembed HF_HOME=/tmp/huggingface
 WORKDIR /app
+ENV SAI_DATA_DIR=/app/data
 COPY backend /app/backend
 COPY data /app/data
 RUN pip install --no-cache-dir pip==26.2.1 setuptools==83.0.0 wheel==0.46.2 && pip install --no-cache-dir --require-hashes -r backend/requirements-runtime.lock && pip install --no-cache-dir --no-deps --no-build-isolation './backend[local]' && useradd --create-home --uid 10001 sai

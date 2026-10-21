@@ -58,3 +58,21 @@ def test_bundled_demo_labels_match_source_sections(monkeypatch):
         for citation in case["expected_citations"]:
             content = (demo / citation["document"]).read_text(encoding="utf-8")
             assert "## " + citation["section"] in content.splitlines()
+
+
+def test_container_data_directory_and_private_override(monkeypatch, tmp_path):
+    import importlib
+
+    demo = tmp_path / "demo"
+    demo.mkdir()
+    (demo / "evaluation.json").write_text("[]")
+    try:
+        with monkeypatch.context() as patch:
+            patch.setenv("SAI_DATA_DIR", str(tmp_path))
+            importlib.reload(service)
+            assert service.DATASET == demo / "evaluation.json"
+            (tmp_path / "evaluation.json").write_text("[]")
+            importlib.reload(service)
+            assert service.DATASET == tmp_path / "evaluation.json"
+    finally:
+        importlib.reload(service)
