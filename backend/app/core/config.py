@@ -29,6 +29,12 @@ class Settings(BaseSettings):
     generation_mode: Literal["llm", "extractive"] = "llm"
     grounding_action: Literal["refuse", "regenerate"] = "regenerate"
     general_fallback_enabled: bool = True
+    langsmith_tracing: bool = False
+    langsmith_api_key: str = Field(default="", repr=False)
+    langsmith_project: str = "sai-guru"
+    langsmith_endpoint: str = "https://api.smith.langchain.com"
+    langsmith_hide_inputs: bool = True
+    langsmith_hide_outputs: bool = True
     max_upload_mb: int = Field(default=10, ge=1, le=20)
     query_timeout_seconds: int = Field(default=120, ge=10, le=600)
     rate_limit_per_minute: int = Field(default=30, ge=1, le=300)

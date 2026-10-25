@@ -1,6 +1,7 @@
 # Documentation
 
 For the current free hosted model setup, see [Cloudflare inference configuration](guides/FREE-INFERENCE.md).
+For workflow orchestration and optional hosted experiment comparison, see [LangGraph and LangSmith](guides/LANGGRAPH-LANGSMITH.md).
 
 | Folder | Contents |
 | --- | --- |
@@ -12,4 +13,4 @@ For the current free hosted model setup, see [Cloudflare inference configuration
 
 The single project checkout is the repository root. Private workspace archives and raw scans live in ignored `.local/`. Runtime dependencies, databases, model caches and credentials are ignored and remain at their configured paths.
 
-Demo documents and synthetic employee seeding have been removed. Existing databases are not erased by this source cleanup. Historical audit reports describe the fixtures present when those checks ran. New installations create an admin account, then accept your own uploads. See [evaluation configuration](../data/README.md) before running benchmarks.
+User-approved synthetic knowledge documents and the eight-question benchmark are in `data/demo/`. Recorded before/after results are in [evaluation evidence](evaluation-evidence/README.md). See [evaluation configuration](../data/README.md) before running benchmarks.

@@ -1,0 +1,147 @@
+{
+  "run_id": "5d8a2e72-9262-4c9c-abc1-f62183cb6053",
+  "created_at": "2026-10-23T17:25:38.847490+00:00",
+  "status": "COMPLETED",
+  "original_artifact_sha256": "39e2ea4fe3009c24e6b0c4f6d06414c71b6adb24d113ac307b0cdd9174aaba46",
+  "aggregate": {
+    "recall_at_k": 1.0,
+    "precision_at_k": 0.16666666666666666,
+    "mrr": 1.0,
+    "ndcg": 1.0,
+    "faithfulness": 1.0,
+    "answer_relevance": 0.713548332333911,
+    "context_relevance": 0.47916666666666663,
+    "citation_correctness": 0.9375,
+    "latency_ms": 3599.748106440529
+  },
+  "cases": [
+    {
+      "question": "How many annual leave days do full-time SaiTech employees receive?",
+      "expected_answer": "Full-time employees receive 24 working days of paid annual leave per calendar year.",
+      "answer": "Full-time SaiTech employees receive 24 working days of paid annual leave per calendar year [Source 1].",
+      "metrics": {
+        "recall_at_k": 1.0,
+        "precision_at_k": 0.16666666666666666,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevance": 0.9032258064516129,
+        "context_relevance": 0.5,
+        "citation_correctness": 1.0,
+        "latency_ms": 4775.665620341897
+      }
+    },
+    {
+      "question": "How many remote work days are permitted per week?",
+      "expected_answer": "Employees may work remotely up to three days per week with manager approval.",
+      "answer": "Employees may work remotely up to three days per week with manager approval [Source 1].",
+      "metrics": {
+        "recall_at_k": 1.0,
+        "precision_at_k": 0.16666666666666666,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevance": 0.9285714285714286,
+        "context_relevance": 0.3333333333333333,
+        "citation_correctness": 1.0,
+        "latency_ms": 3452.537324745208
+      }
+    },
+    {
+      "question": "What is the monthly home internet reimbursement limit in the Expense Policy?",
+      "expected_answer": "Eligible remote employees may claim up to INR 1,500 per month for home internet.",
+      "answer": "The monthly home internet reimbursement limit is INR 1,500 [Source 1]. This limit is also mentioned in the Remote-Work-Policy.md as INR 1,500 per month for home internet with a valid bill under the Expense Policy [Source 3].",
+      "metrics": {
+        "recall_at_k": 1.0,
+        "precision_at_k": 0.16666666666666666,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevance": 0.4,
+        "context_relevance": 0.8333333333333334,
+        "citation_correctness": 0.5,
+        "latency_ms": 3507.7003589831293
+      }
+    },
+    {
+      "question": "What are our standard weekly working hours?",
+      "expected_answer": "The standard work week is Monday to Friday, 40 hours in total.",
+      "answer": "The standard work week is 40 hours in total, from Monday to Friday [Source 1].",
+      "metrics": {
+        "recall_at_k": 1.0,
+        "precision_at_k": 0.16666666666666666,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevance": 0.8888888888888888,
+        "context_relevance": 0.16666666666666666,
+        "citation_correctness": 1.0,
+        "latency_ms": 2887.988859321922
+      }
+    },
+    {
+      "question": "Which reviewer is required for changes to authentication code?",
+      "expected_answer": "Changes to authentication code require a Security reviewer.",
+      "answer": "A Security reviewer is required for changes to authentication code [Source 1].",
+      "metrics": {
+        "recall_at_k": 1.0,
+        "precision_at_k": 0.16666666666666666,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevance": 0.7,
+        "context_relevance": 0.3333333333333333,
+        "citation_correctness": 1.0,
+        "latency_ms": 2403.8742068223655
+      }
+    },
+    {
+      "question": "What is the SEV1 acknowledgement target?",
+      "expected_answer": "The on-call engineer acknowledges SEV1 incidents within 15 minutes.",
+      "answer": "The on-call engineer acknowledges SEV1 incidents within 15 minutes [Source 2].",
+      "metrics": {
+        "recall_at_k": 1.0,
+        "precision_at_k": 0.16666666666666666,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevance": 0.9090909090909091,
+        "context_relevance": 0.5,
+        "citation_correctness": 1.0,
+        "latency_ms": 2817.8779669106007
+      }
+    },
+    {
+      "question": "How long do Atlas data export download links remain valid?",
+      "expected_answer": "Download links expire after 24 hours.",
+      "answer": "Atlas data export download links expire after 24 hours [Source 1].",
+      "metrics": {
+        "recall_at_k": 1.0,
+        "precision_at_k": 0.16666666666666666,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevance": 0.7058823529411765,
+        "context_relevance": 0.6666666666666666,
+        "citation_correctness": 1.0,
+        "latency_ms": 5051.33185070008
+      }
+    },
+    {
+      "question": "What is the minimum password length in the SaiTech security policy?",
+      "expected_answer": "Use a unique password of at least 14 characters.",
+      "answer": "The minimum password length in the SaiTech security policy is 14 characters [Source 1].",
+      "metrics": {
+        "recall_at_k": 1.0,
+        "precision_at_k": 0.16666666666666666,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevance": 0.2727272727272727,
+        "context_relevance": 0.5,
+        "citation_correctness": 1.0,
+        "latency_ms": 3901.008663699031
+      }
+    }
+  ]
+}

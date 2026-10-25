@@ -14,6 +14,8 @@ pypdf==6.18.1
 python-docx==1.2.0
 beautifulsoup4==4.15.0
 sqlglot==29.0.1
+langgraph==1.2.16
+langsmith==0.14.12
 fastembed==0.8.0
 pytest==9.1.1
 pytest-asyncio==1.4.0

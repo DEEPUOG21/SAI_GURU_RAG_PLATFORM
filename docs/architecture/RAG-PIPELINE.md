@@ -11,7 +11,7 @@
 
 ## Query workflow
 
-The explicit state machine is in `backend/app/agents/workflow.py`, with reusable node tracing in `observability/trace.py`.
+The LangGraph `StateGraph` is in `backend/app/agents/workflow.py`, with reusable operation tracing in `observability/trace.py`. Conditional edges select SQL, retrieval, direct answering and general guidance. See [LangGraph and LangSmith](../guides/LANGGRAPH-LANGSMITH.md) for the graph and optional hosted traces. The table below describes operation substeps, not a claim that each is a separate graph node.
 
 | Node | Actual behavior |
 |---|---|

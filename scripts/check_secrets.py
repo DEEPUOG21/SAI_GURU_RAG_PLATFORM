@@ -4,7 +4,7 @@ from pathlib import Path
 
 from dotenv import dotenv_values
 
-secret_names = {"POSTGRES_PASSWORD", "SQL_READER_PASSWORD", "JWT_SECRET", "SEED_ADMIN_PASSWORD", "LLM_API_KEY", "INFERENCE_API_KEY"}
+secret_names = {"POSTGRES_PASSWORD", "SQL_READER_PASSWORD", "JWT_SECRET", "SEED_ADMIN_PASSWORD", "LLM_API_KEY", "INFERENCE_API_KEY", "LANGSMITH_API_KEY"}
 values = [value for name, value in dotenv_values(".env").items() if name in secret_names and value and len(value) >= 12]
 local_key = Path(".local-inference-key")
 if local_key.exists():

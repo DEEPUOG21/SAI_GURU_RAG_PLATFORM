@@ -2,7 +2,7 @@
 
 **AI Knowledge Intelligence Platform** — a full-stack, evidence-first knowledge assistant for the fictional company SaiTech.
 
-React, TypeScript, Vite, Tailwind and Radix UI power the workspace. FastAPI coordinates document ingestion, PostgreSQL/pgvector hybrid retrieval, local ONNX embeddings, cross-encoder reranking, streamed LLM generation and grounding verification. There are no fabricated dashboard metrics or canned AI answers.
+React, TypeScript, Vite, Tailwind and Radix UI power the workspace. FastAPI and LangGraph coordinate document ingestion, PostgreSQL/pgvector hybrid retrieval, local ONNX embeddings, cross-encoder reranking, streamed LLM generation and grounding verification. Optional LangSmith integration adds hosted traces and recorded evaluation imports. There are no fabricated dashboard metrics or canned AI answers.
 
 > Release status: the application has local verification and security hardening, but container-image advisories and hosted end-to-end verification remain open. See [release readiness](docs/operations/RELEASE-READINESS.md).
 
@@ -72,6 +72,7 @@ Workspace rules live in [AGENTS.md](AGENTS.md). Editor configuration disables un
 - [Free deployment](docs/guides/DEPLOYMENT.md) — GitHub → Supabase → model host → Render → Vercel
 - [Architecture](docs/architecture/ARCHITECTURE.md) and [RAG pipeline](docs/architecture/RAG-PIPELINE.md)
 - [Evaluation methodology](docs/architecture/EVALUATION.md)
+- [LangGraph and LangSmith setup](docs/guides/LANGGRAPH-LANGSMITH.md) — graph routing, optional traces, and before/after experiment imports
 - [Troubleshooting](docs/guides/TROUBLESHOOTING.md)
 - [Verification and limitations](docs/operations/PROGRESS.md)
 

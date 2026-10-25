@@ -4,6 +4,7 @@ from abc import ABC, abstractmethod
 from collections.abc import AsyncIterator
 
 import httpx
+from langsmith import traceable
 
 from app.core.config import get_settings
 
@@ -22,6 +23,17 @@ class LLMProvider(ABC):
         return "".join(parts), usage
 
 
+def model_trace_output(events):
+    """Use the provider's usage, never a fabricated token estimate."""
+    output = {
+        "choices": [{"message": {"role": "assistant", "content": "".join(e.get("text", "") for e in events)}}]
+    }
+    usage = next((e["usage"] for e in reversed(events) if e.get("usage")), None)
+    if usage:
+        output["usage"] = usage
+    return output
+
+
 class TrackedLLM(LLMProvider):
     """Record one usage report per call, including missing reports."""
 
@@ -32,8 +44,20 @@ class TrackedLLM(LLMProvider):
     async def stream(self, messages, *, json_mode=False):
         usage = None
         completed = False
-        try:
+        cfg = get_settings()
+
+        @traceable(
+            name="model_completion",
+            run_type="llm",
+            reduce_fn=model_trace_output,
+            metadata={"ls_provider": cfg.llm_provider, "ls_model_name": cfg.llm_model},
+        )
+        async def traced_stream(messages):
             async for event in self.provider.stream(messages, json_mode=json_mode):
+                yield event
+
+        try:
+            async for event in traced_stream(messages):
                 if event.get("usage"):
                     usage = event["usage"]
                 yield event

@@ -1,6 +1,8 @@
 import asyncio
 import time
 
+from langsmith import traceable
+
 
 class Trace:
     def __init__(self):
@@ -13,10 +15,16 @@ class Trace:
         if self.iterations > 24:
             raise RuntimeError("Workflow exceeded 24 nodes.")
         start = time.perf_counter()
+
+        @traceable(name=node, run_type="chain")
+        async def traced_operation():
+            return await operation()
+
         for attempt in range(retries + 1):
             try:
                 async with asyncio.timeout(timeout):
-                    result = await operation()
+                    # A child span for each actual attempt; existing local trace remains authoritative.
+                    result = await traced_operation()
                 self.steps.append(
                     {
                         "node": node,

@@ -1,0 +1,147 @@
+{
+  "run_id": "1f983fc4-01c6-4a03-afdb-d075808b8296",
+  "created_at": "2026-10-22T15:06:30.121716+00:00",
+  "status": "COMPLETED",
+  "original_artifact_sha256": "4d23da89e0b5f763c1087e8cf42a8a8f87fd2259bdbadaa6b62da4d026c8541c",
+  "aggregate": {
+    "recall_at_k": 1.0,
+    "precision_at_k": 0.16666666666666666,
+    "mrr": 1.0,
+    "ndcg": 1.0,
+    "faithfulness": 1.0,
+    "answer_relevance": 0.47447030804456247,
+    "context_relevance": 0.47916666666666663,
+    "citation_correctness": 0.8125,
+    "latency_ms": 13298.762499762233
+  },
+  "cases": [
+    {
+      "question": "How many annual leave days do full-time SaiTech employees receive?",
+      "expected_answer": "Full-time employees receive 24 working days of paid annual leave per calendar year.",
+      "answer": "Full-time SaiTech employees receive 24 working days of paid annual leave per calendar year [Source 1]. This leave accrues at two days per completed month of service [Source 1]. The number of annual leave days for full-time employees is fixed at 24 working days, regardless of the time of year they join [Source 1]. Part-time employees, on the other hand, receive a prorated allowance [Source 1].",
+      "metrics": {
+        "recall_at_k": 1.0,
+        "precision_at_k": 0.16666666666666666,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevance": 0.5283018867924528,
+        "context_relevance": 0.5,
+        "citation_correctness": 1.0,
+        "latency_ms": 66685.9116560081
+      }
+    },
+    {
+      "question": "How many remote work days are permitted per week?",
+      "expected_answer": "Employees may work remotely up to three days per week with manager approval.",
+      "answer": "Employees may work remotely up to three days per week with manager approval [Source 1].",
+      "metrics": {
+        "recall_at_k": 1.0,
+        "precision_at_k": 0.16666666666666666,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevance": 0.9285714285714286,
+        "context_relevance": 0.3333333333333333,
+        "citation_correctness": 1.0,
+        "latency_ms": 2977.022498031147
+      }
+    },
+    {
+      "question": "What is the monthly home internet reimbursement limit in the Expense Policy?",
+      "expected_answer": "Eligible remote employees may claim up to INR 1,500 per month for home internet.",
+      "answer": "The monthly home internet reimbursement limit in the Expense Policy is INR 1,500 [Source 1]. This limit is also mentioned in the Remote-Work-Policy.md, where it states that employees may claim up to INR 1,500 per month for home internet with a valid bill under the Expense Policy [Source 3].",
+      "metrics": {
+        "recall_at_k": 1.0,
+        "precision_at_k": 0.16666666666666666,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevance": 0.5283018867924528,
+        "context_relevance": 0.8333333333333334,
+        "citation_correctness": 0.5,
+        "latency_ms": 6079.030335997231
+      }
+    },
+    {
+      "question": "What are our standard weekly working hours?",
+      "expected_answer": "The standard work week is Monday to Friday, 40 hours in total.",
+      "answer": "Our standard work week is Monday to Friday, 40 hours in total [Source 1].",
+      "metrics": {
+        "recall_at_k": 1.0,
+        "precision_at_k": 0.16666666666666666,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevance": 0.8461538461538461,
+        "context_relevance": 0.16666666666666666,
+        "citation_correctness": 1.0,
+        "latency_ms": 3192.0241999905556
+      }
+    },
+    {
+      "question": "Which reviewer is required for changes to authentication code?",
+      "expected_answer": "Changes to authentication code require a Security reviewer.",
+      "answer": "For changes to authentication code, a Security reviewer is required [Source 1]. This is because changes to authentication, authorization, cryptography, or data deletion require a Security reviewer [Source 1]. The author of the code change must also describe the behavior change and relevant test evidence [Source 1]. Additionally, the company has a security policy that includes guidelines for account security, such as mandatory multi-factor authentication for company email and source control [Source 2]. However, the specific requirement for a Security reviewer for authentication code changes is stated in the engineering guidelines [Source 1].",
+      "metrics": {
+        "recall_at_k": 1.0,
+        "precision_at_k": 0.16666666666666666,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevance": 0.25806451612903225,
+        "context_relevance": 0.3333333333333333,
+        "citation_correctness": 0.5,
+        "latency_ms": 8631.765010068193
+      }
+    },
+    {
+      "question": "What is the SEV1 acknowledgement target?",
+      "expected_answer": "The on-call engineer acknowledges SEV1 incidents within 15 minutes.",
+      "answer": "The SEV1 acknowledgement target is within 15 minutes [Source 2]. This is the time frame within which the on-call engineer must acknowledge SEV1 incidents [Source 2]. SEV1 incidents are defined as company-wide outages, confirmed active data exposure, or loss of a critical production capability [Source 1]. The acknowledgement target is part of the incident response policy [Source 2].",
+      "metrics": {
+        "recall_at_k": 1.0,
+        "precision_at_k": 0.16666666666666666,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevance": 0.34615384615384615,
+        "context_relevance": 0.5,
+        "citation_correctness": 0.5,
+        "latency_ms": 3777.695700060576
+      }
+    },
+    {
+      "question": "How long do Atlas data export download links remain valid?",
+      "expected_answer": "Download links expire after 24 hours.",
+      "answer": "Atlas data export download links expire after 24 hours [Source 1]. This means that users have a limited time to download their exported data, and after this period, the link will no longer be valid [Source 1]. The data export itself includes projects, tasks, and notes, but does not include sensitive information such as passwords or authentication tokens [Source 1]. The expiration time of the download link is a standard security measure to protect user data [Source 1].",
+      "metrics": {
+        "recall_at_k": 1.0,
+        "precision_at_k": 0.16666666666666666,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevance": 0.1935483870967742,
+        "context_relevance": 0.6666666666666666,
+        "citation_correctness": 1.0,
+        "latency_ms": 11546.50606191717
+      }
+    },
+    {
+      "question": "What is the minimum password length in the SaiTech security policy?",
+      "expected_answer": "Use a unique password of at least 14 characters.",
+      "answer": "The minimum password length in the SaiTech security policy is 14 characters [Source 1]. This policy applies to systems that require passwords [Source 1]. SaiTech has a security policy that outlines various requirements for account security, including password length [Source 1]. The company provides guidelines for password management, such as storing credentials in an approved password manager [Source 1].",
+      "metrics": {
+        "recall_at_k": 1.0,
+        "precision_at_k": 0.16666666666666666,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "faithfulness": 1.0,
+        "answer_relevance": 0.16666666666666666,
+        "context_relevance": 0.5,
+        "citation_correctness": 1.0,
+        "latency_ms": 3500.144536024891
+      }
+    }
+  ]
+}
