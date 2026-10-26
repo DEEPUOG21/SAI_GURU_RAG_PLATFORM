@@ -30,7 +30,6 @@ export function Assistant({ inspect }: { inspect: (id: string) => void }) {
     [messages, setMessages] = useState<Message[]>([]),
     [question, setQuestion] = useState(""),
     [busy, setBusy] = useState(false),
-    [draft, setDraft] = useState(""),
     [stage, setStage] = useState(""),
     [error, setError] = useState(""),
     [confirmDelete, setConfirmDelete] = useState(false),
@@ -54,7 +53,7 @@ export function Assistant({ inspect }: { inspect: (id: string) => void }) {
   }, []);
   useEffect(() => {
     bottom.current?.scrollIntoView({ behavior: "smooth", block: "end" });
-  }, [messages, draft, stage]);
+  }, [messages, stage]);
   async function select(id: string) {
     if (busy) return;
     setError("");
@@ -70,7 +69,6 @@ export function Assistant({ inspect }: { inspect: (id: string) => void }) {
     setBusy(true);
     setQuestion("");
     setError("");
-    setDraft("");
     setStage("Starting query");
     setMessages((previous) => [
       ...previous,
@@ -84,10 +82,8 @@ export function Assistant({ inspect }: { inspect: (id: string) => void }) {
         ({ event, data }) => {
           if (event === "meta") setActive(data.conversation_id as string);
           if (event === "status") setStage(data.stage as string);
-          if (event === "draft") setDraft((value) => value + data.text);
-          if (event === "reset") setDraft("");
+          if (event === "reset") setStage("Rechecking the answer");
           if (event === "final") {
-            setDraft("");
             setMessages((previous) => [
               ...previous,
               {
@@ -97,11 +93,11 @@ export function Assistant({ inspect }: { inspect: (id: string) => void }) {
                 citations: data.citations as Source[],
                 query_id: data.query_id as string,
                 grounding: data.grounding as string,
+                guardrails: data.guardrails as Message["guardrails"],
               },
             ]);
           }
           if (event === "error") {
-            setDraft("");
             setError(`${data.message} Query ID: ${data.query_id}`);
           }
         },
@@ -111,12 +107,11 @@ export function Assistant({ inspect }: { inspect: (id: string) => void }) {
     } catch (e) {
       setError(
         controller.signal.aborted
-          ? "Generation stopped. Any unverified draft has been discarded."
+          ? "Generation stopped before the checks finished."
           : (e as Error).message,
       );
     } finally {
       setBusy(false);
-      setDraft("");
       setStage("");
       abort.current = null;
     }
@@ -259,6 +254,14 @@ export function Assistant({ inspect }: { inspect: (id: string) => void }) {
                 <div className="markdown">
                   <AnswerMarkdown>{message.content}</AnswerMarkdown>
                 </div>
+                {message.guardrails?.some(
+                  (check) => check.action === "REDACT",
+                ) && (
+                  <p className="muted">
+                    Privacy checks removed protected values or unsafe source
+                    content. Inspect retrieval for details.
+                  </p>
+                )}
                 {message.citations.length > 0 && (
                   <div className="citations">
                     <span className="eyebrow">SOURCES</span>
@@ -362,16 +365,6 @@ export function Assistant({ inspect }: { inspect: (id: string) => void }) {
                     {stage}
                   </span>
                 </div>
-                {draft && (
-                  <>
-                    <div className="draft-notice">
-                      Provisional draft · not yet verified
-                    </div>
-                    <div className="markdown draft">
-                      <AnswerMarkdown>{draft}</AnswerMarkdown>
-                    </div>
-                  </>
-                )}
               </div>
             </article>
           )}

@@ -5,6 +5,7 @@ from functools import lru_cache
 import httpx
 
 from app.core.config import get_settings
+from app.security.guardrails import redact
 
 
 class EmbeddingProvider(ABC):
@@ -33,7 +34,7 @@ class RemoteEmbedding(EmbeddingProvider):
         async with httpx.AsyncClient(timeout=90) as client:
             response = await client.post(
                 cfg.embedding_url,
-                json={"input": texts, "model": cfg.embedding_model},
+                json={"input": [redact(text) for text in texts], "model": cfg.embedding_model},
                 headers={"Authorization": f"Bearer {cfg.inference_api_key}"} if cfg.inference_api_key else {},
             )
             response.raise_for_status()

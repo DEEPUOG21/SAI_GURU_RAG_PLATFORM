@@ -32,7 +32,7 @@ export function Badge({
 }) {
   return (
     <span
-      className={`badge ${["COMPLETED", "SUPPORTED", "ready"].includes(status) ? "badge-green" : ["FAILED", "UNSUPPORTED"].includes(status) ? "badge-red" : ""}`}
+      className={`badge ${["COMPLETED", "SUPPORTED", "ready"].includes(status) ? "badge-green" : ["FAILED", "UNSUPPORTED", "REFUSED"].includes(status) ? "badge-red" : ""}`}
     >
       {children}
     </span>

@@ -86,6 +86,7 @@ async def chat_stream(query_id, conversation_id, question, scope, history, reque
                         "message_id": message.id,
                         "grounding": result["grounding"],
                         "latency_ms": result["latency_ms"],
+                        "guardrails": result.get("guardrails", []),
                     },
                 )
         except (Exception, asyncio.CancelledError) as exc:

@@ -3,7 +3,7 @@
 from datetime import datetime
 from typing import Any, Literal
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class TokenResponse(BaseModel):
@@ -59,6 +59,7 @@ class MessageResponse(BaseModel):
     content: str
     citations: list[dict[str, Any]]
     grounding: str | None
+    guardrails: list[dict[str, Any]] = Field(default_factory=list)
 
 
 class EvaluationResponse(BaseModel):

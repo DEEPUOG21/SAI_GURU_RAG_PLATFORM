@@ -13,7 +13,7 @@ from app.security.scope import Scope
 @pytest.mark.parametrize("route", ["DIRECT", "DOCUMENT", "SQL", "HYBRID"])
 async def test_graph_routes_only_to_authorized_tools(monkeypatch, route):
     calls = []
-    scope = Scope("tenant", "user", "EMPLOYEE")
+    scope = Scope("tenant", "user", "MANAGER" if route in {"SQL", "HYBRID"} else "EMPLOYEE")
     cfg = get_settings()
     monkeypatch.setattr(cfg, "generation_mode", "extractive")
     monkeypatch.setattr(cfg, "langsmith_tracing", False)

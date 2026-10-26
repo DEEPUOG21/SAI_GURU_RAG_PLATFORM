@@ -30,6 +30,11 @@ export type Source = {
   rrf_score?: number;
   reranker_score?: number | null;
 };
+export type GuardrailCheck = {
+  stage: string;
+  action: "ALLOW" | "REDACT" | "CLARIFY" | "REFUSE";
+  rules: string[];
+};
 export type Message = {
   id: string;
   role: "user" | "assistant";
@@ -37,6 +42,7 @@ export type Message = {
   citations: Source[];
   query_id?: string;
   grounding?: string;
+  guardrails?: GuardrailCheck[];
 };
 export type Conversation = { id: string; title: string; created_at: string };
 export type QuerySummary = {

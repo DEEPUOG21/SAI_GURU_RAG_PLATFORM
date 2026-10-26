@@ -56,6 +56,8 @@ Database integration tests require a disposable `sai_guru_test` database. See th
 
 Answers expose their sources and grounding status. General guidance is labeled when it is not source-verified. Grounding checks can still be wrong; evaluate on your own corpus. The included eight-case benchmark measures synthetic company policies.
 
+Guardrails screen inputs and retrieved text, mask supported sensitive formats before provider calls, enforce tool permissions and check output before display. Decisions are visible in Retrieval Lab. See the [policy and limitations](docs/observability.md#guardrail-policy).
+
 Authentication uses password sign-in and bearer JWTs. OCR, password-reset email and SSO are not implemented. SQL analytics use audited templates. Evidence records describe tested behavior and limitations.
 
 MIT licensed. Model weights retain their upstream licenses.

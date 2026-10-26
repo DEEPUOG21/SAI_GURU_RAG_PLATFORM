@@ -110,6 +110,24 @@ export function Retrieval({ queryId }: { queryId: string }) {
           <div className="debug-columns">
             <section className="panel">
               <div className="panel-heading">
+                <h2>Guardrail decisions</h2>
+              </div>
+              {query.trace.filter((step) => step.node.startsWith("guardrail_"))
+                .length === 0 ? (
+                <p className="muted">
+                  This historical run has no recorded guardrail decisions.
+                </p>
+              ) : (
+                query.trace
+                  .filter((step) => step.node.startsWith("guardrail_"))
+                  .map((step, i) => (
+                    <div key={`guard-${i}`}>
+                      <strong>{step.node.replaceAll("_", " ")}</strong>
+                      <pre>{JSON.stringify(step.output, null, 2)}</pre>
+                    </div>
+                  ))
+              )}
+              <div className="panel-heading">
                 <h2>Execution trace</h2>
                 <Braces size={18} />
               </div>

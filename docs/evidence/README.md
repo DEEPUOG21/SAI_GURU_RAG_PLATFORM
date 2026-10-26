@@ -1,5 +1,27 @@
 # Sai Guru: measured answer-quality improvement
 
+## Guardrail verification
+
+The guardrail release adds deterministic policy checkpoints, protected-data masking and checked-output display. Tests live in [test_guardrails.py](../../backend/tests/test_guardrails.py); policy scope and limitations are in [observability](../observability.md#guardrail-policy).
+
+Measured locally on 26 October 2026:
+
+| Check | Recorded result |
+| --- | --- |
+| Targeted attack fixtures refused | 18 / 18 |
+| Legitimate fixtures refused or modified | 0 / 15 |
+| Policy-only timing, median / p95 | 0.039 / 0.082 ms across 3,300 checks |
+| Normal RAG acceptance checks | 40 / 40 passed |
+| Live checks: attacks, history redaction, injected-document exclusion | 6 / 6 passed |
+| Disposable database integration tests | 3 passed |
+| Frontend tests, including suppression of legacy draft events | 12 passed; lint and build passed |
+
+These attack examples are regression fixtures chosen for the implemented rules, not an independent red-team benchmark. The timing excludes model, network and source-authorization costs. Novel encodings, unsupported identifiers and nuanced attacks remain limitations.
+
+An eight-case synthetic RAG evaluation with guardrails enabled (run `2e410271-6776-43e2-88be-58a78731ae06`) recorded token F1 **0.7212**, citation correctness **0.9375**, recall **1.00**, and mean latency **7.75 seconds**. Answer scores matched the preceding recorded run; its mean latency was **4.14 seconds**. Conditions were not controlled, so these runs do not isolate guardrail overhead or establish a speed improvement. Answers now remain private until checks finish, which intentionally changes when text first appears.
+
+Raw logs, test reports and synthetic live-test records remain in ignored `.local/deployment/`.
+
 ## Result
 
 On a fixed eight-question synthetic company-policy benchmark, answer token-set F1 increased from **0.4745 to 0.7135** and exact citation-label matching increased from **81.25% to 93.75%**, while Recall@6 and MRR remained **1.00**.

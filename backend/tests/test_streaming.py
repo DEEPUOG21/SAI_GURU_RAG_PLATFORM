@@ -73,4 +73,4 @@ async def test_workflow_discards_unsupported_draft(monkeypatch):
     result = await workflow.execute(None, Scope("t", "u", "EMPLOYEE"), "What is our leave policy?", [], emit)
     assert result["answer"] == INSUFFICIENT
     assert result["citations"] == []
-    assert any(event == "draft" for event, _ in events)
+    assert not any(event == "draft" for event, _ in events), "Unverified tokens must stay private"

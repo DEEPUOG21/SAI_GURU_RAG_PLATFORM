@@ -105,9 +105,9 @@ With `GROUNDING_ACTION=regenerate`, one correction attempt and one recheck are a
 
 - `meta`: persisted query and conversation IDs.
 - `status`: actual pipeline stage.
-- `draft`: provisional tokens, visibly unverified in the UI.
-- `reset`: discard the previous draft before regeneration.
-- `final`: accepted answer, citations, grounding, measured latency and message ID.
+- Raw draft tokens are withheld; the UI ignores legacy `draft` events.
+- `reset`: indicates that an answer is being rechecked before display.
+- `final`: checked answer, citations, grounding, guardrail decisions, measured latency and message ID.
 - `error`: safe failure message/query ID; discard draft.
 - `done`: terminal event.
 

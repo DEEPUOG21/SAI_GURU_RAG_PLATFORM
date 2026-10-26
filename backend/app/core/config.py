@@ -29,6 +29,8 @@ class Settings(BaseSettings):
     generation_mode: Literal["llm", "extractive"] = "llm"
     grounding_action: Literal["refuse", "regenerate"] = "regenerate"
     general_fallback_enabled: bool = True
+    guardrails_enabled: bool = True
+    guardrails_redact_identifiers: bool = True
     langsmith_tracing: bool = False
     langsmith_api_key: str = Field(default="", repr=False)
     langsmith_project: str = "sai-guru"

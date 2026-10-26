@@ -7,6 +7,7 @@ import httpx
 
 from app.core.config import get_settings
 from app.retrieval.base import Candidate
+from app.security.guardrails import redact
 
 
 class RerankerProvider(ABC):
@@ -43,7 +44,7 @@ class RemoteReranker(RerankerProvider):
         async with httpx.AsyncClient(timeout=90) as client:
             response = await client.post(
                 get_settings().reranker_url,
-                json={"query": query, "documents": [c.text for c in candidates]},
+                json={"query": redact(query), "documents": [redact(c.text) for c in candidates]},
                 headers={"Authorization": f"Bearer {get_settings().inference_api_key}"}
                 if get_settings().inference_api_key
                 else {},
@@ -68,8 +69,8 @@ class CloudflareReranker(RerankerProvider):
             response = await client.post(
                 cfg.reranker_url,
                 json={
-                    "query": query,
-                    "contexts": [{"text": item.text} for item in candidates],
+                    "query": redact(query),
+                    "contexts": [{"text": redact(item.text)} for item in candidates],
                     "top_k": len(candidates),
                 },
                 headers={"Authorization": f"Bearer {cfg.inference_api_key}"},

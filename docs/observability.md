@@ -6,26 +6,49 @@ The backend now runs chat and evaluation queries through a real LangGraph `State
 
 ```mermaid
 flowchart TD
-    Start --> Resolve
-    Resolve -->|ambiguous policy| End
+    Start --> InputGuard
+    InputGuard -->|allow or redact| Resolve
+    InputGuard -->|refuse or clarify| OutputGuard
+    Resolve -->|ambiguous policy or unsafe rewrite| OutputGuard
     Resolve -->|SQL or HYBRID| SQL
     Resolve -->|DOCUMENT| Retrieve
     Resolve -->|DIRECT| Context
     SQL -->|HYBRID| Retrieve
     SQL -->|SQL| Context
+    SQL -->|role denied| OutputGuard
     Retrieve --> Context
-    Context --> GenerateAndVerify
+    Context --> ContextGuard
+    ContextGuard -->|safe authorized evidence| GenerateAndVerify
+    ContextGuard -->|unsafe or access changed| OutputGuard
     GenerateAndVerify -->|insufficient evidence and fallback enabled| GeneralGuidance
-    GenerateAndVerify -->|otherwise| Finalize
-    GeneralGuidance --> Finalize
+    GenerateAndVerify -->|otherwise| OutputGuard
+    GeneralGuidance --> OutputGuard
+    OutputGuard --> Finalize
     Finalize --> End
 ```
 
-Resolution, SQL, retrieval, context preparation, generation/verification, general guidance, and finalization are graph nodes. Dense/lexical retrieval, reranking, generation, grounding checks, and bounded regeneration remain instrumented substeps. Conditional edges skip irrelevant tools. The graph has a 16-step recursion limit; existing per-operation timeouts, retries and the local trace limit remain in force.
+Input, context and output guards are explicit graph nodes alongside resolution, SQL, retrieval, preparation, generation/verification, guidance and finalization. Retrieval screens text and source metadata before reranking. The graph has a 20-step recursion limit, a 24-operation tool budget and at most 12 recorded policy checkpoints. Grounding and output-safety correction share one regeneration attempt. Per-operation and overall timeouts remain in force.
 
 The compiled graph is request-scoped. Database sessions, access scopes, callbacks and model clients stay in closures, outside graph state. There is no shared memory checkpointer. Conversation history continues to come from the existing authorized database-backed history path; this integration does not replace tenant isolation or grant new document access.
 
 SSE events and response schemas remain compatible with the frontend. Existing Retrieval Lab traces are retained.
+
+## Guardrail policy
+
+`backend/app/security/guardrails.py` implements local deterministic checks with `ALLOW`, `REDACT`, `CLARIFY` and `REFUSE` decisions. No additional service or paid model is required.
+
+- `GUARDRAILS_ENABLED=true` enables the policy by default. It does not replace database RLS, role checks or the SQL allowlist, which remain enforced independently.
+- `GUARDRAILS_REDACT_IDENTIFIERS=true` masks SSN-shaped identifiers and card-like numbers that pass a Luhn checksum. Ordinary business email addresses are preserved. This is format detection, not comprehensive personal-data classification.
+- Supported secret formats include private-key blocks, selected provider-token prefixes, JWT-shaped strings, credential-bearing database URLs and explicit secret assignments. Exact configured model/inference/JWT/LangSmith/seed credentials are also masked when long enough for reliable matching.
+- Questions are redacted before persistence in titles and history. History and external model, embedding and reranking payloads are screened or redacted. Uploaded originals remain private database content; this is not a document-deletion or retroactive data-scrubbing feature.
+- Clear requests to override safeguards, impersonate system roles, extract hidden prompts or obtain credentials are refused before provider calls. Normal security education and quoted examples have regression coverage. Heuristics can miss novel encodings or produce false positives; a policy match is not proof of intent.
+- Instruction-bearing retrieved chunks are withheld before reranking. Text and source names/sections are inspected. If all retrieved evidence is rejected, generation and general fallback stop. Access to selected sources is rechecked before generation.
+- Model tokens remain private. Only a checked final answer is displayed; the frontend ignores legacy draft events too. Sensitive output gets at most one correction attempt, then a fixed refusal. Missing explicit company facts receive deterministic next steps rather than model guesses.
+- Guardrail traces contain stage, action, rule IDs and counts, never matched values. Runtime LangSmith inputs and outputs are forced hidden while guardrails are enabled. Policy exceptions surface as safe chat errors; they do not silently authorize an answer.
+
+Retrieval Lab shows decisions separately from execution timings. Final chat events and reloaded assistant messages include the same decision metadata. A privacy notice appears when content was redacted or excluded. Historical runs without these fields remain readable.
+
+This policy does not provide general content moderation, comprehensive DLP, or a guarantee against prompt injection. Test against your own documents before changing thresholds or deploying to a different domain. See [measured checks](evidence/README.md#guardrail-verification).
 
 ## Enable LangSmith later
 

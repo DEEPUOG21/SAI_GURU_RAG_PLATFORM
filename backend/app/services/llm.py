@@ -7,6 +7,7 @@ import httpx
 from langsmith import traceable
 
 from app.core.config import get_settings
+from app.security.guardrails import redact_value
 
 
 class LLMProvider(ABC):
@@ -42,6 +43,7 @@ class TrackedLLM(LLMProvider):
         self.usages = []
 
     async def stream(self, messages, *, json_mode=False):
+        messages = redact_value(messages)
         usage = None
         completed = False
         cfg = get_settings()

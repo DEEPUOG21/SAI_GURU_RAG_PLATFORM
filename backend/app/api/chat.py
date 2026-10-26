@@ -8,6 +8,7 @@ from app.models.entities import Conversation, Feedback, Message, Query
 from app.schemas.requests import ChatRequest, FeedbackRequest
 from app.schemas.responses import ConversationResponse, MessageResponse
 from app.security.auth import current_scope, rate_limit
+from app.security.guardrails import redact
 from app.services.access import sources_visible
 from app.services.chat import chat_stream, conversation_history
 from app.services.conversation import history_sources
@@ -33,7 +34,7 @@ async def owned_conversation(db, scope, id):
     response_class=StreamingResponse,
     responses={
         200: {
-            "description": "SSE events: meta, status, draft, reset, final, error, done. Drafts are provisional. Errors after headers use an error event followed by done.",
+            "description": "SSE events: meta, status, reset, final, error, done. Answers are emitted only after policy checks. Errors after headers use an error event followed by done.",
             "content": {"text/event-stream": {"schema": {"type": "string"}}},
         }
     },
@@ -42,12 +43,11 @@ async def chat(body: ChatRequest, request: Request, scope=Depends(current_scope)
     if not body.question.strip():
         raise HTTPException(422, "Enter a question.")
     await rate_limit(db, "query:" + scope.user_id)
+    question = redact(body.question)
     if body.conversation_id:
         conversation = await owned_conversation(db, scope, body.conversation_id)
     else:
-        conversation = Conversation(
-            tenant_id=scope.tenant_id, user_id=scope.user_id, title=body.question[:160]
-        )
+        conversation = Conversation(tenant_id=scope.tenant_id, user_id=scope.user_id, title=question[:160])
         db.add(conversation)
         await db.flush()
     history = await conversation_history(db, conversation.id, scope)
@@ -55,12 +55,12 @@ async def chat(body: ChatRequest, request: Request, scope=Depends(current_scope)
         tenant_id=scope.tenant_id,
         user_id=scope.user_id,
         conversation_id=conversation.id,
-        question=body.question,
+        question=question,
         request_id=request.state.request_id,
     )
     db.add(query)
     await db.flush()
-    db.add(Message(conversation_id=conversation.id, role="user", content=body.question, query_id=query.id))
+    db.add(Message(conversation_id=conversation.id, role="user", content=question, query_id=query.id))
     await db.commit()
     return StreamingResponse(
         chat_stream(query.id, conversation.id, body.question, scope, history, request),
@@ -115,6 +115,13 @@ async def messages(id: str, scope=Depends(current_scope), db=Depends(get_db)):
                 else "Source access changed. Regenerate this answer against the current knowledge base.",
                 "citations": row.citations if visible else [],
                 "grounding": (grounding if visible else "INSUFFICIENT") if row.role == "assistant" else None,
+                "guardrails": [
+                    step["output"] | {"stage": step["node"].removeprefix("guardrail_")}
+                    for step in (trace or [])
+                    if step.get("node", "").startswith("guardrail_") and isinstance(step.get("output"), dict)
+                ]
+                if visible and row.role == "assistant"
+                else [],
             }
         )
     return result

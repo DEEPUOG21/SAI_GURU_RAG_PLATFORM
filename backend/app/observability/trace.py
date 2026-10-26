@@ -3,6 +3,8 @@ import time
 
 from langsmith import traceable
 
+from app.security.guardrails import redact_value
+
 
 class Trace:
     def __init__(self):
@@ -52,4 +54,10 @@ class Trace:
         self.iterations += 1
         if self.iterations > 24:
             raise RuntimeError("Workflow exceeded 24 nodes.")
-        self.steps.append({"node": node, "status": status, "output": output})
+        self.steps.append({"node": node, "status": status, "output": redact_value(output)})
+
+    def guardrail(self, stage, metadata):
+        # Policy checkpoints do not consume the existing tool/retry budget.
+        if sum(step["node"].startswith("guardrail_") for step in self.steps) >= 12:
+            raise RuntimeError("Guardrail checkpoint budget exceeded.")
+        self.steps.append({"node": "guardrail_" + stage, "status": "completed", "output": metadata})

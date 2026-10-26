@@ -29,8 +29,8 @@ def tracing_scope(cfg):
                 client = tracing_client(
                     cfg.langsmith_api_key,
                     cfg.langsmith_endpoint,
-                    cfg.langsmith_hide_inputs,
-                    cfg.langsmith_hide_outputs,
+                    cfg.langsmith_hide_inputs or cfg.guardrails_enabled,
+                    cfg.langsmith_hide_outputs or cfg.guardrails_enabled,
                 )
             except Exception:
                 logging.warning("LangSmith client unavailable; continuing without hosted traces.")

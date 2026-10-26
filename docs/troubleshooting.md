@@ -43,7 +43,7 @@ If a source was deleted, replaced or became restricted, old answer text is redac
 
 ## Streaming issues
 
-Reverse proxies must avoid buffering `text/event-stream`. FastAPI sends keepalives and `X-Accel-Buffering: no`. The browser marks drafts as provisional and replaces them with the final verified answer. If the connection ends without the terminal event, it reports an error. Check the backend query record before retrying: a completed answer may have been stored even if its final network frame did not reach the browser.
+Reverse proxies must avoid buffering `text/event-stream`. FastAPI sends keepalives and `X-Accel-Buffering: no`. The browser shows progress while the answer remains private, then displays the checked final answer. If the connection ends without a valid terminal event, it reports an error. Check the backend query record before retrying: an answer may have been stored even if its final network frame did not reach the browser.
 
 CPU generation can exceed free-host timeouts. Wake the model service before a demo, use a manageable model, and configure a bounded `QUERY_TIMEOUT_SECONDS` up to 600. Do not assume increasing the timeout fixes an out-of-memory error.
 
