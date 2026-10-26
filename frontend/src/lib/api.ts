@@ -108,6 +108,7 @@ export async function streamChat(
   const parser = new SSEParser(),
     decoder = new TextDecoder();
   let doneEvent = false;
+  let terminalEvent = false;
   try {
     while (true) {
       const { done, value } = await reader.read();
@@ -115,10 +116,19 @@ export async function streamChat(
         done ? decoder.decode() : decoder.decode(value, { stream: true }),
       );
       for (const event of events) {
-        if (event.event === "done") doneEvent = true;
+        if (event.event === "final" || event.event === "error")
+          terminalEvent = true;
+        if (event.event === "done") {
+          doneEvent = true;
+          if (!terminalEvent)
+            throw new Error(
+              "The stream ended without an answer. Please retry.",
+            );
+        }
         onEvent(event);
+        if (doneEvent) break;
       }
-      if (done) break;
+      if (done || doneEvent) break;
     }
     if (!doneEvent)
       throw new Error(

@@ -91,7 +91,7 @@ async def chat_stream(query_id, conversation_id, question, scope, history, reque
         except (Exception, asyncio.CancelledError) as exc:
             cancelled = isinstance(exc, asyncio.CancelledError)
             error_type = type(exc).__name__
-            logging.error("query_failed query_id=%s", query_id)
+            logging.error("query_failed query_id=%s error_type=%s", query_id, error_type)
 
             async def persist_failure():
                 async with Session(scope=scope) as db:
@@ -109,8 +109,12 @@ async def chat_stream(query_id, conversation_id, question, scope, history, reque
 
             try:
                 await asyncio.shield(persist_failure())
-            except Exception:
-                logging.error("query_failure_persistence_failed query_id=%s", query_id)
+            except Exception as persistence_error:
+                logging.error(
+                    "query_failure_persistence_failed query_id=%s error_type=%s",
+                    query_id,
+                    type(persistence_error).__name__,
+                )
             if not cancelled:
                 await emit(
                     "error",
@@ -128,6 +132,7 @@ async def chat_stream(query_id, conversation_id, question, scope, history, reque
         yield sse("meta", {"query_id": query_id, "conversation_id": conversation_id})
         while True:
             if await request.is_disconnected():
+                logging.info("chat_client_disconnected query_id=%s", query_id)
                 break
             try:
                 event, data = await asyncio.wait_for(queue.get(), timeout=10)
