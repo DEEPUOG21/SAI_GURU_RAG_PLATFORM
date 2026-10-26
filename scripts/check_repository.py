@@ -12,7 +12,7 @@ for filename in filter(None, tracked):
     path = PurePosixPath(filename)
     if ({part.lower() for part in path.parts} & (blocked | generated)) or (
         path.name.startswith(".env") and path.name != ".env.example"
-    ):
+    ) or filename.startswith(("docs/audit/", "backend/scripts/")):
         failures.append(filename)
 for path in root.iterdir():
     if path.name.lower() in blocked:

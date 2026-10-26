@@ -36,7 +36,7 @@ release/
 
 # Private workspace archives and account-specific evidence
 .local/
-docs/audit/supabase-*.json
+docs/audit/
 
 # User-supplied evaluation content
 data/evaluation.json

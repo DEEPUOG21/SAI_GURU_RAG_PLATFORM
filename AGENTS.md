@@ -2,6 +2,7 @@
 
 - Keep application code in `backend/`, `frontend/`, and `inference/`; operational scripts in `scripts/`; documentation in `docs/`.
 - Put private deployment records, temporary diagnostics, downloaded audit tools, and archives under ignored `.local/`.
+- Keep maintained guides directly in `docs/` and measured public evidence in `docs/evidence/`. Do not restore `docs/audit/` or `backend/scripts/`; reusable commands belong in `scripts/`, one-off diagnostics in `.local/`.
 - Do not create or restore `.claude/`, `.tokensave/`, `tokensave-docs/`, `CLAUDE.md`, or Headroom/TokenSave hooks and integrations in this project. The user explicitly opted out of them.
 - Preserve the workspace settings that disable those automatic integrations. Do not enable them to perform a task.
 - Keep credentials and runtime databases private. Do not move or delete active databases, environments, or model caches merely to tidy the source tree.

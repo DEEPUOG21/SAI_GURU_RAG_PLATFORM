@@ -1,8 +1,7 @@
 # Evaluation and regression
 
-> Demo fixtures have been removed. Seeding now creates only the admin account. Upload your own documents and configure a private dataset as described in [data configuration](../../data/README.md). References to synthetic fixtures below describe the original validation setup.
 
-The dataset in `data/evaluation.json` contains three synthetic questions, reference answers, expected document filenames and expected citation sections. It covers annual leave, expense-submission deadlines and SEV1 acknowledgement targets. These cases test the provided SaiTech documents only; they are not a general benchmark.
+The approved dataset in `data/demo/evaluation.json` contains eight synthetic policy questions, reference answers, expected document filenames and citation sections. A private dataset may be supplied through `data/evaluation.json`. These cases test the supplied documents; they are not a general accuracy benchmark. See [recorded evidence](evidence/README.md).
 
 Seed and index the demo documents, sign in as MANAGER or ADMIN, and select **Run evaluation**. Each question executes the real configured pipeline with the user's current access. Results are persisted in `evaluations`, including actual answers, citations, measured latency, available token usage and node traces. No evaluation numbers are present until a run produces them.
 

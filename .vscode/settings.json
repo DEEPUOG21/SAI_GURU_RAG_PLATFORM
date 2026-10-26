@@ -1,5 +1,20 @@
 {
   "easy-headroom.headroom.enabled": false,
   "easy-headroom.tokensave.enabled": false,
-  "easy-headroom.rtk.enabled": false
+  "easy-headroom.rtk.enabled": false,
+  "files.exclude": {
+    "**/__pycache__": true,
+    "**/.pytest_cache": true,
+    "**/.ruff_cache": true,
+    "**/*.egg-info": true,
+    "**/*.tsbuildinfo": true,
+    "**/node_modules": true,
+    "**/dist": true,
+    ".venv": true,
+    ".local": true,
+    ".local-*": true,
+    ".model-cache": true,
+    ".env": true,
+    ".env.supabase*": true
+  }
 }

@@ -4,4 +4,4 @@ Do not publish passwords, tokens, database URLs containing credentials, uploaded
 
 The API must use a non-owner database role. Migration credentials belong only in the provisioning environment. The browser must never receive database credentials or inference keys.
 
-See [the security audit](docs/security/SECURITY-AUDIT.md), [hardening results](docs/security/HARDENING-RESULTS.md), and [release readiness](docs/operations/RELEASE-READINESS.md). Historical test results are evidence from their recorded runs, not a guarantee that the current dependency ecosystem is vulnerability-free.
+Access boundaries are described in [architecture](docs/architecture.md), deployment requirements in [deployment](docs/deployment.md), and measured checks in [evaluation evidence](docs/evidence/README.md). Historical raw audits are archived privately. Recorded checks do not guarantee that current dependencies are vulnerability-free.

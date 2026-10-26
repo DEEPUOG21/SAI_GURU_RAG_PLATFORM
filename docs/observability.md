@@ -1,6 +1,6 @@
 # LangGraph orchestration and LangSmith observability
 
-The backend now runs chat and evaluation queries through a real LangGraph `StateGraph`. LangSmith is optional; an account is not required to run the application. The local integration was connected to LangSmith on 24 October 2026; a synthetic Cloudflare greeting produced a real graph/model trace with hidden inputs and outputs. Production hosting has not yet been updated with this integration.
+The backend now runs chat and evaluation queries through a real LangGraph `StateGraph`. LangSmith is optional; an account is not required to run the application. The local integration was connected to LangSmith on 24 October 2026; a synthetic Cloudflare greeting produced a real graph/model trace with hidden inputs and outputs. Production graph trace delivery was verified on 25 October 2026 with inputs and outputs hidden.
 
 ## Execution graph
 
@@ -53,8 +53,8 @@ The importer uses LangSmith's SDK to create a dataset, reference examples, exper
 From the repository root, preview locally (no credentials or network needed):
 
 ```powershell
-.venv/Scripts/python.exe scripts/export_langsmith.py docs/evaluation-evidence/before.json --name sai-guru-before --output .local/deployment/langsmith-before-preview.json
-.venv/Scripts/python.exe scripts/export_langsmith.py docs/evaluation-evidence/after.json --name sai-guru-after --output .local/deployment/langsmith-after-preview.json
+.venv/Scripts/python.exe scripts/export_langsmith.py docs/evidence/before.json --name sai-guru-before --output .local/deployment/langsmith-before-preview.json
+.venv/Scripts/python.exe scripts/export_langsmith.py docs/evidence/after.json --name sai-guru-after --output .local/deployment/langsmith-after-preview.json
 ```
 
 After reviewing the preview and setting your private API key, append `--upload` to each command. This explicitly sends the selected questions, reference answers, actual answers and numeric metrics. Runtime trace hiding does not hide this intentional evaluation export. No raw retrieval traces, authentication fields or runtime configuration are included.
