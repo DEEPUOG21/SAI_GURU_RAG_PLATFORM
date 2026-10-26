@@ -115,7 +115,12 @@ def redact_value(value):
     if isinstance(value, list):
         return [redact_value(item) for item in value]
     if isinstance(value, dict):
-        return {key: redact_value(item) for key, item in value.items()}
+        # Resource identities are authorization references, not free-text content.
+        # Redacting digit-heavy IDs can break citations and source-access checks.
+        return {
+            key: item if isinstance(key, str) and (key == "id" or key.endswith("_id")) else redact_value(item)
+            for key, item in value.items()
+        }
     return value
 
 
