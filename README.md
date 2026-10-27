@@ -13,7 +13,7 @@ python scripts/configure_local.py
 docker compose up --build
 ```
 
-Open `http://localhost:5173`. API documentation is at `http://localhost:8000/docs`. Sign in with `SEED_ADMIN_EMAIL` and `SEED_ADMIN_PASSWORD` from your private `.env`.
+Open `http://localhost:5173`. API documentation is at `http://localhost:8000/docs`. Choose **Sign up** to create an account and a private workspace, or sign in with `SEED_ADMIN_EMAIL` and `SEED_ADMIN_PASSWORD` from your private `.env` for the seeded workspace. Existing teams add members through their administrator.
 
 Configure a model before asking generated questions. The default local provider uses Ollama with `qwen2.5:3b`; hosted inference is covered in [deployment](docs/deployment.md). `GENERATION_MODE=extractive` enables quoted search excerpts without a generation model.
 

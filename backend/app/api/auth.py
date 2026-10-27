@@ -5,13 +5,40 @@ from sqlalchemy import select, update
 from sqlalchemy.exc import IntegrityError
 
 from app.database.session import bind_scope, get_db
-from app.models.entities import Tenant, User
-from app.schemas.requests import LoginRequest, UserRequest
+from app.models.entities import Tenant, User, new_id
+from app.schemas.requests import LoginRequest, SignupRequest, UserRequest
 from app.schemas.responses import ProfileResponse, TokenResponse, UserResponse
 from app.security.auth import create_token, current_scope, passwords, rate_limit, require_role
 
 router = APIRouter(prefix="/api/v1/auth", tags=["Authentication"])
 DUMMY_HASH = passwords.hash("not-a-real-user-password")
+
+
+@router.post("/signup", status_code=201, response_model=TokenResponse)
+async def signup(body: SignupRequest, request: Request, db=Depends(get_db)):
+    await rate_limit(db, "signup:" + (request.client.host if request.client else "unknown"), 5)
+    # Registration creates a fresh tenant. Client-supplied roles and tenant IDs are forbidden.
+    tenant = Tenant(id=new_id(), name=body.workspace_name)
+    user = User(
+        id=new_id(),
+        tenant_id=tenant.id,
+        email=body.email.lower(),
+        role="ADMIN",
+        token_version=0,
+        password_hash=await asyncio.to_thread(passwords.hash, body.password),
+    )
+    await bind_scope(db, tenant_id=tenant.id, user_id=user.id)
+    try:
+        db.add(tenant)
+        await db.flush()
+        db.add(user)
+        await db.flush()
+        token = create_token(user)
+        await db.commit()
+    except IntegrityError as exc:
+        await db.rollback()
+        raise HTTPException(409, "An account with this email already exists. Sign in instead.") from exc
+    return {"access_token": token, "token_type": "bearer", "expires_in": 3600}
 
 
 @router.post("/login", response_model=TokenResponse)

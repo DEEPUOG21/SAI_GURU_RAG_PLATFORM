@@ -1,6 +1,6 @@
 from typing import Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 
 class LoginRequest(BaseModel):
@@ -11,6 +11,17 @@ class LoginRequest(BaseModel):
 class UserRequest(LoginRequest):
     password: str = Field(min_length=12, max_length=128)
     role: Literal["ADMIN", "MANAGER", "EMPLOYEE"] = "EMPLOYEE"
+
+
+class SignupRequest(LoginRequest):
+    model_config = ConfigDict(extra="forbid")
+    password: str = Field(min_length=12, max_length=128)
+    workspace_name: str = Field(min_length=2, max_length=120)
+
+    @field_validator("email", "workspace_name", mode="before")
+    @classmethod
+    def trim_fields(cls, value):
+        return value.strip() if isinstance(value, str) else value
 
 
 class ChatRequest(BaseModel):

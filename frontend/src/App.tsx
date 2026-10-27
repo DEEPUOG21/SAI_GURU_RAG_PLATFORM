@@ -36,12 +36,15 @@ export default function App() {
   const [page, setPage] = useState("dashboard"),
     [user, setUser] = useState<User | null>(null),
     [loginOpen, setLoginOpen] = useState(false),
+    [authMode, setAuthMode] = useState<"signin" | "signup">("signin"),
     [helpOpen, setHelpOpen] = useState(false),
     [menu, setMenu] = useState(false),
     [health, setHealth] = useState("checking"),
     [queryId, setQueryId] = useState(""),
     [email, setEmail] = useState(""),
     [password, setPassword] = useState(""),
+    [confirmPassword, setConfirmPassword] = useState(""),
+    [workspaceName, setWorkspaceName] = useState(""),
     [loginError, setLoginError] = useState(""),
     [busy, setBusy] = useState(false);
   function navigate(value: string) {
@@ -51,6 +54,13 @@ export default function App() {
   function inspect(id: string) {
     setQueryId(id);
     navigate("retrieval");
+  }
+  function openAuth(mode: "signin" | "signup") {
+    setAuthMode(mode);
+    setPassword("");
+    setConfirmPassword("");
+    setLoginError("");
+    setLoginOpen(true);
   }
   useEffect(() => {
     if (hasToken())
@@ -74,16 +84,31 @@ export default function App() {
     };
   }, []);
   async function login() {
+    if (busy) return;
+    if (authMode === "signup" && password !== confirmPassword) {
+      setLoginError("Passwords do not match.");
+      return;
+    }
     setBusy(true);
     setLoginError("");
     try {
-      const result = await api<{ access_token: string }>("/auth/login", {
-        method: "POST",
-        body: JSON.stringify({ email, password }),
-      });
+      const result = await api<{ access_token: string }>(
+        authMode === "signup" ? "/auth/signup" : "/auth/login",
+        {
+          method: "POST",
+          body: JSON.stringify({
+            email: email.trim(),
+            password,
+            ...(authMode === "signup"
+              ? { workspace_name: workspaceName.trim() }
+              : {}),
+          }),
+        },
+      );
       setToken(result.access_token);
       setUser(await api<User>("/auth/me"));
       setPassword("");
+      setConfirmPassword("");
       setLoginOpen(false);
     } catch (e) {
       setLoginError((e as Error).message);
@@ -189,7 +214,7 @@ export default function App() {
               <button
                 className="icon-button"
                 aria-label="Sign in"
-                onClick={() => setLoginOpen(true)}
+                onClick={() => openAuth("signin")}
               >
                 <ArrowUpRight size={18} />
               </button>
@@ -230,9 +255,12 @@ export default function App() {
             {user ? (
               <span className="top-avatar">{user.email[0].toUpperCase()}</span>
             ) : (
-              <Button variant="secondary" onClick={() => setLoginOpen(true)}>
-                Sign in
-              </Button>
+              <>
+                <Button variant="secondary" onClick={() => openAuth("signin")}>
+                  Sign in
+                </Button>
+                <Button onClick={() => openAuth("signup")}>Sign up</Button>
+              </>
             )}
           </div>
         </header>
@@ -248,16 +276,16 @@ export default function App() {
               key={user?.id || "signed-out"}
               user={user}
               navigate={navigate}
-              signIn={() => setLoginOpen(true)}
+              signIn={() => openAuth("signin")}
               inspect={inspect}
             />
           ) : !user ? (
             <section className="panel">
               <Empty
                 title="Connect your knowledge workspace"
-                description="Sign in with an account created by your SaiTech administrator to access documents, conversations, and evaluations."
+                description="Sign in to your team's workspace, or create an account to start your own private knowledge workspace."
                 action={
-                  <Button onClick={() => setLoginOpen(true)}>
+                  <Button onClick={() => openAuth("signin")}>
                     Sign in to Sai Guru
                     <ArrowUpRight size={16} />
                   </Button>
@@ -296,8 +324,16 @@ export default function App() {
       <Modal
         open={loginOpen}
         onClose={() => setLoginOpen(false)}
-        title="Welcome to Sai Guru"
-        description="Sign in to your team's knowledge workspace."
+        title={
+          authMode === "signup"
+            ? "Create your Sai Guru account"
+            : "Welcome to Sai Guru"
+        }
+        description={
+          authMode === "signup"
+            ? "Start a private workspace for your documents and conversations."
+            : "Sign in to your team's knowledge workspace."
+        }
       >
         <form
           onSubmit={(e) => {
@@ -306,6 +342,20 @@ export default function App() {
           }}
         >
           <ErrorNotice message={loginError} />
+          {authMode === "signup" && (
+            <label className="field">
+              Workspace name
+              <input
+                required
+                minLength={2}
+                maxLength={120}
+                autoComplete="organization"
+                value={workspaceName}
+                onChange={(e) => setWorkspaceName(e.target.value)}
+                placeholder="Your workspace"
+              />
+            </label>
+          )}
           <label className="field">
             Work email
             <input
@@ -322,19 +372,61 @@ export default function App() {
             <input
               type="password"
               required
-              autoComplete="current-password"
+              autoComplete={
+                authMode === "signup" ? "new-password" : "current-password"
+              }
+              minLength={authMode === "signup" ? 12 : 1}
               maxLength={128}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
           </label>
+          {authMode === "signup" && (
+            <>
+              <p className="footnote">
+                Use at least 12 characters for your password.
+              </p>
+              <label className="field">
+                Confirm password
+                <input
+                  type="password"
+                  required
+                  minLength={12}
+                  maxLength={128}
+                  autoComplete="new-password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                />
+              </label>
+            </>
+          )}
           <Button className="w-full justify-center" disabled={busy}>
-            {busy ? "Signing in…" : "Sign in"}
+            {busy
+              ? authMode === "signup"
+                ? "Creating account…"
+                : "Signing in…"
+              : authMode === "signup"
+                ? "Create account"
+                : "Sign in"}
           </Button>
           <p className="footnote">
-            Accounts are created by your administrator. For local setup, run the
-            seed command with your own admin password.
+            {authMode === "signup"
+              ? "To join an existing team, ask its administrator to add you."
+              : "New to Sai Guru? Create your own private workspace."}
           </p>
+          <Button
+            type="button"
+            variant="secondary"
+            className="w-full justify-center"
+            disabled={busy}
+            onClick={() =>
+              openAuth(authMode === "signup" ? "signin" : "signup")
+            }
+          >
+            {authMode === "signup"
+              ? "Already have an account? Sign in"
+              : "Create a new account"}
+          </Button>
         </form>
       </Modal>
       <Modal

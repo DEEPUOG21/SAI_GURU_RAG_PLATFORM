@@ -13,6 +13,8 @@ docker compose up --build
 
 The setup script refuses to overwrite `.env`. Use `.env.template` when editing existing configuration. Compose starts PostgreSQL, migrates the schema, provisions restricted runtime and SQL-reader roles, seeds the admin account and starts the API and frontend. Sign in using the seed credentials in `.env`.
 
+Public sign-up (`POST /api/v1/auth/signup`) creates a new private workspace and its administrator in one transaction, then returns a one-hour session. It requires a workspace name, email, and a password of 12–128 characters. Clients cannot choose a tenant or role. Registration is limited to five attempts per IP per minute; duplicate emails roll back both records. New accounts never join an existing workspace automatically.
+
 For Ollama, pull the configured model on the host and make it reachable from the backend container. Compose uses `http://host.docker.internal:11434/v1`. Set `GENERATION_MODE=extractive` for quoted search without generation. Hosted model configuration is in [deployment](deployment.md).
 
 Upload and process the documents in `data/demo/` through Knowledge Library. See [data configuration](../data/README.md) for the approved benchmark and private overrides.
