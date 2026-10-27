@@ -18,9 +18,16 @@ def load_answer_benchmark(path: Path, corpus: Path):
     raw = path.read_text(encoding="utf-8")
     dataset = json.loads(raw)
     cases = dataset["cases"]
-    if Counter(c["category"] for c in cases) != {"answerable": 30, "unanswerable": 15, "followup": 15}:
-        raise ValueError("Expected 30 answerable, 15 unanswerable and 15 follow-up targets.")
-    if len({c["id"] for c in cases}) != 60 or len({c["question"].casefold() for c in cases}) != 60:
+    counts = dataset.get("expected_counts", {"answerable": 30, "unanswerable": 15, "followup": 15})
+    if (
+        set(counts) != {"answerable", "unanswerable", "followup"}
+        or any(type(n) is not int or n < 1 for n in counts.values())
+        or Counter(c["category"] for c in cases) != counts
+    ):
+        raise ValueError("Dataset cohorts must match their frozen expected counts.")
+    if len({c["id"] for c in cases}) != len(cases) or len({c["question"].casefold() for c in cases}) != len(
+        cases
+    ):
         raise ValueError("Case identities and target questions must be unique.")
     old = json.loads((corpus / "evaluation.json").read_text(encoding="utf-8"))
     known = {c["question"].strip().casefold() for c in old}
@@ -99,12 +106,12 @@ def attach_reviews(record, reviews):
 def answer_summary(record):
     cases = {c["id"]: c for c in record["dataset"]["cases"]}
     summary = {}
-    for mode in MODES:
+    for mode in record.get("modes", MODES):
         targets = [r for r in record["rows"] if r["mode"] == mode and r["turn"] == "target"]
         completed = [r for r in targets if r["status"] == "COMPLETED"]
         reviewed = [r for r in completed if "review" in r]
         bucket = {
-            "targets_planned": 60,
+            "targets_planned": len(cases),
             "attempted": len(targets),
             "completed": len(completed),
             "failed": len(targets) - len(completed),
@@ -112,7 +119,7 @@ def answer_summary(record):
             "latency_p50_ms": percentile([r["latency_ms"] for r in completed], 0.5),
             "latency_p95_ms": percentile([r["latency_ms"] for r in completed], 0.95),
         }
-        if len(reviewed) == 60:
+        if len(reviewed) == len(cases):
             unknown = [r for r in reviewed if cases[r["case_id"]]["category"] == "unanswerable"]
             answerable = [r for r in reviewed if cases[r["case_id"]]["category"] != "unanswerable"]
             followups = [r for r in reviewed if cases[r["case_id"]]["category"] == "followup"]
@@ -134,10 +141,10 @@ def answer_summary(record):
                 ),
             }
             bucket["denominators"] = {
-                "all": 60,
+                "all": len(cases),
                 "answerable_including_followups": len(answerable),
-                "unknown": 15,
-                "followup": 15,
+                "unknown": len(unknown),
+                "followup": len(followups),
                 "source_answerable": len(source_answerable),
                 "company": len(company),
             }
@@ -149,7 +156,7 @@ def answer_summary(record):
                 for r in record["rows"]
                 if r["mode"] == mode and r["turn"] == "setup" and r.get("review")
             }
-            if len(setup_by_case) == 15:
+            if len(setup_by_case) == len(followups):
                 bucket["metrics"]["conversation_pair_correctness"] = mean(
                     r["review"]["correct"] and setup_by_case[r["case_id"]]["review"]["correct"]
                     for r in followups
@@ -162,8 +169,12 @@ def answer_experiment_payload(record, name, mode):
     if mode not in MODES or not record.get("completed_at"):
         raise ValueError("Only completed answer experiments may be exported.")
     rows = [r for r in record["rows"] if r["mode"] == mode and r["turn"] == "target"]
-    if len(rows) != 60 or any(r["status"] != "COMPLETED" or "review" not in r for r in rows):
-        raise ValueError("Export requires 60 completed and reviewed target answers.")
+    if len(rows) != len(record["dataset"]["cases"]) or any(
+        r["status"] != "COMPLETED" or "review" not in r for r in rows
+    ):
+        raise ValueError(
+            f"Export requires {len(record['dataset']['cases'])} completed and reviewed target answers."
+        )
     lookup = {c["id"]: c for c in record["dataset"]["cases"]}
     cases = []
     for row in rows:
@@ -203,7 +214,7 @@ def answer_experiment_payload(record, name, mode):
         name,
     )
     payload["experiment_description"] = (
-        "Imported frozen 60-case answer study; coding-agent review against source facts. Not independently human-annotated or LangSmith rescored. Display timeline reconstructed."
+        f"Imported frozen {len(rows)}-case answer study; coding-agent review against source facts. Not independently human-annotated or LangSmith rescored. Display timeline reconstructed."
     )
     payload["experiment_metadata"].update(
         mode=mode,

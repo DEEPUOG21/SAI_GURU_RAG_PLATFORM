@@ -40,7 +40,7 @@ async def main(args):
         expected = {
             (c["id"], mode, turn)
             for c in dataset["cases"]
-            for mode in MODES
+            for mode in record.get("modes", MODES)
             for turn in (["setup", "target"] if "setup_question" in c else ["target"])
         }
         actual = {(r["case_id"], r["mode"], r["turn"]) for r in record["rows"]}
@@ -139,10 +139,14 @@ async def main(args):
             "general_fallback_enabled",
         )
     }
+    configuration["workflow_sha256"] = hashlib.sha256(
+        (ROOT / "backend/app/agents/workflow.py").read_bytes()
+    ).hexdigest()
     record = {
         "created_at": datetime.now(timezone.utc).isoformat(),
         "dataset": dataset,
         "dataset_sha256": digest,
+        "modes": args.modes,
         "corpus_snapshot_sha256": corpus_hash,
         "configuration": configuration,
         "methodology": {
@@ -162,7 +166,8 @@ async def main(args):
                 "Failed trials are retained. Use a distinct output file for a new run after resolving the external failure; do not replace failed measurements."
             )
         if (
-            old["dataset_sha256"] != digest
+            list(old.get("modes", MODES)) != args.modes
+            or old["dataset_sha256"] != digest
             or old["corpus_snapshot_sha256"] != corpus_hash
             or old["configuration"] != configuration
         ):
@@ -182,7 +187,7 @@ async def main(args):
     cases = list(dataset["cases"])
     rng.shuffle(cases)
     for number, case in enumerate(cases, 1):
-        modes = list(MODES)
+        modes = list(args.modes)
         rng.shuffle(modes)
         for mode in modes:
             history, sources = [], []
@@ -280,7 +285,7 @@ async def main(args):
                         json.dumps(
                             {
                                 "case": number,
-                                "total": 60,
+                                "total": len(cases),
                                 "id": case["id"],
                                 "mode": mode,
                                 "turn": turn,
@@ -317,6 +322,7 @@ if __name__ == "__main__":
         "--output", type=Path, default=ROOT / ".local/deployment/answer-comparison.json"
     )
     parser.add_argument("--resume", action="store_true")
+    parser.add_argument("--modes", choices=MODES, nargs="+", default=list(MODES))
     parser.add_argument(
         "--reviews",
         type=Path,

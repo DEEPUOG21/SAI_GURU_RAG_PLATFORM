@@ -19,7 +19,7 @@ values = {
     "SEED_ADMIN_PASSWORD": secrets.token_urlsafe(18),
 }
 lines = []
-for line in Path(".env.example").read_text().splitlines():
+for line in Path(".env.template").read_text().splitlines():
     key = line.split("=", 1)[0]
     lines.append(f"{key}={values[key]}" if key in values else line)
 target.write_text("\n".join(lines) + "\n")

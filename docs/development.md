@@ -11,7 +11,7 @@ python scripts/configure_local.py
 docker compose up --build
 ```
 
-The setup script refuses to overwrite `.env`. Use `.env.example` when editing existing configuration. Compose starts PostgreSQL, migrates the schema, provisions restricted runtime and SQL-reader roles, seeds the admin account and starts the API and frontend. Sign in using the seed credentials in `.env`.
+The setup script refuses to overwrite `.env`. Use `.env.template` when editing existing configuration. Compose starts PostgreSQL, migrates the schema, provisions restricted runtime and SQL-reader roles, seeds the admin account and starts the API and frontend. Sign in using the seed credentials in `.env`.
 
 For Ollama, pull the configured model on the host and make it reachable from the backend container. Compose uses `http://host.docker.internal:11434/v1`. Set `GENERATION_MODE=extractive` for quoted search without generation. Hosted model configuration is in [deployment](deployment.md).
 

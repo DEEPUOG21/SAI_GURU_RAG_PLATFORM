@@ -12,7 +12,7 @@ from app.observability.langsmith import tracing_scope
 from app.observability.trace import Trace
 from app.reranking.providers import reranker
 from app.retrieval.fusion import reciprocal_rank_fusion
-from app.retrieval.postgres import DenseRetriever, LexicalRetriever
+from app.retrieval.postgres import DenseRetriever, LexicalRetriever, source_catalog
 from app.security.guardrails import (
     SENSITIVE_OUTPUT,
     inspect,
@@ -26,8 +26,10 @@ from app.services.context import INSUFFICIENT, build_context, evidence_text
 from app.services.conversation import (
     ConversationHistory,
     bounded_history,
+    conversation_only,
     fallback_resolution,
     resolve_question,
+    source_aware_route,
 )
 from app.services.grounding import check_grounding, citation_labels
 from app.services.llm import TrackedLLM, llm
@@ -46,6 +48,7 @@ class WorkflowState(TypedDict, total=False):
     result: dict
     blocked: bool
     context_rejected: bool
+    source_intent: bool
 
 
 async def execute(db, scope, question, history, emit, trace=None):
@@ -104,6 +107,42 @@ async def execute(db, scope, question, history, emit, trace=None):
                 "route": route,
             }
         rewritten = decision.text
+        source_intent = False
+        if (
+            route == "DIRECT"
+            and not conversation_only(rewritten)
+            and db is not None
+            and hasattr(db, "execute")
+        ):
+            try:
+                catalog = await trace.run(
+                    "authorized_source_catalog", lambda: source_catalog(db, scope), timeout=5
+                )
+                # Treat topic metadata as untrusted input too; no instruction-bearing titles reach the router.
+                catalog = [
+                    redact_value(topic)
+                    for topic in catalog
+                    if inspect(json.dumps(topic), stage="context").action != "REFUSE"
+                ]
+                if cfg.generation_mode == "llm":
+                    route = await trace.run(
+                        "source_intent_router",
+                        lambda: source_aware_route(provider, rewritten, catalog),
+                        timeout=15,
+                    )
+                else:
+                    route = "DOCUMENT"
+                source_intent = route == "DOCUMENT"
+            except Exception:
+                # A failed intent provider must not turn an ambiguous company question into an ungrounded answer.
+                if hasattr(db, "rollback"):
+                    await db.rollback()
+                route, source_intent = "DOCUMENT", True
+                trace.record(
+                    "source_intent_fallback",
+                    "Intent check unavailable; authorized evidence required.",
+                    "degraded",
+                )
         if not history and re.fullmatch(
             r"\s*what (?:is|are) (?:our|the company) polic(?:y|ies)[?!. ]*", rewritten, re.I
         ):
@@ -122,7 +161,7 @@ async def execute(db, scope, question, history, emit, trace=None):
             "status",
             {"stage": "Preparing a reply" if route == "DIRECT" else "Retrieving evidence", "route": route},
         )
-        return {"rewritten": rewritten, "route": route, "history": history}
+        return {"rewritten": rewritten, "route": route, "history": history, "source_intent": source_intent}
 
     async def query_sql(state: WorkflowState):
         if scope.level < 1:
@@ -385,8 +424,11 @@ async def execute(db, scope, question, history, emit, trace=None):
         await emit("status", {"stage": "Preparing general guidance; company evidence is insufficient"})
         prefix = "I couldn't confirm this from the available company documents.\n\n**General guidance (not source-verified):**\n\n"
 
-        if cfg.guardrails_enabled and re.search(
-            r"\b(?:our|saitech|internal|uploaded|my employer|my company|company's)\b", rewritten, re.I
+        if cfg.guardrails_enabled and (
+            state.get("source_intent")
+            or re.search(
+                r"\b(?:our|saitech|internal|uploaded|my employer|my company|company's)\b", rewritten, re.I
+            )
         ):
             trace.guardrail(
                 "fallback",

@@ -32,6 +32,17 @@ async def test_database_unavailable_returns_safe_readiness_error():
         httpx.ConnectError("private-provider-detail"),
         httpx.ReadTimeout("private-timeout-detail"),
         ValueError("malformed provider payload"),
+        httpx.RemoteProtocolError("private-truncated-response"),
+        httpx.HTTPStatusError(
+            "private-rate-limit",
+            request=httpx.Request("POST", "https://invalid.test"),
+            response=httpx.Response(429),
+        ),
+        httpx.HTTPStatusError(
+            "private-provider-unavailable",
+            request=httpx.Request("POST", "https://invalid.test"),
+            response=httpx.Response(503),
+        ),
     ],
 )
 async def test_failed_chat_emits_safe_error_and_terminal_event(monkeypatch, failure):

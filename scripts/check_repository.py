@@ -6,12 +6,16 @@ from pathlib import Path, PurePosixPath
 root = Path(__file__).resolve().parents[1]
 blocked = {".claude", ".tokensave", "tokensave-docs", "claude.md"}
 generated = {".local", ".venv", "node_modules", "__pycache__", ".pytest_cache", ".ruff_cache", "dist"}
-tracked = subprocess.check_output(["git", "ls-files", "-z"], cwd=root).decode().split("\0")
+tracked = subprocess.check_output(
+    ["git", "ls-files", "-z", "--cached", "--others", "--exclude-standard"], cwd=root
+).decode().split("\0")
 failures = []
 for filename in filter(None, tracked):
+    if not (root / filename).exists():
+        continue
     path = PurePosixPath(filename)
     if ({part.lower() for part in path.parts} & (blocked | generated)) or (
-        path.name.startswith(".env") and path.name != ".env.example"
+        path.name.startswith(".env") and path.name != ".env.template"
     ) or filename.startswith(("docs/audit/", "backend/scripts/")):
         failures.append(filename)
 for path in root.iterdir():

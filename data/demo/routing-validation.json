@@ -1,0 +1,373 @@
+{
+  "version": "2026-10-27-routing-validation-v1",
+  "expected_counts": {
+    "answerable": 20,
+    "unanswerable": 5,
+    "followup": 5
+  },
+  "purpose": "Frozen after implementing the source-intent design, before any validation inference. New phrasings over the same known corpus; no independent author or unseen-corpus claim. Current variant only; not comparable to the older 60-case scores as an improvement estimate.",
+  "rubric": {
+    "correct": "All reference facts needed for the question are correct, with no material contradiction. Unknown facts require explicit uncertainty and no invented company answer.",
+    "supported": "Every factual company claim is supported by the full frozen corpus; distinguish unsupported additions from mere missing requested facts.",
+    "citation_support": "For answerable company-source questions, factual claims cite valid labels whose actual cited text supports them. An abstention is not citation coverage.",
+    "abstained": "The final response declines or explicitly cannot establish the requested answer; do not infer this from the pipeline grounding status alone.",
+    "reviewer": "Coding-agent semantic review against source documents, distinct from the generating model and its grounding judge; not independent human review."
+  },
+  "cases": [
+    {
+      "id": "fresh-001",
+      "category": "answerable",
+      "question": "After how much inactivity must an issued laptop lock itself?",
+      "expected_answer": "After five minutes.",
+      "expected_sections": [
+        {
+          "document": "Security-Policy.md",
+          "section": "Device controls"
+        }
+      ]
+    },
+    {
+      "id": "fresh-002",
+      "category": "answerable",
+      "question": "Once IT approves a critical security update, what is the installation deadline?",
+      "expected_answer": "Within 48 hours of IT approval.",
+      "expected_sections": [
+        {
+          "document": "Security-Policy.md",
+          "section": "Device controls"
+        }
+      ]
+    },
+    {
+      "id": "fresh-003",
+      "category": "answerable",
+      "question": "Do contractors receive the full-time employee annual-leave allowance?",
+      "expected_answer": "No; contractors follow their individual agreements and do not receive the employee allowance.",
+      "expected_sections": [
+        {
+          "document": "Leave-Policy.md",
+          "section": "Annual leave"
+        }
+      ]
+    },
+    {
+      "id": "fresh-004",
+      "category": "answerable",
+      "question": "When should someone notify their manager that they are too ill to attend work?",
+      "expected_answer": "Before the start of the workday when practical.",
+      "expected_sections": [
+        {
+          "document": "Leave-Policy.md",
+          "section": "Sick leave"
+        }
+      ]
+    },
+    {
+      "id": "fresh-005",
+      "category": "answerable",
+      "question": "A planned absence will last six working days. What handover information should accompany the request?",
+      "expected_answer": "A handover plan and a backup contact.",
+      "expected_sections": [
+        {
+          "document": "Leave-Policy.md",
+          "section": "Requesting leave"
+        }
+      ]
+    },
+    {
+      "id": "fresh-006",
+      "category": "answerable",
+      "question": "Before purchasing an item costing INR 8,000, whose authorization is needed?",
+      "expected_answer": "Department-head approval before purchase; expenses above INR 5,000 require it.",
+      "expected_sections": [
+        {
+          "document": "Expense-Policy.md",
+          "section": "Approval limits"
+        }
+      ]
+    },
+    {
+      "id": "fresh-007",
+      "category": "answerable",
+      "question": "What nightly ceiling applies to a domestic business hotel booking, excluding tax?",
+      "expected_answer": "INR 6,000 per night before taxes.",
+      "expected_sections": [
+        {
+          "document": "Expense-Policy.md",
+          "section": "Travel and meals"
+        }
+      ]
+    },
+    {
+      "id": "fresh-008",
+      "category": "answerable",
+      "question": "Will an alcohol purchase qualify for an expense claim?",
+      "expected_answer": "No, alcohol is non-reimbursable.",
+      "expected_sections": [
+        {
+          "document": "Expense-Policy.md",
+          "section": "Non-reimbursable expenses"
+        }
+      ]
+    },
+    {
+      "id": "fresh-009",
+      "category": "answerable",
+      "question": "How should a public endpoint prevent repeated requests from causing the same side effect twice?",
+      "expected_answer": "Use idempotency keys for retryable operations that could create duplicate effects.",
+      "expected_sections": [
+        {
+          "document": "Engineering-Guidelines.md",
+          "section": "API conventions"
+        }
+      ]
+    },
+    {
+      "id": "fresh-010",
+      "category": "answerable",
+      "question": "What conventions apply to public route versions and error responses?",
+      "expected_answer": "Use versioned routes and consistent error objects.",
+      "expected_sections": [
+        {
+          "document": "Engineering-Guidelines.md",
+          "section": "API conventions"
+        }
+      ]
+    },
+    {
+      "id": "fresh-011",
+      "category": "answerable",
+      "question": "Which diagnostic endpoint and log identifiers must a deployed service expose?",
+      "expected_answer": "A health endpoint and structured logs with request IDs; do not log credentials or customer document contents.",
+      "expected_sections": [
+        {
+          "document": "Engineering-Guidelines.md",
+          "section": "Reliability"
+        }
+      ]
+    },
+    {
+      "id": "fresh-012",
+      "category": "answerable",
+      "question": "Where must authorization be enforced when an API reads data?",
+      "expected_answer": "In the service that reads the data; all request data must be validated.",
+      "expected_sections": [
+        {
+          "document": "Engineering-Guidelines.md",
+          "section": "API conventions"
+        }
+      ]
+    },
+    {
+      "id": "fresh-013",
+      "category": "answerable",
+      "question": "Who is permitted to issue an approved external statement during an incident?",
+      "expected_answer": "Only the communications lead, after approval.",
+      "expected_sections": [
+        {
+          "document": "Incident-Response-Policy.md",
+          "section": "Incident roles"
+        }
+      ]
+    },
+    {
+      "id": "fresh-014",
+      "category": "answerable",
+      "question": "Should an affected system be changed immediately after spotting a possible security incident?",
+      "expected_answer": "Preserve logs and avoid changing the affected system unless the incident commander requests it.",
+      "expected_sections": [
+        {
+          "document": "Incident-Response-Policy.md",
+          "section": "Reporting an incident"
+        }
+      ]
+    },
+    {
+      "id": "fresh-015",
+      "category": "answerable",
+      "question": "What response-time target applies to acknowledging a SEV2 event?",
+      "expected_answer": "Within 30 minutes.",
+      "expected_sections": [
+        {
+          "document": "Incident-Response-Policy.md",
+          "section": "Response targets"
+        }
+      ]
+    },
+    {
+      "id": "fresh-016",
+      "category": "answerable",
+      "question": "When an Atlas milestone is closed, what happens to tasks that remain unfinished?",
+      "expected_answer": "They are not automatically closed.",
+      "expected_sections": [
+        {
+          "document": "Product-Documentation.md",
+          "section": "Task workflow"
+        }
+      ]
+    },
+    {
+      "id": "fresh-017",
+      "category": "answerable",
+      "question": "May an Atlas Viewer export data, and may that Viewer edit records?",
+      "expected_answer": "Viewers may read and download exports but cannot modify records.",
+      "expected_sections": [
+        {
+          "document": "Product-Documentation.md",
+          "section": "Workspace roles"
+        }
+      ]
+    },
+    {
+      "id": "fresh-018",
+      "category": "answerable",
+      "question": "Will the Atlas JSON download contain audit-log entries?",
+      "expected_answer": "No; exports exclude audit-log entries, passwords, and authentication tokens.",
+      "expected_sections": [
+        {
+          "document": "Product-Documentation.md",
+          "section": "Data export"
+        }
+      ]
+    },
+    {
+      "id": "fresh-019",
+      "category": "answerable",
+      "question": "On what recurring schedule are sensitive-system access permissions reviewed?",
+      "expected_answer": "Managers review them every quarter.",
+      "expected_sections": [
+        {
+          "document": "Security-Policy.md",
+          "section": "Access reviews"
+        }
+      ]
+    },
+    {
+      "id": "fresh-020",
+      "category": "answerable",
+      "question": "What identifiers belong in an Atlas support ticket, and should customer secrets be included?",
+      "expected_answer": "Include the workspace identifier and request ID; do not include sensitive customer data.",
+      "expected_sections": [
+        {
+          "document": "Product-Documentation.md",
+          "section": "Support and retention"
+        }
+      ]
+    },
+    {
+      "id": "fresh-021",
+      "category": "unanswerable",
+      "question": "What maximum upload size does our Atlas product promise for task attachments?",
+      "expected_answer": "The available company documents do not establish this fact. Explicitly acknowledge the gap without inventing a rule or value.",
+      "expected_sections": []
+    },
+    {
+      "id": "fresh-022",
+      "category": "unanswerable",
+      "question": "What fixed relocation grant does SaiTech give a new employee in INR?",
+      "expected_answer": "The available company documents do not establish this fact. Explicitly acknowledge the gap without inventing a rule or value.",
+      "expected_sections": []
+    },
+    {
+      "id": "fresh-023",
+      "category": "unanswerable",
+      "question": "How is our company severance-payment amount calculated?",
+      "expected_answer": "The available company documents do not establish this fact. Explicitly acknowledge the gap without inventing a rule or value.",
+      "expected_sections": []
+    },
+    {
+      "id": "fresh-024",
+      "category": "unanswerable",
+      "question": "What API requests-per-minute limit is guaranteed for our Atlas Enterprise customers?",
+      "expected_answer": "The available company documents do not establish this fact. Explicitly acknowledge the gap without inventing a rule or value.",
+      "expected_sections": []
+    },
+    {
+      "id": "fresh-025",
+      "category": "unanswerable",
+      "question": "What fixed router-purchase subsidy does SaiTech offer remote employees?",
+      "expected_answer": "The available company documents do not establish this fact. Explicitly acknowledge the gap without inventing a rule or value.",
+      "expected_sections": []
+    },
+    {
+      "id": "fresh-026",
+      "category": "followup",
+      "question": "Can sick leave be carried over in the same way?",
+      "expected_answer": "No, sick leave does not carry forward.",
+      "expected_sections": [
+        {
+          "document": "Leave-Policy.md",
+          "section": "Carryover"
+        }
+      ],
+      "setup_question": "What happens to unused annual leave at year end?",
+      "setup_expected_answer": "Up to five days may carry over and must be used by 31 March.",
+      "setup_expected_sections": [
+        {
+          "document": "Leave-Policy.md",
+          "section": "Carryover"
+        }
+      ]
+    },
+    {
+      "id": "fresh-027",
+      "category": "followup",
+      "question": "Where in the product can an owner request that export?",
+      "expected_answer": "Settings, then Data Export.",
+      "expected_sections": [
+        {
+          "document": "Product-Documentation.md",
+          "section": "Data export"
+        }
+      ],
+      "setup_question": "What content is included in an Atlas JSON export?",
+      "setup_expected_answer": "Projects, tasks and notes; not passwords, tokens or audit logs.",
+      "setup_expected_sections": [
+        {
+          "document": "Product-Documentation.md",
+          "section": "Data export"
+        }
+      ]
+    },
+    {
+      "id": "fresh-028",
+      "category": "followup",
+      "question": "Who approves the claim before Finance reviews it?",
+      "expected_answer": "The manager.",
+      "expected_sections": [
+        {
+          "document": "Expense-Policy.md",
+          "section": "Submitting claims"
+        }
+      ],
+      "setup_question": "When are approved expense claims reimbursed?",
+      "setup_expected_answer": "In the next monthly payroll cycle.",
+      "setup_expected_sections": [
+        {
+          "document": "Expense-Policy.md",
+          "section": "Submitting claims"
+        }
+      ]
+    },
+    {
+      "id": "fresh-029",
+      "category": "followup",
+      "question": "In what year did he publish that general theory?",
+      "expected_answer": "1915.",
+      "expected_sections": [],
+      "setup_question": "Which scientist developed general relativity?",
+      "setup_expected_answer": "Albert Einstein.",
+      "setup_expected_sections": []
+    },
+    {
+      "id": "fresh-030",
+      "category": "followup",
+      "question": "What label did I give my personal experiment earlier?",
+      "expected_answer": "MIST-WILLOW.",
+      "expected_sections": [],
+      "setup_question": "Please remember my personal experiment label MIST-WILLOW.",
+      "setup_expected_answer": "Acknowledges the user-provided label MIST-WILLOW.",
+      "setup_expected_sections": []
+    }
+  ]
+}

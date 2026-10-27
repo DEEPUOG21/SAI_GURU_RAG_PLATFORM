@@ -21,6 +21,19 @@ def authorized_chunks(scope):
     )
 
 
+async def source_catalog(db, scope):
+    """Return bounded titles/sections visible to this caller, never document bodies."""
+    statement = (
+        authorized_chunks(scope)
+        .with_only_columns(Chunk.source, Chunk.section)
+        .distinct()
+        .order_by(Chunk.source, Chunk.section)
+        .limit(60)
+    )
+    rows = (await db.execute(statement)).all()
+    return [{"document": source[:160], "section": section[:120]} for source, section in rows]
+
+
 def candidate(chunk, score, dense):
     result = Candidate(
         chunk.id, chunk.document_id, chunk.source, chunk.text, chunk.page, chunk.section, chunk.version

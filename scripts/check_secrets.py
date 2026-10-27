@@ -15,7 +15,7 @@ checked = 0
 for root, directories, files in os.walk("."):
     directories[:] = [name for name in directories if name not in ignored]
     for name in files:
-        if (name.startswith(".env") and name != ".env.example") or name.startswith(".local-") or name.endswith((".pyc", ".log", ".tsbuildinfo")):
+        if (name.startswith(".env") and name != ".env.template") or name.startswith(".local-") or name.endswith((".pyc", ".log", ".tsbuildinfo")):
             continue
         path = Path(root) / name
         try:
