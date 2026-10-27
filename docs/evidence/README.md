@@ -2,6 +2,8 @@
 
 The [56-question retrieval comparison](RETRIEVAL-2026-10-27.md) separately measures dense, hybrid and reranked retrieval across three repeated rounds, with per-case rankings, latency, paired intervals and limitations. It does not replace the answer-quality experiment below.
 
+The [60-case answer/abstention/follow-up study](ANSWERS-2026-10-27.md) records 150 generated turns and a controlled dense-versus-current comparison. It found no answer-accuracy gain and identifies general-knowledge routing of company questions as the remaining bottleneck.
+
 ## Guardrail verification
 
 The guardrail release adds deterministic policy checkpoints, protected-data masking and checked-output display. Tests live in [test_guardrails.py](../../backend/tests/test_guardrails.py); policy scope and limitations are in [observability](../observability.md#guardrail-policy).

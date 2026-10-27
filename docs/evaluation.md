@@ -62,3 +62,9 @@ python scripts/export_langsmith.py .local/deployment/retrieval-ablation.json --r
 ```
 
 Repeat with `hybrid` and `hybrid_reranked`, using distinct experiment names and output files. Preview is local by default; `--upload` sends the synthetic questions, source labels, ranked document/section names and scores to the configured LangSmith workspace. Every mode uses the same 56 reference examples. Each experiment contains one case per question with metrics averaged over repeats, all repeated rankings retained, and reconstructed display timestamps explicitly labeled as imported. LangSmith is the comparison viewer; the application computed these metrics.
+
+## Answer, abstention and follow-up comparison
+
+The separate `data/demo/answer-holdout.json` freezes 30 company-answerable questions, 15 absent company facts and 15 follow-ups with actual generated setup turns. `python scripts/benchmark_answers.py` runs the same LLM, resolver, prompts and guardrails with a dense-only retrieval baseline and the current hybrid/reranked workflow, using read-only scoped database access. Each final answer is scored against written reference facts and its cited evidence, separately from the generator's own grounding verdict. False refusals, unsupported company answers and citation support use explicit eligible cohorts.
+
+The [recorded protocol, results, limitations and reproduction commands](evidence/ANSWERS-2026-10-27.md) include all 150 generated turns and source-based coding-agent review reasons. The study found no final-answer quality improvement despite improved retrieval ranking, exposing company questions incorrectly routed to general knowledge. It is diagnostic evidence over the known synthetic corpus, not independent human evaluation. Future routing changes must be validated on new held-out questions as well as retaining these regressions.

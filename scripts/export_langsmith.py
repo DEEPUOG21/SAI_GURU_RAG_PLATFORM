@@ -10,6 +10,8 @@ from langsmith import Client
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "backend"))
 
 from app.core.config import get_settings
+from app.evaluation.answer_benchmark import MODES as ANSWER_MODES
+from app.evaluation.answer_benchmark import answer_experiment_payload
 from app.evaluation.langsmith_export import experiment_payload, upload_experiment
 from app.evaluation.retrieval_benchmark import MODES, retrieval_experiment_payload
 
@@ -35,10 +37,19 @@ def main():
         choices=MODES,
         help="Export repeat-averaged results of a retrieval ablation instead of an answer evaluation",
     )
+    parser.add_argument(
+        "--answer-mode",
+        choices=ANSWER_MODES,
+        help="Export a completed, source-reviewed 60-case answer comparison",
+    )
     args = parser.parse_args()
+    if args.answer_mode and args.retrieval_mode:
+        parser.error("Select either an answer comparison or a retrieval comparison.")
     record = json.loads(args.result.read_text(encoding="utf-8"))
     payload = (
-        retrieval_experiment_payload(record, args.name, args.retrieval_mode)
+        answer_experiment_payload(record, args.name, args.answer_mode)
+        if args.answer_mode
+        else retrieval_experiment_payload(record, args.name, args.retrieval_mode)
         if args.retrieval_mode
         else experiment_payload(record, args.name)
     )

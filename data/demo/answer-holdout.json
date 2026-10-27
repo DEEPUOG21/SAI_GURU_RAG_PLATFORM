@@ -1,0 +1,748 @@
+{
+  "version": "2026-10-27-v1",
+  "purpose": "Frozen answer-quality diagnostic set over known synthetic documents. No independent human annotations or unseen-corpus claim.",
+  "rubric": {
+    "correct": "All reference facts needed for the question are correct, with no material contradiction. Unknown facts require explicit uncertainty and no invented company answer.",
+    "supported": "Every factual company claim is supported by the full frozen corpus; distinguish unsupported additions from mere missing requested facts.",
+    "citation_support": "For answerable company-source questions, factual claims cite valid labels whose actual cited text supports them. An abstention is not citation coverage.",
+    "abstained": "The final response declines or explicitly cannot establish the requested answer; do not infer this from the pipeline grounding status alone.",
+    "reviewer": "Coding-agent semantic review against source documents, distinct from the generating model and its grounding judge; not independent human review."
+  },
+  "cases": [
+    {
+      "id": "answer-001",
+      "category": "answerable",
+      "question": "How soon should a workplace-conduct report be acknowledged by People Operations?",
+      "expected_answer": "Within two working days.",
+      "expected_sections": [
+        {
+          "document": "Employee-Handbook.md",
+          "section": "Equal opportunity and conduct"
+        }
+      ]
+    },
+    {
+      "id": "answer-002",
+      "category": "answerable",
+      "question": "During which IST hours should employees be available to collaborate?",
+      "expected_answer": "10:00 to 15:00 India Standard Time.",
+      "expected_sections": [
+        {
+          "document": "Employee-Handbook.md",
+          "section": "Working hours"
+        }
+      ]
+    },
+    {
+      "id": "answer-003",
+      "category": "answerable",
+      "question": "Who is responsible for assigning a new starter a buddy and a 30-day learning plan?",
+      "expected_answer": "The manager assigns an onboarding buddy and creates a 30-day learning plan.",
+      "expected_sections": [
+        {
+          "document": "Employee-Handbook.md",
+          "section": "Onboarding"
+        }
+      ]
+    },
+    {
+      "id": "answer-004",
+      "category": "answerable",
+      "question": "What approvals and assessment documentation must exist before filling an open role?",
+      "expected_answer": "A written business justification, approved headcount allocation, and consistent interview rubric.",
+      "expected_sections": [
+        {
+          "document": "Employee-Handbook.md",
+          "section": "Hiring principles"
+        }
+      ]
+    },
+    {
+      "id": "answer-005",
+      "category": "answerable",
+      "question": "How many approvals from someone other than the author does a production code change need?",
+      "expected_answer": "At least one approval from a reviewer other than the author, through a pull request.",
+      "expected_sections": [
+        {
+          "document": "Engineering-Guidelines.md",
+          "section": "Change review"
+        }
+      ]
+    },
+    {
+      "id": "answer-006",
+      "category": "answerable",
+      "question": "What must happen to existing callers before a destructive database schema change?",
+      "expected_answer": "Existing callers must migrate before destructive schema changes.",
+      "expected_sections": [
+        {
+          "document": "Engineering-Guidelines.md",
+          "section": "Testing and delivery"
+        }
+      ]
+    },
+    {
+      "id": "answer-007",
+      "category": "answerable",
+      "question": "What operational diagnostic facilities should every service provide?",
+      "expected_answer": "A health endpoint and structured logs with request IDs, without logging credentials or customer document contents.",
+      "expected_sections": [
+        {
+          "document": "Engineering-Guidelines.md",
+          "section": "Reliability"
+        }
+      ]
+    },
+    {
+      "id": "answer-008",
+      "category": "answerable",
+      "question": "Which reviewer must approve a cryptography change?",
+      "expected_answer": "A Security reviewer.",
+      "expected_sections": [
+        {
+          "document": "Engineering-Guidelines.md",
+          "section": "Change review"
+        }
+      ]
+    },
+    {
+      "id": "answer-009",
+      "category": "answerable",
+      "question": "What is the claim-submission deadline and which attachments are required for a purchase expense?",
+      "expected_answer": "Submit through the Finance Portal within 30 calendar days; attach an itemized receipt, business purpose, and relevant cost center.",
+      "expected_sections": [
+        {
+          "document": "Expense-Policy.md",
+          "section": "Submitting claims"
+        }
+      ]
+    },
+    {
+      "id": "answer-010",
+      "category": "answerable",
+      "question": "Which flight cabin is reimbursable for normal business travel?",
+      "expected_answer": "Economy-class flights.",
+      "expected_sections": [
+        {
+          "document": "Expense-Policy.md",
+          "section": "Travel and meals"
+        }
+      ]
+    },
+    {
+      "id": "answer-011",
+      "category": "answerable",
+      "question": "Can unused monthly home-internet allowance be exchanged for money or rolled into next month?",
+      "expected_answer": "It cannot be carried forward or exchanged for cash.",
+      "expected_sections": [
+        {
+          "document": "Expense-Policy.md",
+          "section": "Home internet"
+        }
+      ]
+    },
+    {
+      "id": "answer-012",
+      "category": "answerable",
+      "question": "Whose approval is enough for an expense of INR 4,000?",
+      "expected_answer": "Manager approval is required for expenses up to INR 5,000.",
+      "expected_sections": [
+        {
+          "document": "Expense-Policy.md",
+          "section": "Approval limits"
+        }
+      ]
+    },
+    {
+      "id": "answer-013",
+      "category": "answerable",
+      "question": "Which incident severity covers confirmed active data exposure?",
+      "expected_answer": "SEV1.",
+      "expected_sections": [
+        {
+          "document": "Incident-Response-Policy.md",
+          "section": "Severity levels"
+        }
+      ]
+    },
+    {
+      "id": "answer-014",
+      "category": "answerable",
+      "question": "Who directs diagnosis and mitigation while an incident commander coordinates decisions?",
+      "expected_answer": "The technical lead.",
+      "expected_sections": [
+        {
+          "document": "Incident-Response-Policy.md",
+          "section": "Incident roles"
+        }
+      ]
+    },
+    {
+      "id": "answer-015",
+      "category": "answerable",
+      "question": "What deadline applies to a blameless review after a SEV1 incident?",
+      "expected_answer": "Within five working days.",
+      "expected_sections": [
+        {
+          "document": "Incident-Response-Policy.md",
+          "section": "Post-incident review"
+        }
+      ]
+    },
+    {
+      "id": "answer-016",
+      "category": "answerable",
+      "question": "What is the required interval between stakeholder updates during an unmitigated SEV1 incident?",
+      "expected_answer": "Every 30 minutes until mitigation.",
+      "expected_sections": [
+        {
+          "document": "Incident-Response-Policy.md",
+          "section": "Response targets"
+        }
+      ]
+    },
+    {
+      "id": "answer-017",
+      "category": "answerable",
+      "question": "Does sickness lasting four consecutive working days require medical certification?",
+      "expected_answer": "Yes; a medical certificate is required for more than three consecutive working days.",
+      "expected_sections": [
+        {
+          "document": "Leave-Policy.md",
+          "section": "Sick leave"
+        }
+      ]
+    },
+    {
+      "id": "answer-018",
+      "category": "answerable",
+      "question": "Is emergency leave part of the normal annual-leave balance, and how many days can be approved?",
+      "expected_answer": "Up to three working days approved by People Operations, separate from the annual allowance.",
+      "expected_sections": [
+        {
+          "document": "Leave-Policy.md",
+          "section": "Emergency leave"
+        }
+      ]
+    },
+    {
+      "id": "answer-019",
+      "category": "answerable",
+      "question": "What advance notice should I give for planned annual leave?",
+      "expected_answer": "Submit through the People Portal at least seven calendar days before the first day of absence.",
+      "expected_sections": [
+        {
+          "document": "Leave-Policy.md",
+          "section": "Requesting leave"
+        }
+      ]
+    },
+    {
+      "id": "answer-020",
+      "category": "answerable",
+      "question": "At what monthly rate does paid annual leave accrue for a full-time employee?",
+      "expected_answer": "Two days per completed month of service.",
+      "expected_sections": [
+        {
+          "document": "Leave-Policy.md",
+          "section": "Annual leave"
+        }
+      ]
+    },
+    {
+      "id": "answer-021",
+      "category": "answerable",
+      "question": "What distinguishes the Atlas Owner, Editor and Viewer permissions?",
+      "expected_answer": "Owners manage settings and membership; Editors create and modify project content; Viewers read content and download exports without modifying records.",
+      "expected_sections": [
+        {
+          "document": "Product-Documentation.md",
+          "section": "Workspace roles"
+        }
+      ]
+    },
+    {
+      "id": "answer-022",
+      "category": "answerable",
+      "question": "List the four statuses in the Atlas task lifecycle in order.",
+      "expected_answer": "Backlog, In Progress, Review, Done.",
+      "expected_sections": [
+        {
+          "document": "Product-Documentation.md",
+          "section": "Task workflow"
+        }
+      ]
+    },
+    {
+      "id": "answer-023",
+      "category": "answerable",
+      "question": "What must be assigned to an Atlas task before it can enter Review?",
+      "expected_answer": "It must have an owner.",
+      "expected_sections": [
+        {
+          "document": "Product-Documentation.md",
+          "section": "Task workflow"
+        }
+      ]
+    },
+    {
+      "id": "answer-024",
+      "category": "answerable",
+      "question": "For how long is an Atlas export download link usable?",
+      "expected_answer": "24 hours.",
+      "expected_sections": [
+        {
+          "document": "Product-Documentation.md",
+          "section": "Data export"
+        }
+      ]
+    },
+    {
+      "id": "answer-025",
+      "category": "answerable",
+      "question": "What company-provided hardware is specified for working remotely?",
+      "expected_answer": "A laptop and one external monitor.",
+      "expected_sections": [
+        {
+          "document": "Remote-Work-Policy.md",
+          "section": "Equipment and connectivity"
+        }
+      ]
+    },
+    {
+      "id": "answer-026",
+      "category": "answerable",
+      "question": "What advance notice is needed for a request to work from another country?",
+      "expected_answer": "At least 15 calendar days; approval is required before travel.",
+      "expected_sections": [
+        {
+          "document": "Remote-Work-Policy.md",
+          "section": "Location changes"
+        }
+      ]
+    },
+    {
+      "id": "answer-027",
+      "category": "answerable",
+      "question": "May a household member use an employee company laptop during remote work?",
+      "expected_answer": "No; family members and other people must not use company devices.",
+      "expected_sections": [
+        {
+          "document": "Remote-Work-Policy.md",
+          "section": "Secure remote access"
+        }
+      ]
+    },
+    {
+      "id": "answer-028",
+      "category": "answerable",
+      "question": "Where is multi-factor authentication mandatory at SaiTech?",
+      "expected_answer": "Company email, source control, cloud consoles, and the People Portal.",
+      "expected_sections": [
+        {
+          "document": "Security-Policy.md",
+          "section": "Account security"
+        }
+      ]
+    },
+    {
+      "id": "answer-029",
+      "category": "answerable",
+      "question": "Which classifications apply to customer personal data and production secrets respectively?",
+      "expected_answer": "Customer personal data is Confidential; production secrets are Restricted.",
+      "expected_sections": [
+        {
+          "document": "Security-Policy.md",
+          "section": "Data classification"
+        }
+      ]
+    },
+    {
+      "id": "answer-030",
+      "category": "answerable",
+      "question": "How frequently must a manager review access to sensitive systems?",
+      "expected_answer": "Every quarter.",
+      "expected_sections": [
+        {
+          "document": "Security-Policy.md",
+          "section": "Access reviews"
+        }
+      ]
+    },
+    {
+      "id": "answer-031",
+      "category": "unanswerable",
+      "question": "How many weeks of paid maternity leave does our SaiTech policy provide?",
+      "expected_answer": "The available synthetic company documents do not establish this fact. Explicitly acknowledge the knowledge gap; do not invent a value, name, entitlement or company rule.",
+      "expected_sections": []
+    },
+    {
+      "id": "answer-032",
+      "category": "unanswerable",
+      "question": "What percentage annual salary increase does SaiTech guarantee every year?",
+      "expected_answer": "The available synthetic company documents do not establish this fact. Explicitly acknowledge the knowledge gap; do not invent a value, name, entitlement or company rule.",
+      "expected_sections": []
+    },
+    {
+      "id": "answer-033",
+      "category": "unanswerable",
+      "question": "What is the monthly INR subscription price for our Atlas Enterprise plan?",
+      "expected_answer": "The available synthetic company documents do not establish this fact. Explicitly acknowledge the knowledge gap; do not invent a value, name, entitlement or company rule.",
+      "expected_sections": []
+    },
+    {
+      "id": "answer-034",
+      "category": "unanswerable",
+      "question": "Which SAML identity provider is officially supported by our Atlas product?",
+      "expected_answer": "The available synthetic company documents do not establish this fact. Explicitly acknowledge the knowledge gap; do not invent a value, name, entitlement or company rule.",
+      "expected_sections": []
+    },
+    {
+      "id": "answer-035",
+      "category": "unanswerable",
+      "question": "How many years does our company retain production database backups?",
+      "expected_answer": "The available synthetic company documents do not establish this fact. Explicitly acknowledge the knowledge gap; do not invent a value, name, entitlement or company rule.",
+      "expected_sections": []
+    },
+    {
+      "id": "answer-036",
+      "category": "unanswerable",
+      "question": "What is the monthly parking reimbursement allowance in our expense policy?",
+      "expected_answer": "The available synthetic company documents do not establish this fact. Explicitly acknowledge the knowledge gap; do not invent a value, name, entitlement or company rule.",
+      "expected_sections": []
+    },
+    {
+      "id": "answer-037",
+      "category": "unanswerable",
+      "question": "How many calendar days of resignation notice does our employment policy require?",
+      "expected_answer": "The available synthetic company documents do not establish this fact. Explicitly acknowledge the knowledge gap; do not invent a value, name, entitlement or company rule.",
+      "expected_sections": []
+    },
+    {
+      "id": "answer-038",
+      "category": "unanswerable",
+      "question": "Are pets allowed in our SaiTech office under the workplace policy?",
+      "expected_answer": "The available synthetic company documents do not establish this fact. Explicitly acknowledge the knowledge gap; do not invent a value, name, entitlement or company rule.",
+      "expected_sections": []
+    },
+    {
+      "id": "answer-039",
+      "category": "unanswerable",
+      "question": "What annual training budget in INR is allocated to each SaiTech employee?",
+      "expected_answer": "The available synthetic company documents do not establish this fact. Explicitly acknowledge the knowledge gap; do not invent a value, name, entitlement or company rule.",
+      "expected_sections": []
+    },
+    {
+      "id": "answer-040",
+      "category": "unanswerable",
+      "question": "Which cloud region physically hosts our Atlas production database?",
+      "expected_answer": "The available synthetic company documents do not establish this fact. Explicitly acknowledge the knowledge gap; do not invent a value, name, entitlement or company rule.",
+      "expected_sections": []
+    },
+    {
+      "id": "answer-041",
+      "category": "unanswerable",
+      "question": "Who is the current CEO of our fictional company SaiTech?",
+      "expected_answer": "The available synthetic company documents do not establish this fact. Explicitly acknowledge the knowledge gap; do not invent a value, name, entitlement or company rule.",
+      "expected_sections": []
+    },
+    {
+      "id": "answer-042",
+      "category": "unanswerable",
+      "question": "What exchange rate does SaiTech use to reimburse a dollar-denominated receipt?",
+      "expected_answer": "The available synthetic company documents do not establish this fact. Explicitly acknowledge the knowledge gap; do not invent a value, name, entitlement or company rule.",
+      "expected_sections": []
+    },
+    {
+      "id": "answer-043",
+      "category": "unanswerable",
+      "question": "How much does SaiTech reimburse for the doctor visit that provides a sick-leave certificate?",
+      "expected_answer": "The available synthetic company documents do not establish this fact. Explicitly acknowledge the knowledge gap; do not invent a value, name, entitlement or company rule.",
+      "expected_sections": []
+    },
+    {
+      "id": "answer-044",
+      "category": "unanswerable",
+      "question": "What overtime pay multiplier does our company promise for weekend work?",
+      "expected_answer": "The available synthetic company documents do not establish this fact. Explicitly acknowledge the knowledge gap; do not invent a value, name, entitlement or company rule.",
+      "expected_sections": []
+    },
+    {
+      "id": "answer-045",
+      "category": "unanswerable",
+      "question": "How many years of service qualify a SaiTech employee for a paid sabbatical?",
+      "expected_answer": "The available synthetic company documents do not establish this fact. Explicitly acknowledge the knowledge gap; do not invent a value, name, entitlement or company rule.",
+      "expected_sections": []
+    },
+    {
+      "id": "answer-046",
+      "category": "followup",
+      "question": "How many of those days accrue after each completed month?",
+      "expected_answer": "Two days per completed month.",
+      "expected_sections": [
+        {
+          "document": "Leave-Policy.md",
+          "section": "Annual leave"
+        }
+      ],
+      "setup_question": "Explain our full-time annual-leave entitlement.",
+      "setup_expected_answer": "24 working days per calendar year, accruing at two days per completed month.",
+      "setup_expected_sections": [
+        {
+          "document": "Leave-Policy.md",
+          "section": "Annual leave"
+        }
+      ]
+    },
+    {
+      "id": "answer-047",
+      "category": "followup",
+      "question": "If I am off sick for four consecutive working days, do I need a certificate?",
+      "expected_answer": "Yes, a medical certificate is required for absences longer than three consecutive working days.",
+      "expected_sections": [
+        {
+          "document": "Leave-Policy.md",
+          "section": "Sick leave"
+        }
+      ],
+      "setup_question": "What yearly sick-leave allowance do employees have?",
+      "setup_expected_answer": "12 working days per calendar year.",
+      "setup_expected_sections": [
+        {
+          "document": "Leave-Policy.md",
+          "section": "Sick leave"
+        }
+      ]
+    },
+    {
+      "id": "answer-048",
+      "category": "followup",
+      "question": "By which date must those carried-over days be taken?",
+      "expected_answer": "By 31 March.",
+      "expected_sections": [
+        {
+          "document": "Leave-Policy.md",
+          "section": "Carryover"
+        }
+      ],
+      "setup_question": "Can I carry unused annual leave into the next year?",
+      "setup_expected_answer": "Up to five unused annual-leave days may be carried forward.",
+      "setup_expected_sections": [
+        {
+          "document": "Leave-Policy.md",
+          "section": "Carryover"
+        }
+      ]
+    },
+    {
+      "id": "answer-049",
+      "category": "followup",
+      "question": "Would taking that leave use up my annual allowance?",
+      "expected_answer": "No, emergency leave is separate from the annual allowance.",
+      "expected_sections": [
+        {
+          "document": "Leave-Policy.md",
+          "section": "Emergency leave"
+        }
+      ],
+      "setup_question": "What immediate-family emergency leave can People Operations approve?",
+      "setup_expected_answer": "Up to three working days, separate from annual leave.",
+      "setup_expected_sections": [
+        {
+          "document": "Leave-Policy.md",
+          "section": "Emergency leave"
+        }
+      ]
+    },
+    {
+      "id": "answer-050",
+      "category": "followup",
+      "question": "Does that hotel limit already include taxes?",
+      "expected_answer": "No, the limit is before taxes.",
+      "expected_sections": [
+        {
+          "document": "Expense-Policy.md",
+          "section": "Travel and meals"
+        }
+      ],
+      "setup_question": "What is the domestic hotel reimbursement limit?",
+      "setup_expected_answer": "INR 6,000 per night before taxes.",
+      "setup_expected_sections": [
+        {
+          "document": "Expense-Policy.md",
+          "section": "Travel and meals"
+        }
+      ]
+    },
+    {
+      "id": "answer-051",
+      "category": "followup",
+      "question": "Can alcohol be included in that meal claim?",
+      "expected_answer": "No; alcohol is excluded and not reimbursable.",
+      "expected_sections": [
+        {
+          "document": "Expense-Policy.md",
+          "section": "Travel and meals"
+        }
+      ],
+      "setup_question": "What is our business-meal reimbursement limit per person?",
+      "setup_expected_answer": "INR 1,000 per person per day, excluding alcohol.",
+      "setup_expected_sections": [
+        {
+          "document": "Expense-Policy.md",
+          "section": "Travel and meals"
+        }
+      ]
+    },
+    {
+      "id": "answer-052",
+      "category": "followup",
+      "question": "Which portal should I use to submit the expense claim itself?",
+      "expected_answer": "The Finance Portal.",
+      "expected_sections": [
+        {
+          "document": "Expense-Policy.md",
+          "section": "Submitting claims"
+        }
+      ],
+      "setup_question": "How long do I have to resubmit an expense claim returned as incomplete?",
+      "setup_expected_answer": "Ten working days from the return notice.",
+      "setup_expected_sections": [
+        {
+          "document": "Expense-Policy.md",
+          "section": "Non-reimbursable expenses"
+        }
+      ]
+    },
+    {
+      "id": "answer-053",
+      "category": "followup",
+      "question": "Will that exported file contain passwords or authentication tokens?",
+      "expected_answer": "No; exports exclude passwords, authentication tokens, and audit-log entries.",
+      "expected_sections": [
+        {
+          "document": "Product-Documentation.md",
+          "section": "Data export"
+        }
+      ],
+      "setup_question": "How long does an Atlas JSON export download link stay valid?",
+      "setup_expected_answer": "24 hours.",
+      "setup_expected_sections": [
+        {
+          "document": "Product-Documentation.md",
+          "section": "Data export"
+        }
+      ]
+    },
+    {
+      "id": "answer-054",
+      "category": "followup",
+      "question": "Who has permission to restore that deleted task?",
+      "expected_answer": "A workspace owner.",
+      "expected_sections": [
+        {
+          "document": "Product-Documentation.md",
+          "section": "Support and retention"
+        }
+      ],
+      "setup_question": "How long can a deleted Atlas task still be recovered?",
+      "setup_expected_answer": "30 days before permanent removal.",
+      "setup_expected_sections": [
+        {
+          "document": "Product-Documentation.md",
+          "section": "Support and retention"
+        }
+      ]
+    },
+    {
+      "id": "answer-055",
+      "category": "followup",
+      "question": "Would a data-deletion change need that reviewer as well?",
+      "expected_answer": "Yes, changes to data deletion also require a Security reviewer.",
+      "expected_sections": [
+        {
+          "document": "Engineering-Guidelines.md",
+          "section": "Change review"
+        }
+      ],
+      "setup_question": "Who must review a pull request that changes authentication?",
+      "setup_expected_answer": "A Security reviewer.",
+      "setup_expected_sections": [
+        {
+          "document": "Engineering-Guidelines.md",
+          "section": "Change review"
+        }
+      ]
+    },
+    {
+      "id": "answer-056",
+      "category": "followup",
+      "question": "When must the team publish its shared office days for that arrangement?",
+      "expected_answer": "By the last Friday of each month.",
+      "expected_sections": [
+        {
+          "document": "Remote-Work-Policy.md",
+          "section": "Eligibility and schedule"
+        }
+      ],
+      "setup_question": "How many days may an employee work remotely in an ordinary week?",
+      "setup_expected_answer": "Up to three days per week with manager approval.",
+      "setup_expected_sections": [
+        {
+          "document": "Remote-Work-Policy.md",
+          "section": "Eligibility and schedule"
+        }
+      ]
+    },
+    {
+      "id": "answer-057",
+      "category": "followup",
+      "question": "And how often should stakeholders be updated until it is mitigated?",
+      "expected_answer": "Every 30 minutes until mitigation.",
+      "expected_sections": [
+        {
+          "document": "Incident-Response-Policy.md",
+          "section": "Response targets"
+        }
+      ],
+      "setup_question": "What is the acknowledgement target for a SEV1 incident?",
+      "setup_expected_answer": "Within 15 minutes.",
+      "setup_expected_sections": [
+        {
+          "document": "Incident-Response-Policy.md",
+          "section": "Response targets"
+        }
+      ]
+    },
+    {
+      "id": "answer-058",
+      "category": "followup",
+      "question": "In which year was he born?",
+      "expected_answer": "1564.",
+      "expected_sections": [],
+      "setup_question": "Who is the author of Hamlet?",
+      "setup_expected_answer": "William Shakespeare.",
+      "setup_expected_sections": []
+    },
+    {
+      "id": "answer-059",
+      "category": "followup",
+      "question": "Which gas is absorbed in that process?",
+      "expected_answer": "Carbon dioxide.",
+      "expected_sections": [],
+      "setup_question": "What is photosynthesis in a sentence?",
+      "setup_expected_answer": "Plants use light energy to convert carbon dioxide and water into sugars, releasing oxygen.",
+      "setup_expected_sections": []
+    },
+    {
+      "id": "answer-060",
+      "category": "followup",
+      "question": "What codename did I give my personal project earlier?",
+      "expected_answer": "MAUVE-RIDGE.",
+      "expected_sections": [],
+      "setup_question": "Remember that the codename for my personal project is MAUVE-RIDGE.",
+      "setup_expected_answer": "Acknowledges the user-provided codename MAUVE-RIDGE without claiming company evidence.",
+      "setup_expected_sections": []
+    }
+  ]
+}
