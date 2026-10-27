@@ -77,11 +77,11 @@ test("real backend: sign in, upload, index, preview, delete and ask with citatio
     );
   await page.getByLabel("Send question").click();
   await expect(
-    page.getByText("Provisional draft · not yet verified"),
-  ).toBeVisible({ timeout: 90000 });
-  await expect(
     page.getByRole("button", { name: /Source 1.*Leave-Policy/ }),
   ).toBeVisible({ timeout: 120000 });
+  await expect(
+    page.getByText("Provisional draft · not yet verified"),
+  ).not.toBeVisible();
   await page.screenshot({
     path: "test-results/assistant-live.png",
     fullPage: true,
