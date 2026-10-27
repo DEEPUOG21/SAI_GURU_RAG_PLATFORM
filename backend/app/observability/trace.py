@@ -1,9 +1,11 @@
 import asyncio
 import time
 
+import httpx
 from langsmith import traceable
 
 from app.security.guardrails import redact_value
+from app.services.provider_errors import cloudflare_error_codes
 
 
 class Trace:
@@ -37,16 +39,24 @@ class Trace:
                 )
                 return result
             except Exception as exc:
-                if attempt == retries:
-                    self.steps.append(
-                        {
-                            "node": node,
-                            "status": "failed",
-                            "error": type(exc).__name__,
-                            "attempts": attempt + 1,
-                            "latency_ms": round((time.perf_counter() - start) * 1000, 2),
-                        }
-                    )
+                step = {
+                    "node": node,
+                    "status": "failed",
+                    "error": type(exc).__name__,
+                    "attempts": attempt + 1,
+                    "latency_ms": round((time.perf_counter() - start) * 1000, 2),
+                }
+                if isinstance(exc, httpx.HTTPStatusError):
+                    step["http_status"] = exc.response.status_code
+                    codes = cloudflare_error_codes(exc)
+                    if codes:
+                        step["provider_error_codes"] = codes
+                # A 429 never improves through an immediate retry; it may be a daily
+                # account allowance or provider capacity limit.
+                if attempt == retries or (
+                    isinstance(exc, httpx.HTTPStatusError) and exc.response.status_code == 429
+                ):
+                    self.steps.append(step)
                     raise
                 await asyncio.sleep(0.25 * (attempt + 1))
 

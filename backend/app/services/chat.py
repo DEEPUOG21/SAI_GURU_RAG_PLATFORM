@@ -12,6 +12,7 @@ from app.models.entities import Chunk, Message, Query, RetrievalResult
 from app.observability.trace import Trace
 from app.services.access import sources_visible
 from app.services.conversation import ConversationHistory, bounded_history, history_sources
+from app.services.provider_errors import safe_provider_error_message
 
 
 def sse(event, data):
@@ -120,7 +121,7 @@ async def chat_stream(query_id, conversation_id, question, scope, history, reque
                 await emit(
                     "error",
                     {
-                        "message": "Query failed. Check provider configuration and the retrieval trace.",
+                        "message": safe_provider_error_message(exc),
                         "query_id": query_id,
                     },
                 )

@@ -33,6 +33,7 @@ from app.services.conversation import (
 )
 from app.services.grounding import check_grounding, citation_labels
 from app.services.llm import TrackedLLM, llm
+from app.services.provider_errors import cloudflare_error_codes
 
 
 class WorkflowState(TypedDict, total=False):
@@ -133,7 +134,9 @@ async def execute(db, scope, question, history, emit, trace=None):
                 else:
                     route = "DOCUMENT"
                 source_intent = route == "DOCUMENT"
-            except Exception:
+            except Exception as exc:
+                if 3036 in cloudflare_error_codes(exc):
+                    raise
                 # A failed intent provider must not turn an ambiguous company question into an ungrounded answer.
                 if hasattr(db, "rollback"):
                     await db.rollback()
@@ -187,7 +190,9 @@ async def execute(db, scope, question, history, emit, trace=None):
             dense = await trace.run(
                 "dense_retriever", lambda: DenseRetriever(db).retrieve(rewritten, scope), retries=1
             )
-        except Exception:
+        except Exception as exc:
+            if 3036 in cloudflare_error_codes(exc):
+                raise
             # A broken database transaction is rolled back before lexical fallback.
             await db.rollback()
             dense = []
@@ -205,7 +210,9 @@ async def execute(db, scope, question, history, emit, trace=None):
         )
         try:
             candidates = await trace.run("reranker", lambda: reranker().rerank(rewritten, fused), retries=1)
-        except Exception:
+        except Exception as exc:
+            if 3036 in cloudflare_error_codes(exc):
+                raise
             candidates = fused[:6]
             trace.record("reranker_fallback", "RRF ranking used; reranker scores unavailable.", "degraded")
         context = build_context(candidates)

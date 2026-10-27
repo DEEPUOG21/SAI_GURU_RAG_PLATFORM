@@ -48,7 +48,7 @@ async def test_topic_catalog_uses_authorized_current_chunks_and_not_bodies():
     assert "document_chunks.text" not in statement
 
 
-@pytest.mark.parametrize("intent", ["DOCUMENT", "DIRECT", "unavailable", "rate_limited"])
+@pytest.mark.parametrize("intent", ["DOCUMENT", "DIRECT", "unavailable", "rate_limited", "daily_limit"])
 async def test_workflow_source_intent_and_provider_failure_are_safe(monkeypatch, intent):
     cfg = get_settings()
     monkeypatch.setattr(cfg, "generation_mode", "llm")
@@ -60,12 +60,22 @@ async def test_workflow_source_intent_and_provider_failure_are_safe(monkeypatch,
             instruction = messages[0]["content"]
             if instruction.startswith("Classify the user's intent"):
                 calls.append("intent")
-                if intent in {"unavailable", "rate_limited"}:
-                    if intent == "rate_limited":
+                if intent in {"unavailable", "rate_limited", "daily_limit"}:
+                    if intent in {"rate_limited", "daily_limit"}:
                         raise httpx.HTTPStatusError(
                             "private-rate-limit",
                             request=httpx.Request("POST", "https://invalid.test"),
-                            response=httpx.Response(429),
+                            response=httpx.Response(
+                                429,
+                                json={
+                                    "errors": [
+                                        {
+                                            "code": 3036 if intent == "daily_limit" else 3040,
+                                            "message": "private-provider-detail",
+                                        }
+                                    ]
+                                },
+                            ),
                         )
                     raise httpx.ConnectError("private-provider-error")
                 text = json.dumps({"route": intent})
@@ -86,7 +96,7 @@ async def test_workflow_source_intent_and_provider_failure_are_safe(monkeypatch,
             calls.append("retrieval")
             return (
                 []
-                if intent in {"unavailable", "rate_limited"}
+                if intent in {"unavailable", "rate_limited", "daily_limit"}
                 else [Candidate("c", "d", "Policy.md", "The answer is 30 days.", None, "Procedure", 1)]
             )
 
@@ -115,7 +125,13 @@ async def test_workflow_source_intent_and_provider_failure_are_safe(monkeypatch,
     monkeypatch.setattr(workflow, "DenseRetriever", Retriever)
     monkeypatch.setattr(workflow, "LexicalRetriever", Retriever)
     monkeypatch.setattr(workflow, "reranker", Ranker)
-    result = await workflow.execute(DB(), Scope("tenant", "user", "EMPLOYEE"), "What happens next?", [], emit)
+    run = workflow.execute(DB(), Scope("tenant", "user", "EMPLOYEE"), "What happens next?", [], emit)
+    if intent == "daily_limit":
+        with pytest.raises(httpx.HTTPStatusError):
+            await run
+        assert calls == ["intent"]
+        return
+    result = await run
     if intent == "DIRECT":
         assert "retrieval" not in calls and result["route"] == "DIRECT"
     elif intent == "DOCUMENT":

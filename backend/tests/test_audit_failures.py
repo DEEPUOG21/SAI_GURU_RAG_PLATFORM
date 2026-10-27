@@ -36,7 +36,10 @@ async def test_database_unavailable_returns_safe_readiness_error():
         httpx.HTTPStatusError(
             "private-rate-limit",
             request=httpx.Request("POST", "https://invalid.test"),
-            response=httpx.Response(429),
+            response=httpx.Response(
+                429,
+                json={"errors": [{"code": 3036, "message": "private-provider-detail"}]},
+            ),
         ),
         httpx.HTTPStatusError(
             "private-provider-unavailable",
@@ -87,6 +90,8 @@ async def test_failed_chat_emits_safe_error_and_terminal_event(monkeypatch, fail
     content = "".join(frames)
     assert "event: error" in content and "event: done" in content
     assert str(failure) not in content and query.status == "FAILED"
+    if isinstance(failure, httpx.HTTPStatusError) and failure.response.status_code == 429:
+        assert "Today's free AI usage has been reached" in content
 
 
 async def test_embedding_and_reranker_failure_degrade_explicitly(monkeypatch):
