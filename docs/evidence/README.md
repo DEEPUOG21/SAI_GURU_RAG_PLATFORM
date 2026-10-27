@@ -1,5 +1,7 @@
 # Sai Guru: measured answer-quality improvement
 
+The [56-question retrieval comparison](RETRIEVAL-2026-10-27.md) separately measures dense, hybrid and reranked retrieval across three repeated rounds, with per-case rankings, latency, paired intervals and limitations. It does not replace the answer-quality experiment below.
+
 ## Guardrail verification
 
 The guardrail release adds deterministic policy checkpoints, protected-data masking and checked-output display. Tests live in [test_guardrails.py](../../backend/tests/test_guardrails.py); policy scope and limitations are in [observability](../observability.md#guardrail-policy).

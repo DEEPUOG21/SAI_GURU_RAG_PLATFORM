@@ -1,0 +1,658 @@
+{
+  "version": "2026-10-27-v1",
+  "purpose": "Frozen retrieval diagnostic set, separate from the eight tuning questions. Author-generated labels; same known synthetic corpus; no independent annotation or unseen-corpus claim.",
+  "cases": [
+    {
+      "id": "retrieval-001",
+      "category": "single_section",
+      "question": "What daily time window must SaiTech teams keep free for collaboration, and in which timezone?",
+      "expected_sections": [
+        {
+          "document": "Employee-Handbook.md",
+          "section": "Working hours"
+        }
+      ]
+    },
+    {
+      "id": "retrieval-002",
+      "category": "single_section",
+      "question": "By which working day must a new starter finish security training?",
+      "expected_sections": [
+        {
+          "document": "Employee-Handbook.md",
+          "section": "Onboarding"
+        }
+      ]
+    },
+    {
+      "id": "retrieval-003",
+      "category": "single_section",
+      "question": "Who arranges a new employee's buddy and month-long learning plan?",
+      "expected_sections": [
+        {
+          "document": "Employee-Handbook.md",
+          "section": "Onboarding"
+        }
+      ]
+    },
+    {
+      "id": "retrieval-004",
+      "category": "single_section",
+      "question": "How quickly does People Operations acknowledge a report about workplace conduct?",
+      "expected_sections": [
+        {
+          "document": "Employee-Handbook.md",
+          "section": "Equal opportunity and conduct"
+        }
+      ]
+    },
+    {
+      "id": "retrieval-005",
+      "category": "single_section",
+      "question": "Does an employee referral skip the normal interview assessment, and when must interview feedback be recorded?",
+      "expected_sections": [
+        {
+          "document": "Employee-Handbook.md",
+          "section": "Hiring principles"
+        }
+      ]
+    },
+    {
+      "id": "retrieval-006",
+      "category": "single_section",
+      "question": "Where should a new hire send an equipment request?",
+      "expected_sections": [
+        {
+          "document": "Employee-Handbook.md",
+          "section": "Onboarding"
+        }
+      ]
+    },
+    {
+      "id": "retrieval-007",
+      "category": "single_section",
+      "question": "Can the author approve their own production pull request as its only reviewer?",
+      "expected_sections": [
+        {
+          "document": "Engineering-Guidelines.md",
+          "section": "Change review"
+        }
+      ]
+    },
+    {
+      "id": "retrieval-008",
+      "category": "single_section",
+      "question": "What recovery preparation is required before deploying a service?",
+      "expected_sections": [
+        {
+          "document": "Engineering-Guidelines.md",
+          "section": "Testing and delivery"
+        }
+      ]
+    },
+    {
+      "id": "retrieval-009",
+      "category": "single_section",
+      "question": "Which diagnostic information must every service expose without logging customer documents?",
+      "expected_sections": [
+        {
+          "document": "Engineering-Guidelines.md",
+          "section": "Reliability"
+        }
+      ]
+    },
+    {
+      "id": "retrieval-010",
+      "category": "single_section",
+      "question": "What should an API use to stop a retried operation from creating duplicate effects?",
+      "expected_sections": [
+        {
+          "document": "Engineering-Guidelines.md",
+          "section": "API conventions"
+        }
+      ]
+    },
+    {
+      "id": "retrieval-011",
+      "category": "single_section",
+      "question": "How are independently ranked full-text and vector search candidates combined?",
+      "expected_sections": [
+        {
+          "document": "Engineering-Guidelines.md",
+          "section": "Knowledge assistant architecture"
+        }
+      ]
+    },
+    {
+      "id": "retrieval-012",
+      "category": "single_section",
+      "question": "When may an engineering team make destructive schema changes, and how are database changes versioned?",
+      "expected_sections": [
+        {
+          "document": "Engineering-Guidelines.md",
+          "section": "Testing and delivery"
+        }
+      ]
+    },
+    {
+      "id": "retrieval-013",
+      "category": "single_section",
+      "question": "How long after buying something do I have to submit an expense, and what supporting information is required?",
+      "expected_sections": [
+        {
+          "document": "Expense-Policy.md",
+          "section": "Submitting claims"
+        }
+      ]
+    },
+    {
+      "id": "retrieval-014",
+      "category": "single_section",
+      "question": "I plan to spend INR 7,000 on equipment: whose approval must I obtain before purchasing?",
+      "expected_sections": [
+        {
+          "document": "Expense-Policy.md",
+          "section": "Approval limits"
+        }
+      ]
+    },
+    {
+      "id": "retrieval-015",
+      "category": "single_section",
+      "question": "Does an inexpensive international business trip still need advance Finance approval?",
+      "expected_sections": [
+        {
+          "document": "Expense-Policy.md",
+          "section": "Approval limits"
+        }
+      ]
+    },
+    {
+      "id": "retrieval-016",
+      "category": "single_section",
+      "question": "What is the domestic hotel nightly cap, and does it include tax?",
+      "expected_sections": [
+        {
+          "document": "Expense-Policy.md",
+          "section": "Travel and meals"
+        }
+      ]
+    },
+    {
+      "id": "retrieval-017",
+      "category": "single_section",
+      "question": "What is the daily per-person business meal allowance, and can it cover alcohol?",
+      "expected_sections": [
+        {
+          "document": "Expense-Policy.md",
+          "section": "Travel and meals"
+        }
+      ]
+    },
+    {
+      "id": "retrieval-018",
+      "category": "single_section",
+      "question": "Finance returned my incomplete claim. How many working days do I have to correct it?",
+      "expected_sections": [
+        {
+          "document": "Expense-Policy.md",
+          "section": "Non-reimbursable expenses"
+        }
+      ]
+    },
+    {
+      "id": "retrieval-019",
+      "category": "within_document_multisection",
+      "question": "What acknowledgement target applies when a major feature is unavailable to multiple customers without a workaround?",
+      "expected_sections": [
+        {
+          "document": "Incident-Response-Policy.md",
+          "section": "Severity levels"
+        },
+        {
+          "document": "Incident-Response-Policy.md",
+          "section": "Response targets"
+        }
+      ]
+    },
+    {
+      "id": "retrieval-020",
+      "category": "single_section",
+      "question": "During a SEV1 outage, how frequently must stakeholders receive updates?",
+      "expected_sections": [
+        {
+          "document": "Incident-Response-Policy.md",
+          "section": "Response targets"
+        }
+      ]
+    },
+    {
+      "id": "retrieval-021",
+      "category": "single_section",
+      "question": "When must the blameless review of a SEV2 incident be completed, and what should its actions include?",
+      "expected_sections": [
+        {
+          "document": "Incident-Response-Policy.md",
+          "section": "Post-incident review"
+        }
+      ]
+    },
+    {
+      "id": "retrieval-022",
+      "category": "single_section",
+      "question": "I spotted a suspected security incident. What information should I report, and should I change the affected system?",
+      "expected_sections": [
+        {
+          "document": "Incident-Response-Policy.md",
+          "section": "Reporting an incident"
+        }
+      ]
+    },
+    {
+      "id": "retrieval-023",
+      "category": "single_section",
+      "question": "Who may publish an external incident statement, and is approval required?",
+      "expected_sections": [
+        {
+          "document": "Incident-Response-Policy.md",
+          "section": "Incident roles"
+        }
+      ]
+    },
+    {
+      "id": "retrieval-024",
+      "category": "single_section",
+      "question": "Which incident severity applies to a limited issue that already has a working mitigation?",
+      "expected_sections": [
+        {
+          "document": "Incident-Response-Policy.md",
+          "section": "Severity levels"
+        }
+      ]
+    },
+    {
+      "id": "retrieval-025",
+      "category": "single_section",
+      "question": "What is the yearly paid sick-leave allowance for an employee?",
+      "expected_sections": [
+        {
+          "document": "Leave-Policy.md",
+          "section": "Sick leave"
+        }
+      ]
+    },
+    {
+      "id": "retrieval-026",
+      "category": "single_section",
+      "question": "After how many consecutive working days of sickness is a medical certificate required?",
+      "expected_sections": [
+        {
+          "document": "Leave-Policy.md",
+          "section": "Sick leave"
+        }
+      ]
+    },
+    {
+      "id": "retrieval-027",
+      "category": "single_section",
+      "question": "What is the deadline for using annual leave carried into the next year, and does sick leave roll over?",
+      "expected_sections": [
+        {
+          "document": "Leave-Policy.md",
+          "section": "Carryover"
+        }
+      ]
+    },
+    {
+      "id": "retrieval-028",
+      "category": "single_section",
+      "question": "How much emergency leave can People Operations approve, and does it reduce the annual allowance?",
+      "expected_sections": [
+        {
+          "document": "Leave-Policy.md",
+          "section": "Emergency leave"
+        }
+      ]
+    },
+    {
+      "id": "retrieval-029",
+      "category": "single_section",
+      "question": "How far ahead must planned annual leave be requested, and how long does the manager have to decide?",
+      "expected_sections": [
+        {
+          "document": "Leave-Policy.md",
+          "section": "Requesting leave"
+        }
+      ]
+    },
+    {
+      "id": "retrieval-030",
+      "category": "single_section",
+      "question": "What handover details must accompany a request for five working days off?",
+      "expected_sections": [
+        {
+          "document": "Leave-Policy.md",
+          "section": "Requesting leave"
+        }
+      ]
+    },
+    {
+      "id": "retrieval-031",
+      "category": "single_section",
+      "question": "Can an Atlas Viewer download exports or edit project records?",
+      "expected_sections": [
+        {
+          "document": "Product-Documentation.md",
+          "section": "Workspace roles"
+        }
+      ]
+    },
+    {
+      "id": "retrieval-032",
+      "category": "single_section",
+      "question": "Why can an Atlas task with no assigned owner not move to Review?",
+      "expected_sections": [
+        {
+          "document": "Product-Documentation.md",
+          "section": "Task workflow"
+        }
+      ]
+    },
+    {
+      "id": "retrieval-033",
+      "category": "single_section",
+      "question": "If I close an Atlas milestone, will all its unfinished tasks be closed automatically?",
+      "expected_sections": [
+        {
+          "document": "Product-Documentation.md",
+          "section": "Task workflow"
+        }
+      ]
+    },
+    {
+      "id": "retrieval-034",
+      "category": "single_section",
+      "question": "Which categories of information are deliberately excluded from an Atlas JSON export?",
+      "expected_sections": [
+        {
+          "document": "Product-Documentation.md",
+          "section": "Data export"
+        }
+      ]
+    },
+    {
+      "id": "retrieval-035",
+      "category": "single_section",
+      "question": "Who can restore a deleted Atlas task, and for how long is restoration possible?",
+      "expected_sections": [
+        {
+          "document": "Product-Documentation.md",
+          "section": "Support and retention"
+        }
+      ]
+    },
+    {
+      "id": "retrieval-036",
+      "category": "single_section",
+      "question": "Which identifiers should I include in an Atlas support request, and what data should I omit?",
+      "expected_sections": [
+        {
+          "document": "Product-Documentation.md",
+          "section": "Support and retention"
+        }
+      ]
+    },
+    {
+      "id": "retrieval-037",
+      "category": "single_section",
+      "question": "By what point each month must teams publish their shared office days?",
+      "expected_sections": [
+        {
+          "document": "Remote-Work-Policy.md",
+          "section": "Eligibility and schedule"
+        }
+      ]
+    },
+    {
+      "id": "retrieval-038",
+      "category": "single_section",
+      "question": "Whose written approval is needed for a fully remote arrangement?",
+      "expected_sections": [
+        {
+          "document": "Remote-Work-Policy.md",
+          "section": "Eligibility and schedule"
+        }
+      ]
+    },
+    {
+      "id": "retrieval-039",
+      "category": "single_section",
+      "question": "Are remote employees assessed on online presence indicators or on delivery outcomes?",
+      "expected_sections": [
+        {
+          "document": "Remote-Work-Policy.md",
+          "section": "Collaboration"
+        }
+      ]
+    },
+    {
+      "id": "retrieval-040",
+      "category": "single_section",
+      "question": "What network and device requirements apply when accessing internal systems from public Wi-Fi?",
+      "expected_sections": [
+        {
+          "document": "Remote-Work-Policy.md",
+          "section": "Secure remote access"
+        }
+      ]
+    },
+    {
+      "id": "retrieval-041",
+      "category": "single_section",
+      "question": "What hardware does SaiTech provide to remote employees, and where do they get IT help?",
+      "expected_sections": [
+        {
+          "document": "Remote-Work-Policy.md",
+          "section": "Equipment and connectivity"
+        }
+      ]
+    },
+    {
+      "id": "retrieval-042",
+      "category": "single_section",
+      "question": "How far in advance must I request permission to work from another country?",
+      "expected_sections": [
+        {
+          "document": "Remote-Work-Policy.md",
+          "section": "Location changes"
+        }
+      ]
+    },
+    {
+      "id": "retrieval-043",
+      "category": "single_section",
+      "question": "Which company systems require multi-factor authentication?",
+      "expected_sections": [
+        {
+          "document": "Security-Policy.md",
+          "section": "Account security"
+        }
+      ]
+    },
+    {
+      "id": "retrieval-044",
+      "category": "single_section",
+      "question": "How are customer personal information and production secrets classified?",
+      "expected_sections": [
+        {
+          "document": "Security-Policy.md",
+          "section": "Data classification"
+        }
+      ]
+    },
+    {
+      "id": "retrieval-045",
+      "category": "single_section",
+      "question": "After what idle period must a company laptop automatically lock?",
+      "expected_sections": [
+        {
+          "document": "Security-Policy.md",
+          "section": "Device controls"
+        }
+      ]
+    },
+    {
+      "id": "retrieval-046",
+      "category": "single_section",
+      "question": "How long after IT approval may a critical security update wait before installation?",
+      "expected_sections": [
+        {
+          "document": "Security-Policy.md",
+          "section": "Device controls"
+        }
+      ]
+    },
+    {
+      "id": "retrieval-047",
+      "category": "single_section",
+      "question": "How often must managers review sensitive-system access, and what ownership requirement applies to service accounts?",
+      "expected_sections": [
+        {
+          "document": "Security-Policy.md",
+          "section": "Access reviews"
+        }
+      ]
+    },
+    {
+      "id": "retrieval-048",
+      "category": "single_section",
+      "question": "When must access be removed for a departing employee or an account identified as compromised?",
+      "expected_sections": [
+        {
+          "document": "Security-Policy.md",
+          "section": "Access reviews"
+        }
+      ]
+    },
+    {
+      "id": "retrieval-049",
+      "category": "cross_document",
+      "question": "What laptop security controls and remote-network protections must I use when working from a cafe?",
+      "expected_sections": [
+        {
+          "document": "Security-Policy.md",
+          "section": "Device controls"
+        },
+        {
+          "document": "Remote-Work-Policy.md",
+          "section": "Secure remote access"
+        }
+      ]
+    },
+    {
+      "id": "retrieval-050",
+      "category": "cross_document",
+      "question": "For onboarding, what is the security-training deadline and what minimum password length must I follow?",
+      "expected_sections": [
+        {
+          "document": "Employee-Handbook.md",
+          "section": "Onboarding"
+        },
+        {
+          "document": "Security-Policy.md",
+          "section": "Account security"
+        }
+      ]
+    },
+    {
+      "id": "retrieval-051",
+      "category": "cross_document",
+      "question": "For an international work trip, which expense approvals are needed and how much notice is required to work from that country?",
+      "expected_sections": [
+        {
+          "document": "Expense-Policy.md",
+          "section": "Approval limits"
+        },
+        {
+          "document": "Remote-Work-Policy.md",
+          "section": "Location changes"
+        }
+      ]
+    },
+    {
+      "id": "retrieval-052",
+      "category": "cross_document",
+      "question": "How long can an Atlas owner recover a deleted task, and when should a departing employee lose company access?",
+      "expected_sections": [
+        {
+          "document": "Product-Documentation.md",
+          "section": "Support and retention"
+        },
+        {
+          "document": "Security-Policy.md",
+          "section": "Access reviews"
+        }
+      ]
+    },
+    {
+      "id": "retrieval-053",
+      "category": "cross_document",
+      "question": "What should I do before a sick workday starts, and where should I record a planned absence?",
+      "expected_sections": [
+        {
+          "document": "Leave-Policy.md",
+          "section": "Sick leave"
+        },
+        {
+          "document": "Employee-Handbook.md",
+          "section": "Working hours"
+        }
+      ]
+    },
+    {
+      "id": "retrieval-054",
+      "category": "cross_document",
+      "question": "Are production secrets included in Atlas exports, and what information classification applies to those secrets?",
+      "expected_sections": [
+        {
+          "document": "Product-Documentation.md",
+          "section": "Data export"
+        },
+        {
+          "document": "Security-Policy.md",
+          "section": "Data classification"
+        }
+      ]
+    },
+    {
+      "id": "retrieval-055",
+      "category": "cross_document",
+      "question": "What special reviewer is required for authentication-code changes, and which source-control account protection is mandatory?",
+      "expected_sections": [
+        {
+          "document": "Engineering-Guidelines.md",
+          "section": "Change review"
+        },
+        {
+          "document": "Security-Policy.md",
+          "section": "Account security"
+        }
+      ]
+    },
+    {
+      "id": "retrieval-056",
+      "category": "cross_document",
+      "question": "What is the acknowledgement target for a company-wide outage, and which health and logging facilities should the affected service expose?",
+      "expected_sections": [
+        {
+          "document": "Incident-Response-Policy.md",
+          "section": "Response targets"
+        },
+        {
+          "document": "Engineering-Guidelines.md",
+          "section": "Reliability"
+        }
+      ]
+    }
+  ]
+}

@@ -11,6 +11,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "backend"))
 
 from app.core.config import get_settings
 from app.evaluation.langsmith_export import experiment_payload, upload_experiment
+from app.evaluation.retrieval_benchmark import MODES, retrieval_experiment_payload
 
 
 def main():
@@ -27,11 +28,19 @@ def main():
     parser.add_argument(
         "--upload",
         action="store_true",
-        help="Send questions, reference answers, answers and metrics",
+        help="Send selected evaluation inputs, references, outputs and metrics",
+    )
+    parser.add_argument(
+        "--retrieval-mode",
+        choices=MODES,
+        help="Export repeat-averaged results of a retrieval ablation instead of an answer evaluation",
     )
     args = parser.parse_args()
-    payload = experiment_payload(
-        json.loads(args.result.read_text(encoding="utf-8")), args.name
+    record = json.loads(args.result.read_text(encoding="utf-8"))
+    payload = (
+        retrieval_experiment_payload(record, args.name, args.retrieval_mode)
+        if args.retrieval_mode
+        else experiment_payload(record, args.name)
     )
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
