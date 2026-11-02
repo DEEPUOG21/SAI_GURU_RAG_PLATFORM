@@ -5,6 +5,7 @@ the web application and remains the deployment target ``app.main:app``.
 """
 
 import logging
+import os
 import uuid
 from contextlib import asynccontextmanager
 
@@ -110,4 +111,9 @@ async def unexpected_error(request: Request, exc: Exception):
 
 @app.get("/api/v1/health")
 async def health():
-    return {"status": "ok", "service": "sai-guru", "max_upload_mb": settings.max_upload_mb}
+    return {
+        "status": "ok",
+        "service": "sai-guru",
+        "max_upload_mb": settings.max_upload_mb,
+        "revision": os.getenv("RENDER_GIT_COMMIT"),
+    }

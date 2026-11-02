@@ -2,6 +2,8 @@
 
 The API image uses a digest-pinned Wolfi base with Python 3.11 and the native C++/OpenMP libraries needed by the local model providers. Dependencies remain hash-locked. Build tools are removed after installation, and the service runs as UID 10001. CI checks the runtime identity, native ONNX provider and isolated parser before accepting the image. OS packages receive Wolfi repository updates during builds; the base digest still needs periodic refresh and every built image must pass the security scan.
 
+`GET /api/v1/health` reports Render's `RENDER_GIT_COMMIT` as `revision` when available. Compare it with the intended Git SHA after deployment; `null` means this host did not supply that metadata. Health alone checks process availability; use `/api/v1/ready` for database readiness and a real chat for provider availability. The revision is public source metadata, not a credential.
+
 The application uses Vercel for the frontend, Render for the API and Supabase PostgreSQL with pgvector. Cloudflare Workers AI supplies the hosted chat, embedding and reranking models. Check provider availability and account limits in the relevant dashboards.
 
 ## Database
