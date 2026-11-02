@@ -3,7 +3,7 @@ import json
 import httpx
 import pytest
 
-from app.services.llm import OpenCompatibleLLM
+from app.llm.provider import OpenCompatibleLLM
 
 
 @pytest.mark.parametrize(
@@ -26,7 +26,7 @@ async def test_llm_stream_protocol(monkeypatch, payload, valid):
             )
         )
 
-    monkeypatch.setattr("app.services.llm.httpx.AsyncClient", factory)
+    monkeypatch.setattr("app.llm.provider.httpx.AsyncClient", factory)
     if valid:
         assert (await OpenCompatibleLLM().complete([{"role": "user", "content": "q"}]))[0] == "Hello"
     else:
@@ -35,11 +35,11 @@ async def test_llm_stream_protocol(monkeypatch, payload, valid):
 
 
 async def test_workflow_discards_unsupported_draft(monkeypatch):
-    from app.agents import workflow
+    from app.core import engine as workflow
     from app.core.config import get_settings
     from app.retrieval.base import Candidate
+    from app.retrieval.context import INSUFFICIENT
     from app.security.scope import Scope
-    from app.services.context import INSUFFICIENT
 
     class Retrieval:
         def __init__(self, db):

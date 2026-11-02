@@ -3,15 +3,15 @@ from fastapi.responses import StreamingResponse
 from sqlalchemy import delete, select
 from sqlalchemy.dialects.postgresql import insert
 
+from app.api.streaming import chat_stream, conversation_history
 from app.database.session import get_db
+from app.guardrails.policy import redact
+from app.llm.conversation import history_sources
 from app.models.entities import Conversation, Feedback, Message, Query
 from app.schemas.requests import ChatRequest, FeedbackRequest
 from app.schemas.responses import ConversationResponse, MessageResponse
+from app.security.access import sources_visible
 from app.security.auth import current_scope, rate_limit
-from app.security.guardrails import redact
-from app.services.access import sources_visible
-from app.services.chat import chat_stream, conversation_history
-from app.services.conversation import history_sources
 
 router = APIRouter(prefix="/api/v1", tags=["Assistant"])
 

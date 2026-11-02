@@ -13,7 +13,7 @@ if not key_file.exists():
     key_file.write_text(secrets.token_urlsafe(48))
 os.environ["RUNTIME_DATABASE_PASSWORD"] = key_file.read_text().strip()
 
-from app.database.setup_runtime import main  # noqa: E402
+from app.database.setup_runtime import main
 
 asyncio.run(main())
 Path(".local-runtime-url").write_text(

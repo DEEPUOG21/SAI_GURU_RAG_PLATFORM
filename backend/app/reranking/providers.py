@@ -6,8 +6,8 @@ from functools import lru_cache
 import httpx
 
 from app.core.config import get_settings
+from app.guardrails.policy import redact
 from app.retrieval.base import Candidate
-from app.security.guardrails import redact
 
 
 class RerankerProvider(ABC):

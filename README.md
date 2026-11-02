@@ -30,6 +30,11 @@ docs/          Development, design, deployment and evidence
 
 Docker Compose and Render configuration stay at the root; CI workflows live in `.github/`. Private configuration, dependencies, databases, model caches and local archives are ignored by Git.
 
+Inside `backend/app/`, start with `core/engine.py` for the question-answering flow.
+`main.py` starts FastAPI; `guardrails/`, `llm/`, `chunking/`, `embeddings/`,
+`retrieval/`, `reranking/` and `observability/` contain the corresponding RAG steps.
+The [backend folder map](docs/architecture.md#backend-folder-map) explains each folder and the reading order.
+
 ## Documentation
 
 - [Development](docs/development.md): setup, migrations, inference and tests

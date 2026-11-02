@@ -3,7 +3,7 @@ from contextlib import contextmanager
 
 import pytest
 
-from app.agents import workflow
+from app.core import engine as workflow
 from app.core.config import get_settings
 from app.observability import langsmith as observability
 from app.retrieval.base import Candidate

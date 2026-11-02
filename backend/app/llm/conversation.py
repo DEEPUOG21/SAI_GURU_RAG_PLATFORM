@@ -3,7 +3,7 @@
 import json
 import re
 
-from app.agents.routing import classify, is_followup, rewrite
+from app.llm.routing import classify, is_followup, rewrite
 
 
 class ConversationHistory(list):

@@ -49,8 +49,8 @@ async def test_database_unavailable_returns_safe_readiness_error():
     ],
 )
 async def test_failed_chat_emits_safe_error_and_terminal_event(monkeypatch, failure):
+    from app.api import streaming as chat
     from app.security.scope import Scope
-    from app.services import chat
 
     query = SimpleNamespace(status="RUNNING")
 
@@ -95,7 +95,7 @@ async def test_failed_chat_emits_safe_error_and_terminal_event(monkeypatch, fail
 
 
 async def test_embedding_and_reranker_failure_degrade_explicitly(monkeypatch):
-    from app.agents import workflow
+    from app.core import engine as workflow
     from app.core.config import get_settings
     from app.retrieval.base import Candidate
     from app.security.scope import Scope

@@ -153,8 +153,8 @@ async def test_real_end_to_end(monkeypatch):
         assert (await client.delete(f"/api/v1/documents/{doc.id}", headers=a)).status_code == 204
         history = (await client.get(f"/api/v1/conversations/{conversation_id}/messages", headers=e)).json()
         assert history == []  # Document deletion now erases derived messages, not just redacts them.
+        from app.api.streaming import conversation_history
         from app.security.scope import Scope
-        from app.services.chat import conversation_history
 
         async with Session() as history_db:
             model_history = await conversation_history(

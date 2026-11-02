@@ -2,9 +2,9 @@ import re
 
 from sqlalchemy import func, select
 
+from app.embeddings.providers import embeddings
 from app.models.entities import Chunk, Document
 from app.retrieval.base import Candidate, Retriever
-from app.services.providers import embeddings
 
 
 def authorized_chunks(scope):

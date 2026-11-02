@@ -4,11 +4,12 @@ from datetime import datetime, timezone
 from sqlalchemy import delete, func, select, text
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.chunking.splitter import chunk_sections
 from app.core.config import get_settings
-from app.ingestion.parsing import chunk_sections, validate_file
+from app.embeddings.providers import embeddings
+from app.ingestion.parsing import validate_file
 from app.ingestion.sandbox import parse_isolated
 from app.models.entities import Chunk, Document, DocumentVersion
-from app.services.providers import embeddings
 
 
 async def upload(

@@ -6,8 +6,8 @@ from pathlib import Path
 
 from sqlalchemy import select
 
-from app.agents.workflow import execute
 from app.core.config import get_settings
+from app.core.engine import execute
 from app.database.session import Session
 from app.evaluation.metrics import citation_correctness, retrieval_metrics, token_f1
 from app.models.entities import Evaluation

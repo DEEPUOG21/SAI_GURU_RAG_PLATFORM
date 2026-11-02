@@ -15,7 +15,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "backend"))
 
 import httpx
-from app.agents import workflow
+from app.core import engine as workflow
 from app.core.config import get_settings
 from app.database.session import engine, require_runtime_role
 from app.evaluation.retrieval_benchmark import percentile

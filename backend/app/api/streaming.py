@@ -5,14 +5,14 @@ import time
 
 from sqlalchemy import select
 
-from app.agents.workflow import execute
 from app.core.config import get_settings
+from app.core.engine import execute
 from app.database.session import Session
+from app.llm.conversation import ConversationHistory, bounded_history, history_sources
+from app.llm.errors import safe_provider_error_message
 from app.models.entities import Chunk, Message, Query, RetrievalResult
 from app.observability.trace import Trace
-from app.services.access import sources_visible
-from app.services.conversation import ConversationHistory, bounded_history, history_sources
-from app.services.provider_errors import safe_provider_error_message
+from app.security.access import sources_visible
 
 
 def sse(event, data):

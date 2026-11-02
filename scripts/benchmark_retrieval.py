@@ -23,11 +23,11 @@ from app.evaluation.retrieval_benchmark import (
     score_ranking,
     summarize,
 )
+from app.guardrails.policy import screen_candidates
 from app.models.entities import Document, User
 from app.reranking.providers import reranker
 from app.retrieval.fusion import reciprocal_rank_fusion
 from app.retrieval.postgres import DenseRetriever, LexicalRetriever, authorized_chunks
-from app.security.guardrails import screen_candidates
 from app.security.scope import Scope
 from sqlalchemy import select, text
 

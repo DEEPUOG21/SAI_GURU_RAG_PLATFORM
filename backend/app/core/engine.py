@@ -1,3 +1,9 @@
+"""RAG core engine: assemble and execute the guarded LangGraph query workflow.
+
+Start with ``execute`` to follow a question through routing, retrieval, generation,
+verification and finalization. HTTP transport belongs to ``app.api.streaming``.
+"""
+
 import json
 import logging
 import re
@@ -6,24 +12,17 @@ from typing import TypedDict
 
 from langgraph.graph import END, START, StateGraph
 
-from app.agents.sql import run_sql
 from app.core.config import get_settings
-from app.observability.langsmith import tracing_scope
-from app.observability.trace import Trace
-from app.reranking.providers import reranker
-from app.retrieval.fusion import reciprocal_rank_fusion
-from app.retrieval.postgres import DenseRetriever, LexicalRetriever, source_catalog
-from app.security.guardrails import (
+from app.guardrails.conflicts import literal_conflicts, relevant_excerpts
+from app.guardrails.grounding import check_grounding, citation_labels
+from app.guardrails.policy import (
     SENSITIVE_OUTPUT,
     inspect,
     redact,
     redact_value,
     screen_candidates,
 )
-from app.services.access import sources_visible
-from app.services.conflicts import literal_conflicts, relevant_excerpts
-from app.services.context import INSUFFICIENT, build_context, evidence_text
-from app.services.conversation import (
+from app.llm.conversation import (
     ConversationHistory,
     bounded_history,
     conversation_only,
@@ -31,9 +30,16 @@ from app.services.conversation import (
     resolve_question,
     source_aware_route,
 )
-from app.services.grounding import check_grounding, citation_labels
-from app.services.llm import TrackedLLM, llm
-from app.services.provider_errors import cloudflare_error_codes
+from app.llm.errors import cloudflare_error_codes
+from app.llm.provider import TrackedLLM, llm
+from app.observability.langsmith import tracing_scope
+from app.observability.trace import Trace
+from app.reranking.providers import reranker
+from app.retrieval.context import INSUFFICIENT, build_context, evidence_text
+from app.retrieval.fusion import reciprocal_rank_fusion
+from app.retrieval.postgres import DenseRetriever, LexicalRetriever, source_catalog
+from app.retrieval.sql import run_sql
+from app.security.access import sources_visible
 
 
 class WorkflowState(TypedDict, total=False):

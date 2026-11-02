@@ -5,7 +5,7 @@ from functools import lru_cache
 import httpx
 
 from app.core.config import get_settings
-from app.security.guardrails import redact
+from app.guardrails.policy import redact
 
 
 class EmbeddingProvider(ABC):

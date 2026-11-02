@@ -1,3 +1,9 @@
+"""FastAPI entry point: configure HTTP, middleware, lifecycle and API routes.
+
+The question-answering engine lives in ``app.core.engine``; this module starts
+the web application and remains the deployment target ``app.main:app``.
+"""
+
 import logging
 import uuid
 from contextlib import asynccontextmanager

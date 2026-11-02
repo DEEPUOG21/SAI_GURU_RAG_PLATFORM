@@ -35,7 +35,7 @@ SSE events and response schemas remain compatible with the frontend. Existing Re
 
 ## Guardrail policy
 
-`backend/app/security/guardrails.py` implements local deterministic checks with `ALLOW`, `REDACT`, `CLARIFY` and `REFUSE` decisions. No additional service or paid model is required.
+`backend/app/guardrails/policy.py` implements local deterministic checks with `ALLOW`, `REDACT`, `CLARIFY` and `REFUSE` decisions. No additional service or paid model is required.
 
 - `GUARDRAILS_ENABLED=true` enables the policy by default. It does not replace database RLS, role checks or the SQL allowlist, which remain enforced independently.
 - `GUARDRAILS_REDACT_IDENTIFIERS=true` masks SSN-shaped identifiers and card-like numbers that pass a Luhn checksum. Ordinary business email addresses are preserved. This is format detection, not comprehensive personal-data classification.

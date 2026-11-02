@@ -7,7 +7,7 @@ from contextlib import contextmanager
 from pathlib import Path
 from statistics import mean
 
-from app.agents import workflow
+from app.core import engine as workflow
 from app.evaluation.langsmith_export import experiment_payload
 from app.evaluation.retrieval_benchmark import paired_deltas, percentile
 

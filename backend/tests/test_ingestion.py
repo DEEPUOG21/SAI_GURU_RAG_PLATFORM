@@ -4,7 +4,8 @@ import zipfile
 import pytest
 from docx import Document
 
-from app.ingestion.parsing import Section, chunk_sections, parse, validate_file
+from app.chunking.splitter import chunk_sections
+from app.ingestion.parsing import Section, parse, validate_file
 
 
 @pytest.mark.parametrize(

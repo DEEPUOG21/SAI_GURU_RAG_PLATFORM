@@ -1,9 +1,9 @@
 import pytest
 
-from app.agents.routing import classify, rewrite
-from app.agents.sql import SQL_TEMPLATES, generate_sql, validate_sql
+from app.guardrails.grounding import check_grounding, citations_valid
+from app.llm.routing import classify, rewrite
 from app.observability.trace import Trace
-from app.services.grounding import check_grounding, citations_valid
+from app.retrieval.sql import SQL_TEMPLATES, generate_sql, validate_sql
 
 
 @pytest.mark.parametrize(
@@ -147,7 +147,7 @@ async def test_grounding_normalizes_numbers_and_ignores_citation_numbers():
 
 
 async def test_usage_tracking_preserves_missing_call_reports():
-    from app.services.llm import TrackedLLM
+    from app.llm.provider import TrackedLLM
 
     class Provider:
         async def stream(self, messages, **kwargs):

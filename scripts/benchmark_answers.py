@@ -13,8 +13,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "backend"))
 
-from app.agents.workflow import execute
 from app.core.config import get_settings
+from app.core.engine import execute
 from app.database.session import engine, require_runtime_role
 from app.evaluation.answer_benchmark import (
     MODES,
@@ -24,11 +24,11 @@ from app.evaluation.answer_benchmark import (
     paired_answer_comparisons,
     retrieval_mode,
 )
+from app.llm.conversation import ConversationHistory
 from app.models.entities import Document, User
 from app.observability.trace import Trace
 from app.retrieval.postgres import authorized_chunks
 from app.security.scope import Scope
-from app.services.conversation import ConversationHistory
 from benchmark_retrieval import readonly
 from sqlalchemy import select, text
 
@@ -140,7 +140,7 @@ async def main(args):
         )
     }
     configuration["workflow_sha256"] = hashlib.sha256(
-        (ROOT / "backend/app/agents/workflow.py").read_bytes()
+        (ROOT / "backend/app/core/engine.py").read_bytes()
     ).hexdigest()
     record = {
         "created_at": datetime.now(timezone.utc).isoformat(),

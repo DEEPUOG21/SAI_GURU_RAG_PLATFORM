@@ -1,4 +1,4 @@
-from app.services.grounding import check_grounding
+from app.guardrails.grounding import check_grounding
 
 
 async def test_citations_cannot_replace_requested_values():

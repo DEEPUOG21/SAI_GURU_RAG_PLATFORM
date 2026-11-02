@@ -1,7 +1,7 @@
 import json
 import re
 
-from app.services.context import INSUFFICIENT, evidence_text
+from app.retrieval.context import INSUFFICIENT, evidence_text
 
 
 def citation_labels(answer: str) -> set[str]:

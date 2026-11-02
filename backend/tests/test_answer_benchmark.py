@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from app.agents import workflow
+from app.core import engine as workflow
 from app.evaluation.answer_benchmark import (
     MODES,
     answer_experiment_payload,

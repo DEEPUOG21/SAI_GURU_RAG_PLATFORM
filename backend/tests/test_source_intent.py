@@ -4,12 +4,12 @@ from types import SimpleNamespace
 import httpx
 import pytest
 
-from app.agents import workflow
+from app.core import engine as workflow
 from app.core.config import get_settings
+from app.llm.conversation import conversation_only, source_aware_route
 from app.retrieval.base import Candidate
 from app.retrieval.postgres import source_catalog
 from app.security.scope import Scope
-from app.services.conversation import conversation_only, source_aware_route
 
 
 @pytest.mark.parametrize(

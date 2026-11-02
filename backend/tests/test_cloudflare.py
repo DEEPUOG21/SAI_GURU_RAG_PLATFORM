@@ -4,9 +4,9 @@ import httpx
 import pytest
 
 from app.core.config import get_settings
+from app.embeddings.providers import RemoteEmbedding
 from app.reranking.providers import CloudflareReranker, reranker
 from app.retrieval.base import Candidate
-from app.services.providers import RemoteEmbedding
 
 
 @pytest.fixture
@@ -110,7 +110,7 @@ def test_cloudflare_requires_key(cloudflare, monkeypatch):
 
 
 async def test_cloudflare_json_uses_schema_without_stream_options(monkeypatch, cloudflare):
-    from app.services.llm import OpenCompatibleLLM
+    from app.llm.provider import OpenCompatibleLLM
 
     monkeypatch.setattr(cloudflare, "llm_provider", "cloudflare")
     schema = {"type": "object", "properties": {"ok": {"type": "boolean"}}, "required": ["ok"]}
@@ -133,7 +133,7 @@ async def test_cloudflare_json_uses_schema_without_stream_options(monkeypatch, c
 
 @pytest.mark.parametrize("content,finish", [('{"ok":', 'stop'), ('[]', 'stop'), ('{}', 'length')])
 async def test_cloudflare_rejects_invalid_or_truncated_json(monkeypatch, cloudflare, content, finish):
-    from app.services.llm import OpenCompatibleLLM
+    from app.llm.provider import OpenCompatibleLLM
 
     monkeypatch.setattr(cloudflare, "llm_provider", "cloudflare")
     mock_api(monkeypatch, lambda request: httpx.Response(200, json={
@@ -144,7 +144,7 @@ async def test_cloudflare_rejects_invalid_or_truncated_json(monkeypatch, cloudfl
 
 
 async def test_cloudflare_numeric_stream_fragments_preserve_zero(monkeypatch, cloudflare):
-    from app.services.llm import OpenCompatibleLLM
+    from app.llm.provider import OpenCompatibleLLM
 
     monkeypatch.setattr(cloudflare, "llm_provider", "cloudflare")
     frames = ["Code ", 7, 0, 1, " [Source ", 1, "]"]
@@ -156,7 +156,7 @@ async def test_cloudflare_numeric_stream_fragments_preserve_zero(monkeypatch, cl
 
 @pytest.mark.parametrize("fragment", [True, {}, []])
 async def test_structured_stream_content_is_not_answer_text(monkeypatch, cloudflare, fragment):
-    from app.services.llm import OpenCompatibleLLM
+    from app.llm.provider import OpenCompatibleLLM
 
     monkeypatch.setattr(cloudflare, "llm_provider", "cloudflare")
     body = 'data: ' + json.dumps({"choices": [{"delta": {"content": fragment}}]}) + '\n\ndata: [DONE]\n\n'

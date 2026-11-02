@@ -7,9 +7,9 @@ import pytest
 from httpx import ASGITransport, AsyncClient
 from pydantic import ValidationError
 
-from app.agents.sql import validate_sql
 from app.core.config import Settings, get_settings
 from app.main import app
+from app.retrieval.sql import validate_sql
 from app.security.auth import create_token, decode_token, passwords
 from app.security.body_limit import BodyLimitMiddleware
 

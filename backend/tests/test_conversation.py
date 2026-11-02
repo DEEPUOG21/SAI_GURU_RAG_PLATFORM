@@ -2,7 +2,7 @@ import json
 
 import pytest
 
-from app.services.conversation import bounded_history, resolve_question
+from app.llm.conversation import bounded_history, resolve_question
 
 
 def test_history_retains_answers_without_old_source_labels_and_bounds_bytes():
@@ -17,7 +17,7 @@ def test_history_retains_answers_without_old_source_labels_and_bounds_bytes():
 
 
 def test_fallback_keeps_topic_across_multiple_followups():
-    from app.services.conversation import fallback_resolution
+    from app.llm.conversation import fallback_resolution
 
     history = [
         {"role": "user", "content": "Explain our annual leave policy"},
@@ -91,7 +91,7 @@ async def test_followup_preserves_company_scope_but_allows_topic_change(question
 
 
 async def test_general_guidance_is_labeled_and_has_no_citations(monkeypatch):
-    from app.agents import workflow
+    from app.core import engine as workflow
     from app.core.config import get_settings
     from app.security.scope import Scope
 

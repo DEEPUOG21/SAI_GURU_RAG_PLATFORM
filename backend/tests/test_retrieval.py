@@ -1,12 +1,12 @@
 import pytest
 from sqlalchemy.dialects import postgresql
 
+from app.core.cache import InMemoryCache, scoped_key
 from app.retrieval.base import Candidate
+from app.retrieval.context import build_context
 from app.retrieval.fusion import reciprocal_rank_fusion
 from app.retrieval.postgres import authorized_chunks
 from app.security.scope import Scope
-from app.services.cache import InMemoryCache, scoped_key
-from app.services.context import build_context
 
 
 def item(id, text="Evidence", **kwargs):

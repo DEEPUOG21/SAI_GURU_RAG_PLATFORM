@@ -5,8 +5,8 @@ from app.database.session import get_db
 from app.evaluation.service import load_dataset, run_evaluation
 from app.models.entities import Evaluation
 from app.schemas.responses import EvaluationResponse
+from app.security.access import sources_visible
 from app.security.auth import current_scope, rate_limit, require_role
-from app.services.access import sources_visible
 
 router = APIRouter(prefix="/api/v1/evaluation", tags=["Evaluation"])
 

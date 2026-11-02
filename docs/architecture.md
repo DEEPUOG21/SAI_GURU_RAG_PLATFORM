@@ -21,6 +21,46 @@ flowchart LR
     CHECK --> LLM
 ```
 
+## Backend folder map
+
+```text
+backend/app/
+  main.py                 FastAPI startup, middleware and routes
+  core/
+    engine.py             Main RAG engine: LangGraph nodes and branches
+    config.py             Runtime settings
+    cache.py              Optional scoped cache abstraction
+  api/                    HTTP endpoints and streaming.py (SSE and persistence)
+  guardrails/
+    policy.py             Input/context/output screening and redaction
+    grounding.py          Citation and evidence-support checks
+    conflicts.py          Evidence conflicts and safe excerpts
+  llm/
+    provider.py           Model interface, HTTP adapter and usage tracking
+    conversation.py       History bounds and follow-up resolution
+    routing.py            Deterministic question routing
+    errors.py             Provider error classification and safe messages
+  chunking/splitter.py    Sentence/word packing of parsed sections
+  embeddings/providers.py Local/HTTP text-to-vector providers
+  retrieval/              Dense/lexical search, RRF, context packing and approved SQL
+  reranking/              Relevance scoring of retrieved candidates
+  observability/          Bounded traces and optional LangSmith export
+  ingestion/              File validation, parsing, parser sandbox and indexing worker
+  security/               Authentication, tenant scope, source access and request limits
+  database/               Sessions, provisioning, seeding and retention
+  models/                 SQLAlchemy database entities
+  schemas/                Validated API request/response models
+  evaluation/             Retrieval/answer benchmarks, metrics and experiment exports
+```
+
+- **Start the web server:** `app.main:app`. Deployment commands keep this entry point.
+- **Read the core logic:** `core/engine.py::execute`. This orchestrates the RAG stages; HTTP handling stays in `api/`.
+- **Follow one question:** `api/chat.py` → `api/streaming.py` → `core/engine.py` → `llm/`, `retrieval/`, `reranking/` and `guardrails/` → save the answer → SSE to the browser.
+- **Follow one document:** `api/documents.py` → `ingestion/service.py` → isolated parsing → `chunking/splitter.py` → `embeddings/providers.py` → PostgreSQL chunks and vectors.
+- **Follow a trace:** the engine and model adapter record execution through `observability/trace.py`; optional LangSmith integration lives in `observability/langsmith.py`.
+- `core/cache.py` provides an optional cache interface; the current engine does not use it to cache final answers.
+- Folder names describe responsibility. They do not mean every file runs for every query.
+
 ## Persistence
 
 `tenants` own `users`, `documents`, `document_versions`, `document_chunks`, conversations, queries and evaluation runs. Document versions preserve original bytes in `bytea`; there is no writable upload directory. Chunks use a composite `(document_id, tenant_id)` foreign key to prevent mismatched tenant ownership. Vector and lexical indexes support cosine search and PostgreSQL full-text search. Model dimensions are deliberately fixed at 384 in the schema.
@@ -71,7 +111,7 @@ Dashboard counts are actual database aggregates. Query metrics are scoped to the
 
 ## Query workflow
 
-The LangGraph `StateGraph` is in `backend/app/agents/workflow.py`, with reusable operation tracing in `observability/trace.py`. Conditional edges select SQL, retrieval, direct answering and general guidance. See [LangGraph and LangSmith](observability.md) for the graph and optional hosted traces. The table below describes operation substeps, not a claim that each is a separate graph node.
+The LangGraph `StateGraph` is in `backend/app/core/engine.py`, with reusable operation tracing in `observability/trace.py`. Conditional edges select SQL, retrieval, direct answering and general guidance. See [LangGraph and LangSmith](observability.md) for the graph and optional hosted traces. The table below describes operation substeps, not a claim that each is a separate graph node.
 
 | Node | Actual behavior |
 |---|---|

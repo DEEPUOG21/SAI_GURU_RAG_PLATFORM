@@ -1,4 +1,4 @@
-from app.services.conflicts import literal_conflicts, relevant_excerpts
+from app.guardrails.conflicts import literal_conflicts, relevant_excerpts
 
 
 def test_reports_disagreement_without_selecting_policy():

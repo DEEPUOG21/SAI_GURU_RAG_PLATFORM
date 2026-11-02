@@ -7,7 +7,7 @@ import httpx
 from langsmith import traceable
 
 from app.core.config import get_settings
-from app.security.guardrails import redact_value
+from app.guardrails.policy import redact_value
 
 
 class LLMProvider(ABC):

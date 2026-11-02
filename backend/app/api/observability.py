@@ -4,11 +4,11 @@ from sqlalchemy import func, select, text
 from app.api.documents import serialize
 from app.core.config import get_settings
 from app.database.session import get_db
+from app.llm.conversation import history_sources
 from app.models.entities import Document, Query, RetrievalResult
 from app.schemas.responses import DashboardResponse, DebugResponse
+from app.security.access import sources_visible
 from app.security.auth import current_scope
-from app.services.access import sources_visible
-from app.services.conversation import history_sources
 
 router = APIRouter(prefix="/api/v1", tags=["Observability"])
 

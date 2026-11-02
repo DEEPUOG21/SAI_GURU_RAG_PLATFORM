@@ -3,8 +3,8 @@ import json
 import httpx
 import pytest
 
+from app.llm.errors import cloudflare_error_codes, safe_provider_error_message
 from app.observability.trace import Trace
-from app.services.provider_errors import cloudflare_error_codes, safe_provider_error_message
 
 
 def provider_error(code, message="private detail"):
