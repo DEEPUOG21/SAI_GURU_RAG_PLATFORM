@@ -1,5 +1,7 @@
 # Sai Guru: measured answer-quality improvement
 
+The [runtime security verification](RUNTIME-2026-11-02.md) records the API image's 45 → 0 HIGH findings, the web image's 3 → 0 HIGH/CRITICAL findings, native runtime checks and deployment limitations. These are security/runtime measurements, separate from answer-quality evaluation.
+
 The [56-question retrieval comparison](RETRIEVAL-2026-10-27.md) separately measures dense, hybrid and reranked retrieval across three repeated rounds, with per-case rankings, latency, paired intervals and limitations. It does not replace the answer-quality experiment below.
 
 The [60-case answer/abstention/follow-up study](ANSWERS-2026-10-27.md) records 150 generated turns and a controlled dense-versus-current comparison. It found no answer-accuracy gain and identifies general-knowledge routing of company questions as the remaining bottleneck.
