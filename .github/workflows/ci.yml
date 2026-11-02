@@ -66,6 +66,22 @@ jobs:
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       - run: docker build -f backend/Dockerfile -t sai-guru-api .
+      - name: Verify non-root runtime and isolated parser
+        run: |
+          docker run --rm -i --entrypoint python sai-guru-api - <<'PY'
+          import asyncio
+          import os
+          import sys
+          import onnxruntime
+          from app.ingestion.sandbox import parse_isolated
+
+          assert sys.version_info[:2] == (3, 11)
+          assert os.getuid() == 10001
+          assert "CPUExecutionProvider" in onnxruntime.get_available_providers()
+          sections = asyncio.run(parse_isolated("Runtime-check.md", b"# Runtime\n\nParser isolation works."))
+          assert sections and "Parser isolation works." in sections[0].text
+          print("Python 3.11, non-root native runtime, and isolated parsing passed.")
+          PY
       - run: docker build -f frontend/Dockerfile -t sai-guru-web .
   deploy:
     if: github.ref == 'refs/heads/main' && github.event_name == 'push' && vars.ENABLE_DEPLOYMENT == 'true'
