@@ -8,24 +8,25 @@ pgvector==0.5.0
 alembic==1.20.0
 python-multipart==0.0.32
 httpx==0.28.1
-PyJWT==2.14.0
+PyJWT==2.15.0
 pwdlib==0.3.1
-pypdf==6.18.1
+pypdf==6.21.4
 python-docx==1.2.0
 beautifulsoup4==4.15.0
 sqlglot==29.0.1
 langgraph==1.2.16
 langsmith==0.14.12
-fastembed==0.8.0
+fastembed==0.9.1
 pytest==9.1.1
 pytest-asyncio==1.4.0
 ruff==0.16.7
 
 # Preserve tested transitive versions while generating the complete runtime hash lock.
-filelock==3.32.6
+filelock==4.2.6
 fsspec==2026.7.0
 greenlet==3.5.5
 huggingface-hub==1.31.0
 idna==3.19
 protobuf==7.36.1
-urllib3==2.7.0
+urllib3==2.8.0
+pillow==13.0.0

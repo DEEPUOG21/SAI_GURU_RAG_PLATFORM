@@ -43,6 +43,7 @@ jobs:
     env:
       DATABASE_URL: postgresql+asyncpg://sai:test-only-password@localhost:5432/sai_guru_test
       SAI_INTEGRATION: '1'
+      JWT_SECRET: ci-only-signing-key-for-disposable-integration-tests-2026
       FASTEMBED_CACHE_PATH: /tmp/fastembed
       HF_HOME: /tmp/huggingface
       RUNTIME_DATABASE_PASSWORD: ci-runtime-only-not-production-1234567890
