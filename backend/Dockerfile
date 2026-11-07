@@ -1,4 +1,4 @@
-FROM cgr.dev/chainguard/wolfi-base@sha256:88a20e2d017bd20cdc0cb3910de603e7bea9512a6c351a8dd3c9df212ab03d73
+FROM cgr.dev/chainguard/wolfi-base@sha256:8509ee4351a2e501b7f98201f2e2642396e82020c61a589cacdcfe74b9de46c1
 RUN apk upgrade --no-cache && apk add --no-cache python-3.11 libstdc++ libgomp && python3.11 -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 FASTEMBED_CACHE_PATH=/tmp/fastembed HF_HOME=/tmp/huggingface
